@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "name": "xmake",
+  "version": "3.1.2",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/xmake-io/xmake/releases/download/v3.1.2/xmake-v3.1.2.win64.zip",
+      "sha256": "be1c5fd5abec08ac14004daca7bfb1ec6e1f2f2dea94877de8f44dc6e0aed1b1",
+      "format": "zip",
+      "bin": {
+        "xmake": "xmake.exe",
+        "xrepo": {
+          "path": "piko-xrepo.ps1",
+          "kind": "powershell"
+        }
+      },
+      "stripPrefix": "xmake",
+      "configFiles": {
+        "piko-xrepo.ps1": "if ($args -contains 'shell' -or $args -contains 'quit') { Write-Error 'xrepo Shell environment changes require the upstream current-Shell hook; this command is a child process.'; exit 2 }\n& (Join-Path $PSScriptRoot 'xmake.exe') lua private.xrepo @args\nexit $LASTEXITCODE\n"
+      }
+    }
+  }
+}

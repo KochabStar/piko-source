@@ -1,0 +1,433 @@
+{
+  "date": "2026-10-29",
+  "status": "passed",
+  "scope": "Standalone source updater and initial Git repository; no application or installer execution",
+  "sourcePackages": 46,
+  "sourceVersions": 46,
+  "sourceIndexSha256": "1b53eb3a813d16c99b03216b37e2649151025354b11f486a13e75027ef050fc8",
+  "tests": {
+    "passed": 28,
+    "failed": 0,
+    "command": "npm test"
+  },
+  "canonicalClientSourceCheck": {
+    "checked": 46,
+    "status": "passed"
+  },
+  "liveDiscovery": {
+    "checkedAt": "2026-10-29T09:31:24.506Z",
+    "checked": 46,
+    "blocked": 0,
+    "statusCounts": {
+      "available": 11,
+      "current": 32,
+      "manual": 2,
+      "inspection-required": 1
+    },
+    "packages": [
+      {
+        "name": "node",
+        "current": "26.12.1",
+        "version": "26.13.0",
+        "status": "available"
+      },
+      {
+        "name": "ripgrep",
+        "current": "15.2.0",
+        "version": "15.2.0",
+        "status": "current"
+      },
+      {
+        "name": "lua",
+        "current": "5.5.0",
+        "version": "5.5.0",
+        "status": "current"
+      },
+      {
+        "name": "z.lua",
+        "current": "1.8.26",
+        "version": "1.8.27",
+        "status": "available"
+      },
+      {
+        "name": "starship",
+        "current": "1.27.0",
+        "version": "1.27.0",
+        "status": "current"
+      },
+      {
+        "name": "fzf",
+        "current": "0.74.5",
+        "version": "0.74.5",
+        "status": "current"
+      },
+      {
+        "name": "psfzf",
+        "current": "2.7.12",
+        "version": "2.7.12",
+        "status": "current"
+      },
+      {
+        "name": "sudo",
+        "current": "0.2020.01.26",
+        "version": "0.2020.01.26",
+        "status": "current"
+      },
+      {
+        "name": "snipaste",
+        "current": "2.11.3",
+        "version": "2.11.3",
+        "status": "current"
+      },
+      {
+        "name": "7zip",
+        "current": "26.05",
+        "version": "26.05",
+        "status": "current"
+      },
+      {
+        "name": "beyondcompare-zh-cn",
+        "current": "5.2.6.32774",
+        "version": "5.2.7.32913",
+        "status": "available"
+      },
+      {
+        "name": "obsidian",
+        "current": "1.14.5",
+        "version": "1.14.5",
+        "status": "current"
+      },
+      {
+        "name": "tabby",
+        "current": "1.0.238",
+        "version": "1.0.238",
+        "status": "current"
+      },
+      {
+        "name": "llvm",
+        "current": "23.1.4",
+        "version": "23.1.4",
+        "status": "current"
+      },
+      {
+        "name": "firacode-nf",
+        "current": "3.5.1",
+        "version": "3.5.1",
+        "status": "current"
+      },
+      {
+        "name": "hack-nf-mono",
+        "current": "3.5.1",
+        "version": "3.5.1",
+        "status": "current"
+      },
+      {
+        "name": "rustup",
+        "current": "1.29.2",
+        "version": "1.29.2",
+        "status": "current"
+      },
+      {
+        "name": "flclash",
+        "current": "0.9.2",
+        "version": "0.9.2",
+        "status": "current"
+      },
+      {
+        "name": "tortoise-svn",
+        "current": "1.14.9.29743",
+        "version": "1.15.0.29830",
+        "status": "available"
+      },
+      {
+        "name": "aria2",
+        "current": "1.37.0-1",
+        "version": "1.37.0-1",
+        "status": "current"
+      },
+      {
+        "name": "cmake",
+        "current": "4.4.5",
+        "version": "4.4.5",
+        "status": "current"
+      },
+      {
+        "name": "dbgate",
+        "current": "7.3.2",
+        "version": "7.3.3",
+        "status": "available"
+      },
+      {
+        "name": "ffmpeg",
+        "current": "9.0.2",
+        "version": "9.0.2",
+        "status": "current"
+      },
+      {
+        "name": "gh",
+        "current": "2.103.3",
+        "version": "2.103.3",
+        "status": "current"
+      },
+      {
+        "name": "git",
+        "current": "2.56.0.4",
+        "version": "2.56.0.4",
+        "status": "current"
+      },
+      {
+        "name": "inno-setup",
+        "current": "7.1.0",
+        "version": "7.1.1",
+        "status": "available"
+      },
+      {
+        "name": "innounp",
+        "current": "2.71.2",
+        "status": "manual",
+        "reason": "Audited executable comes from a fixed upstream commit. Review the helper release and executable digest before changing this pin; never auto-run a new unpacker."
+      },
+      {
+        "name": "lazygit",
+        "current": "0.66.2",
+        "version": "0.66.2",
+        "status": "current"
+      },
+      {
+        "name": "localsend",
+        "current": "1.18.2",
+        "version": "1.18.2",
+        "status": "current"
+      },
+      {
+        "name": "ninja",
+        "current": "1.13.2",
+        "version": "1.13.2",
+        "status": "current"
+      },
+      {
+        "name": "oh-my-pi",
+        "current": "18.13.2",
+        "version": "18.13.3",
+        "status": "available"
+      },
+      {
+        "name": "sublime-text",
+        "current": "4-4215",
+        "version": "4-4215",
+        "status": "current"
+      },
+      {
+        "name": "wave-terminal",
+        "current": "0.14.5",
+        "version": "0.14.5",
+        "status": "current"
+      },
+      {
+        "name": "xmake",
+        "current": "3.1.2",
+        "version": "3.1.2",
+        "status": "current"
+      },
+      {
+        "name": "go",
+        "current": "1.27.3",
+        "version": "1.27.3",
+        "status": "current"
+      },
+      {
+        "name": "uv",
+        "current": "0.13.5",
+        "version": "0.13.6",
+        "status": "available"
+      },
+      {
+        "name": "pixi",
+        "current": "0.83.0",
+        "version": "0.83.0",
+        "status": "current"
+      },
+      {
+        "name": "codex",
+        "current": "0.164.0",
+        "version": "0.165.0",
+        "status": "available"
+      },
+      {
+        "name": "orca",
+        "current": "1.4.243",
+        "version": "1.4.244",
+        "status": "available"
+      },
+      {
+        "name": "listary",
+        "current": "6.3.5.94",
+        "version": "6.3.5.94",
+        "status": "current"
+      },
+      {
+        "name": "wecom",
+        "current": "5.0.13.6005",
+        "version": "5.0.13.6005",
+        "status": "current"
+      },
+      {
+        "name": "tabbit",
+        "current": "1.19.25.0",
+        "version": "1.19.25.0",
+        "status": "current"
+      },
+      {
+        "name": "todesk",
+        "current": "4.9.8.0",
+        "version": "5.2.3.0",
+        "status": "available"
+      },
+      {
+        "name": "dingtalk",
+        "current": "8.2.5.260113006",
+        "status": "manual",
+        "reason": "The CN full updater ZIP and the public international installer do not share a reliable version feed. Do not silently change region/channel or publish a web bootstrap instead of the full application."
+      },
+      {
+        "name": "wechat",
+        "current": "4.2.0.9",
+        "version": "4.2.0",
+        "status": "inspection-required"
+      },
+      {
+        "name": "sunlogin",
+        "current": "16.8.0.33445",
+        "version": "16.8.0.33445",
+        "status": "current"
+      }
+    ]
+  },
+  "realPayloadLayoutChecks": [
+    {
+      "name": "7zip",
+      "status": "passed",
+      "milliseconds": 9059,
+      "files": 106,
+      "knownExpandedBytes": 5903862,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "listary",
+      "status": "passed",
+      "milliseconds": 3845,
+      "files": 188,
+      "knownExpandedBytes": 41255381,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "orca",
+      "status": "passed",
+      "milliseconds": 2702,
+      "files": 7042,
+      "knownExpandedBytes": 936260439,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "wecom",
+      "status": "passed",
+      "milliseconds": 5376,
+      "files": 585,
+      "knownExpandedBytes": 17586172,
+      "unknownSizeFiles": 569,
+      "reviewSensitive": false
+    },
+    {
+      "name": "tabbit",
+      "status": "passed",
+      "milliseconds": 10145,
+      "version": "1.19.25.0",
+      "files": 2686,
+      "knownExpandedBytes": 2357208631,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "todesk",
+      "status": "passed",
+      "milliseconds": 2240,
+      "files": 57,
+      "knownExpandedBytes": 398220200,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "wechat",
+      "status": "passed",
+      "milliseconds": 9741,
+      "version": "4.2.0.9",
+      "files": 31,
+      "knownExpandedBytes": 1201324647,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    },
+    {
+      "name": "sunlogin",
+      "status": "passed",
+      "milliseconds": 1838,
+      "files": 491,
+      "knownExpandedBytes": 304229162,
+      "unknownSizeFiles": 0,
+      "reviewSensitive": false
+    }
+  ],
+  "readonlyCandidateCheck": {
+    "mode": "check",
+    "changed": 0,
+    "blocked": 0,
+    "results": [
+      {
+        "name": "node",
+        "current": "26.12.1",
+        "version": "26.13.0",
+        "url": "https://nodejs.org/dist/v26.13.0/node-v26.13.0-win-x64.zip",
+        "provenance": "https://nodejs.org/dist/index.json",
+        "sha256": "dcc60d59a0746999f99064a01c020445d54d84228c691cdbf25b49ac3b59150a",
+        "bytes": 41157375,
+        "layout": {
+          "files": 1938,
+          "knownExpandedBytes": 112910764,
+          "unknownSizeFiles": 0,
+          "reviewSensitive": false
+        },
+        "status": "validated"
+      }
+    ]
+  },
+  "automationFileSha256": {
+    "package.json": "889b292318a24032c47f31650d0b564b0b115b676526c8bf2feb06e0a386bcc6",
+    "automation/rules.json": "6767fd204e8ffc61e9f7501aa1c1df8983b0116e72cc3ea16386712c77af913c",
+    "automation/tools.json": "74454f141dcea3466ee339cf0b32e2a9e71a5a098ed103ee9f635193550d4824",
+    ".github/workflows/validate.yml": "ecb2a58f4a6655c2ed3ed5bb0b50f2aa226809162ead2dbddba5a78bfb30029c",
+    ".github/workflows/update-source.yml": "6aba0a0a93c4af4d2c88dc089256f3bbd9ef726807181781c03d658f105d832d",
+    "scripts/check.mjs": "41ca6d5b179c043b768ebdd2ab9859915bb8d2467fe41dbcc1a6453568169a39",
+    "scripts/update.mjs": "f0fa263136c9b8b0bab88908b2e3b46d5cbd2e0a75bae3f66194444503435856",
+    "scripts/lib/catalog.mjs": "6feb8fc5975af4f6e9c84a814f8e45e47732595918e5a9746189ade11c360004",
+    "scripts/lib/layout.mjs": "5d07ea7eb8901204c310d30b77aa7c48a965530eade5a67da08961c381224ade",
+    "scripts/lib/msi.mjs": "2b05d1c663a51c81931e854bee17afa9805094a9109badf9644e46bc1c1b4378",
+    "scripts/lib/net.mjs": "40a34b298ea364c8534b03146ca65eb6ee30b52b5a50332200fd16dfef6a1a12",
+    "scripts/lib/providers.mjs": "ee172434d0abba1f6713fb8be2f5ff7dc2a8f16c8cfd4d947ef74e018a022df4",
+    "scripts/lib/tools.mjs": "4c78280e17b0487d81e265e024cc8170cafffc5d209b939275543f6cb440a4f2",
+    "tests/update.test.mjs": "f0a452c4a8f56422e640d19e7b920bf2a4ce97a3285093d2b82d276330953ed7"
+  },
+  "repository": {
+    "branch": "main",
+    "remoteConfigured": false,
+    "remoteWorkflowRun": false
+  },
+  "boundaries": [
+    "Existing 46 package/version selections remain unchanged; verification did not publish candidate versions.",
+    "GUI, services, drivers, application bootstrap/hooks and user data migration were not run.",
+    "innounp and dingtalk retain explicit manual policies.",
+    "Private inventory, downloads, caches, credentials and local reports are excluded from Git.",
+    "GitHub workflow execution and PR creation still require a configured remote and repository permissions."
+  ]
+}

@@ -1,0 +1,22 @@
+# Private machine inventory is never part of the software source repository.
+/inventory/
+
+# Local dependencies, downloaded payloads and generated updater reports.
+/node_modules/
+/.cache/
+/.tmp/
+/artifacts/
+/downloads/
+/update-report.json
+/update-report.md
+/.tmp-index-*.json
+*.log
+
+# Local credentials and editor state.
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

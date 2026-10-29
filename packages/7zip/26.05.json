@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "name": "7zip",
+  "version": "26.05",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/ip7z/7zip/releases/download/26.05/7z2605-x64.msi",
+      "sha256": "3fe4ab99fa15629c652944309a2b2bc6e41fc933fc6b63f5df1ebcf3aea68263",
+      "format": "msi",
+      "stripPrefix": "Files/7-Zip",
+      "bin": {
+        "7z": "7z.exe",
+        "7zfm": "7zFM.exe",
+        "7zg": "7zG.exe"
+      },
+      "persist": [
+        "Codecs",
+        "Formats"
+      ],
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "7-Zip File Manager",
+            "path": "7zFM.exe"
+          }
+        ],
+        "menus": [
+          {
+            "id": "open-archive",
+            "label": "Open with 7-Zip",
+            "target": "file",
+            "path": "7zFM.exe",
+            "args": [
+              "%1"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

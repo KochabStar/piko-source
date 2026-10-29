@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "name": "lua",
+  "version": "5.5.0",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://downloads.sourceforge.net/project/luabinaries/5.5.0/Tools%20Executables/lua-5.5.0_Win64_bin.zip",
+      "sha256": "7825cb261d0dc61cb0e1511d451ceaf10bf72d2bba1855bfd3350add190e0024",
+      "format": "zip",
+      "bin": {
+        "lua": "lua55.exe",
+        "luac": "luac55.exe"
+      }
+    }
+  }
+}

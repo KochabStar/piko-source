@@ -1,0 +1,697 @@
+{
+  "date": "2026-10-29",
+  "status": "passed",
+  "sourcePackages": 38,
+  "newPackages": 19,
+  "coverage": {
+    "scoopTargets": 33,
+    "scoopExcluded": [
+      "scoop",
+      "mise",
+      "scoop-search"
+    ],
+    "miseTargets": [
+      "node",
+      "go",
+      "uv",
+      "pixi",
+      "codex (official native package equivalent to npm:@openai/codex)"
+    ],
+    "missingWithinTheseTargets": []
+  },
+  "packages": [
+    {
+      "name": "git",
+      "version": "2.56.0.4",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 47858
+    },
+    {
+      "name": "aria2",
+      "version": "1.37.0-1",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1064
+    },
+    {
+      "name": "cmake",
+      "version": "4.4.5",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 16944
+    },
+    {
+      "name": "dbgate",
+      "version": "7.3.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 5512
+    },
+    {
+      "name": "ffmpeg",
+      "version": "9.0.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 7137
+    },
+    {
+      "name": "gh",
+      "version": "2.103.3",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1576
+    },
+    {
+      "name": "inno-setup",
+      "version": "7.1.0",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 62122
+    },
+    {
+      "name": "innounp",
+      "version": "2.71.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1435
+    },
+    {
+      "name": "lazygit",
+      "version": "0.66.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1561
+    },
+    {
+      "name": "localsend",
+      "version": "1.18.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1979
+    },
+    {
+      "name": "ninja",
+      "version": "1.13.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 1638
+    },
+    {
+      "name": "oh-my-pi",
+      "version": "18.13.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 2932
+    },
+    {
+      "name": "sublime-text",
+      "version": "4-4215",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 2211
+    },
+    {
+      "name": "wave-terminal",
+      "version": "0.14.5",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 6787
+    },
+    {
+      "name": "xmake",
+      "version": "3.1.2",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 5611
+    },
+    {
+      "name": "go",
+      "version": "1.27.3",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 31507
+    },
+    {
+      "name": "uv",
+      "version": "0.13.5",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 2276
+    },
+    {
+      "name": "pixi",
+      "version": "0.83.0",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 2539
+    },
+    {
+      "name": "codex",
+      "version": "0.164.0",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "status": "passed",
+      "durationMs": 6556
+    }
+  ],
+  "origins": [
+    {
+      "name": "cmake",
+      "version": "4.4.5",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.4.5/cmake-4.4.5-windows-x86_64.zip",
+      "expectedSha256": "326c826486d46a23cf9d5a1c9ee3a567d427bdd02c4a34071937a2a675cff004",
+      "release": "https://github.com/Kitware/CMake/releases/tag/v4.4.5",
+      "officialSize": 54412232,
+      "officialDigest": "sha256:326c826486d46a23cf9d5a1c9ee3a567d427bdd02c4a34071937a2a675cff004",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "ffmpeg",
+      "version": "9.0.2",
+      "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-full_build.7z",
+      "expectedSha256": "f0e46253c70dfe902bac915dfb4224f0cf1b7c6eeab9da2ccc9a5581f9a71b13",
+      "release": "https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2",
+      "officialSize": 168971636,
+      "officialDigest": "sha256:f0e46253c70dfe902bac915dfb4224f0cf1b7c6eeab9da2ccc9a5581f9a71b13",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "dbgate",
+      "version": "7.3.2",
+      "url": "https://github.com/dbgate/dbgate/releases/download/v7.3.2/dbgate-7.3.2-win_x64.zip",
+      "expectedSha256": "be05ba046bf1532ac1ccd6b7acdd7bebac1224d295780b5be2bf65b724de1eea",
+      "release": "https://github.com/dbgate/dbgate/releases/tag/v7.3.2",
+      "officialSize": 186496568,
+      "officialDigest": "sha256:be05ba046bf1532ac1ccd6b7acdd7bebac1224d295780b5be2bf65b724de1eea",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "gh",
+      "version": "2.103.3",
+      "url": "https://github.com/cli/cli/releases/download/v2.103.3/gh_2.103.3_windows_amd64.zip",
+      "expectedSha256": "98d0cfa794721665d7973dd728c78aff7bd836d58f10f6d7a03568eccb0a22e0",
+      "release": "https://github.com/cli/cli/releases/tag/v2.103.3",
+      "officialSize": 15197187,
+      "officialDigest": "sha256:98d0cfa794721665d7973dd728c78aff7bd836d58f10f6d7a03568eccb0a22e0",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "git",
+      "version": "2.56.0.4",
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.56.0.windows.4/PortableGit-2.56.0.4-64-bit.7z.exe",
+      "expectedSha256": "b1f3e52216e2ed6882d1bebfd4d3fdf319bec40d2edbbf9fd26ec4fd3fce7ed1",
+      "release": "https://github.com/git-for-windows/git/releases/tag/v2.56.0.windows.4",
+      "officialSize": 60087472,
+      "officialDigest": "sha256:b1f3e52216e2ed6882d1bebfd4d3fdf319bec40d2edbbf9fd26ec4fd3fce7ed1",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "inno-setup",
+      "version": "7.1.0",
+      "url": "https://github.com/jrsoftware/issrc/releases/download/is-7_1_0/innosetup-7.1.0-x64.exe",
+      "expectedSha256": "0362a383ed217d4c4239b5933866dd96d3eb2102737da92f80f6057a4b40df2f",
+      "release": "https://github.com/jrsoftware/issrc/releases/tag/is-7_1_0",
+      "officialSize": 14304168,
+      "officialDigest": "sha256:0362a383ed217d4c4239b5933866dd96d3eb2102737da92f80f6057a4b40df2f",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "lazygit",
+      "version": "0.66.2",
+      "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.66.2/lazygit_0.66.2_windows_x86_64.zip",
+      "expectedSha256": "8b1e2194c2d8ac660f0a132cb4384e9d2fe1405217a144e280df16383c18d45c",
+      "release": "https://github.com/jesseduffield/lazygit/releases/tag/v0.66.2",
+      "officialSize": 7574703,
+      "officialDigest": "sha256:8b1e2194c2d8ac660f0a132cb4384e9d2fe1405217a144e280df16383c18d45c",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "localsend",
+      "version": "1.18.2",
+      "url": "https://github.com/localsend/localsend/releases/download/v1.18.2/LocalSend-1.18.2-windows-x86-64.zip",
+      "expectedSha256": "737aab1829d901e1d798cddd1e5fdc06ba9dfcc9ea50cfe3805e047005d5e71a",
+      "release": "https://github.com/localsend/localsend/releases/tag/v1.18.2",
+      "officialSize": 26113764,
+      "officialDigest": "sha256:737aab1829d901e1d798cddd1e5fdc06ba9dfcc9ea50cfe3805e047005d5e71a",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "aria2",
+      "version": "1.37.0-1",
+      "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0-win-64bit-build1.zip",
+      "expectedSha256": "67d015301eef0b612191212d564c5bb0a14b5b9c4796b76454276a4d28d9b288",
+      "release": "https://github.com/aria2/aria2/releases/tag/release-1.37.0",
+      "officialSize": 2475379,
+      "method": "official-https-byte-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "innounp",
+      "version": "2.71.2",
+      "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip",
+      "expectedSha256": "10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd",
+      "method": "official-https-byte-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "ninja",
+      "version": "1.13.2",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+      "expectedSha256": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "release": "https://github.com/ninja-build/ninja/releases/tag/v1.13.2",
+      "officialSize": 291570,
+      "officialDigest": "sha256:07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "oh-my-pi",
+      "version": "18.13.2",
+      "url": "https://github.com/can1357/oh-my-pi/releases/download/v18.13.2/omp-windows-x64.exe",
+      "expectedSha256": "95c45f53fff419ae4aff5cf07e6af38f297fc7e754947bcb85d9d2253fcae17a",
+      "release": "https://github.com/can1357/oh-my-pi/releases/tag/v18.13.2",
+      "officialSize": 244882944,
+      "officialDigest": "sha256:95c45f53fff419ae4aff5cf07e6af38f297fc7e754947bcb85d9d2253fcae17a",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "wave-terminal",
+      "version": "0.14.5",
+      "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.14.5/Wave-win32-x64-0.14.5.zip",
+      "expectedSha256": "61d132770a5b44a4ab1d6f4fe111fcb270047b97ef0e6f2d4f7d93562eea79dd",
+      "release": "https://github.com/wavetermdev/waveterm/releases/tag/v0.14.5",
+      "officialSize": 218149204,
+      "officialDigest": "sha256:61d132770a5b44a4ab1d6f4fe111fcb270047b97ef0e6f2d4f7d93562eea79dd",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "xmake",
+      "version": "3.1.2",
+      "url": "https://github.com/xmake-io/xmake/releases/download/v3.1.2/xmake-v3.1.2.win64.zip",
+      "expectedSha256": "be1c5fd5abec08ac14004daca7bfb1ec6e1f2f2dea94877de8f44dc6e0aed1b1",
+      "release": "https://github.com/xmake-io/xmake/releases/tag/v3.1.2",
+      "officialSize": 6182245,
+      "officialDigest": "sha256:be1c5fd5abec08ac14004daca7bfb1ec6e1f2f2dea94877de8f44dc6e0aed1b1",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "uv",
+      "version": "0.13.5",
+      "url": "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-x86_64-pc-windows-msvc.zip",
+      "expectedSha256": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a",
+      "release": "https://github.com/astral-sh/uv/releases/tag/0.13.5",
+      "officialSize": 15264056,
+      "officialDigest": "sha256:a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "pixi",
+      "version": "0.83.0",
+      "url": "https://github.com/prefix-dev/pixi/releases/download/v0.83.0/pixi-x86_64-pc-windows-msvc.zip",
+      "expectedSha256": "77bed9f9d2795c94f9ab5744353892eb82bd3b1eaa09ecbbe7573e22ef70a2f4",
+      "release": "https://github.com/prefix-dev/pixi/releases/tag/v0.83.0",
+      "officialSize": 32758879,
+      "officialDigest": "sha256:77bed9f9d2795c94f9ab5744353892eb82bd3b1eaa09ecbbe7573e22ef70a2f4",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "sublime-text",
+      "version": "4-4215",
+      "url": "https://download.sublimetext.com/sublime_text_build_4215_x64.zip",
+      "expectedSha256": "14f9d6190d5d118bd61a7067a6b00e27e6a82f5f42a94e675792ec7734e09aca",
+      "method": "official-https-byte-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "codex",
+      "version": "0.164.0",
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.164.0/codex-package-x86_64-pc-windows-msvc.tar.gz",
+      "expectedSha256": "700116be3143576d006467af8576f7f4c9dada1feddfdb7f69743bfde0997018",
+      "release": "https://github.com/openai/codex/releases/tag/rust-v0.164.0",
+      "officialSize": 167144380,
+      "officialDigest": "sha256:700116be3143576d006467af8576f7f4c9dada1feddfdb7f69743bfde0997018",
+      "method": "official-release-sha256",
+      "status": "passed"
+    },
+    {
+      "name": "go",
+      "version": "1.27.3",
+      "url": "https://dl.google.com/go/go1.27.3.windows-amd64.zip",
+      "expectedSha256": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff",
+      "method": "official-https-byte-sha256",
+      "status": "passed"
+    }
+  ],
+  "smoke": [
+    {
+      "package": "git",
+      "command": "git",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "git version 2.56.0.windows.4",
+      "status": "passed"
+    },
+    {
+      "package": "aria2",
+      "command": "aria2c",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "aria2 version 1.37.0\nCopyright (C) 2006, 2019 Tatsuhiro Tsujikawa\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 2 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n** Configuration **\nEnabled Features: Async DNS, BitTorre",
+      "status": "passed"
+    },
+    {
+      "package": "cmake",
+      "command": "cmake",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "cmake version 4.4.5\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+      "status": "passed"
+    },
+    {
+      "package": "cmake",
+      "command": "ctest",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "ctest version 4.4.5\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+      "status": "passed"
+    },
+    {
+      "package": "cmake",
+      "command": "cpack",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "cpack version 4.4.5\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+      "status": "passed"
+    },
+    {
+      "package": "ffmpeg",
+      "command": "ffmpeg",
+      "args": [
+        "-version"
+      ],
+      "code": 0,
+      "output": "ffmpeg version 9.0.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers\r\nbuilt with gcc 16.2.0 (Rev3, Built by MSYS2 project)\r\nconfiguration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-cairo --enable-fontconfig --enable-iconv --enable-gnutls --enable-lcms2 --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-libdvdnav --enable-libdvdread --enable-sdl2 --ena",
+      "status": "passed"
+    },
+    {
+      "package": "ffmpeg",
+      "command": "ffprobe",
+      "args": [
+        "-version"
+      ],
+      "code": 0,
+      "output": "ffprobe version 9.0.2-full_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers\r\nbuilt with gcc 16.2.0 (Rev3, Built by MSYS2 project)\r\nconfiguration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-cairo --enable-fontconfig --enable-iconv --enable-gnutls --enable-lcms2 --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-libdvdnav --enable-libdvdread --enable-sdl2 --en",
+      "status": "passed"
+    },
+    {
+      "package": "gh",
+      "command": "gh",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "gh version 2.103.3 (2026-10-26)\nhttps://github.com/cli/cli/releases/tag/v2.103.3",
+      "status": "passed"
+    },
+    {
+      "package": "inno-setup",
+      "command": "iscc",
+      "args": [
+        "/?"
+      ],
+      "code": 0,
+      "output": "Inno Setup 7 Command-Line Compiler\r\nCopyright (C) 1997-2026 Jordan Russell. All rights reserved.\r\nPortions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.\r\nPortions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.\r\nhttps://www.innosetup.com",
+      "status": "passed"
+    },
+    {
+      "package": "innounp",
+      "command": "innounp",
+      "args": [],
+      "code": 0,
+      "output": "innounp - the Inno Setup Unpacker, version 2.71.2 (2026-10-29)\r\n\r\nUsage: innounp [command] [options] <setup.exe or setup.0> [@filelist] [filemask ...]\r\nCommands:\r\n  (no)   display general information about the installation archive\r\n  -v     verbose list if files (with sizes and timestamps)\r\n  -s     short list of files (without sizes and timestamps)\r\n  -x     extract the files from the installation (to the current directory, also see -d)\r\n  -e     extract files without paths\r\n  -t     test files for integrity\r\n  -l     show list of languages supported by the installation\r\n  -i     show list of",
+      "status": "passed"
+    },
+    {
+      "package": "lazygit",
+      "command": "lazygit",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "commit=63ab89fff478854deb4a35ef8902676b3cc5ca72, build date=2026-10-16T09:27:30Z, build source=binaryRelease, version=0.66.2, os=windows, arch=amd64, git version=2.56.0.windows.4",
+      "status": "passed"
+    },
+    {
+      "package": "ninja",
+      "command": "ninja",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "1.13.2",
+      "status": "passed"
+    },
+    {
+      "package": "oh-my-pi",
+      "command": "omp",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "omp/18.13.2",
+      "status": "passed"
+    },
+    {
+      "package": "sublime-text",
+      "command": "subl",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "Sublime Text Build 4215",
+      "status": "passed"
+    },
+    {
+      "package": "xmake",
+      "command": "xmake",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "\u001b[0m\u001b[1mxmake v3.1.2+HEAD.5d21e9daf, A cross-platform build utility based on Lua\u001b[0m\u001b[0m\r\n\u001b[0mCopyright (C) 2015-present Ruki Wang, \u001b[4mhttps://xmake.io\u001b[0m\u001b[0m\r\n\u001b[0m\u001b[1;38;2;1;195;187m \u001b[1;38;2;1;199;183m \u001b[1;38;2;1;202;179m \u001b[1;38;2;2;206;175m \u001b[1;38;2;2;209;171m \u001b[1;38;2;3;212;167m \u001b[1;38;2;4;215;163m \u001b[1;38;2;5;218;159m \u001b[1;38;2;6;221;155m \u001b[1;38;2;8;224;151m \u001b[1;38;2;9;227;147m \u001b[1;38;2;11;229;143m \u001b[1;38;2;12;232;138m \u001b[1;38;2;14;234;134m \u001b[1;38;2;16;236;130m \u001b[1;38;2;18;238;126m \u001b[1;38;2;21;240;121m \u001b[1;38;2;23;242;117m \u001b[1;38;2;25;244;113m \u001b[1;38;2;28;246;109m \u001b[1;38;2;31;247;105m \u001b[1;",
+      "status": "passed"
+    },
+    {
+      "package": "xmake",
+      "command": "xrepo",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "\u001b[0m\u001b[1mxRepo 3.1.2+HEAD.5d21e9daf/xmake, A cross-platform C/C++ package manager based on Xmake.\u001b[0m\r\n\u001b[0mCopyright (C) 2015-present Ruki Wang, \u001b[4mhttps://xmake.io\u001b[0m\u001b[0m\r\n\r\n\u001b[0m\u001b[1;38;2;13;233;136m \u001b[1;38;2;15;235;132m \u001b[1;38;2;17;237;128m \u001b[1;38;2;20;239;123m \u001b[1;38;2;22;241;119m_\u001b[1;38;2;24;243;115m_\u001b[1;38;2;27;245;111m \u001b[1;38;2;29;246;107m \u001b[1;38;2;32;248;102m_\u001b[1;38;2;35;249;98m_\u001b[1;38;2;38;250;94m_\u001b[1;38;2;41;251;90m \u001b[1;38;2;44;252;86m_\u001b[1;38;2;47;253;82m_\u001b[1;38;2;51;254;78m_\u001b[1;38;2;54;254;74m \u001b[1;38;2;58;254;70m \u001b[1;38;2;61;254;67m_\u001b[1;38;2;65;254;63m_\u001b[1;38;2;69;254;59m_\u001b[1;38;2;72",
+      "status": "passed"
+    },
+    {
+      "package": "go",
+      "command": "go",
+      "args": [
+        "version"
+      ],
+      "code": 0,
+      "output": "go version go1.27.3 windows/amd64",
+      "status": "passed"
+    },
+    {
+      "package": "uv",
+      "command": "uv",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+      "status": "passed"
+    },
+    {
+      "package": "uv",
+      "command": "uvx",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "uvx 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+      "status": "passed"
+    },
+    {
+      "package": "uv",
+      "command": "uv",
+      "args": [
+        "cache",
+        "dir"
+      ],
+      "code": 0,
+      "output": "<PIKO_TEST_HOME>\\persist\\uv--bdf93f63457cfbcd/cache",
+      "status": "passed"
+    },
+    {
+      "package": "pixi",
+      "command": "pixi",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "pixi 0.83.0",
+      "status": "passed"
+    },
+    {
+      "package": "codex",
+      "command": "codex",
+      "args": [
+        "--version"
+      ],
+      "code": 0,
+      "output": "codex-cli 0.164.0",
+      "status": "passed"
+    },
+    {
+      "package": "codex",
+      "command": "codex",
+      "args": [
+        "--help"
+      ],
+      "code": 0,
+      "output": "Codex CLI\n\nIf no subcommand is specified, options will be forwarded to the interactive CLI.\n\nUsage: codex [OPTIONS] [PROMPT]\n       codex [OPTIONS] <COMMAND> [ARGS]\n\nCommands:\n  agents            Browse all agent sessions on the shared local app-server daemon\n  exec              Run Codex non-interactively [aliases: e]\n  review            Run a code review non-interactively\n  login             Manage login\n  logout            Remove stored authentication credentials\n  mcp               Manage external MCP servers for Codex\n  plugin            Manage Codex plugins\n  app-server        [experimen",
+      "status": "passed"
+    },
+    {
+      "package": "git",
+      "command": "git",
+      "args": [
+        "-C",
+        "<TEST_WORKDIR>\\git-fixture",
+        "init"
+      ],
+      "code": 0,
+      "output": "Initialized empty Git repository in <TEST_WORKDIR>/git-fixture/.git/",
+      "status": "passed"
+    },
+    {
+      "package": "git",
+      "command": "git",
+      "args": [
+        "-C",
+        "<TEST_WORKDIR>\\git-fixture",
+        "status",
+        "--porcelain"
+      ],
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "package": "cmake",
+      "command": "cmake",
+      "args": [
+        "-S",
+        "<TEST_WORKDIR>\\cmake-fixture",
+        "-B",
+        "<TEST_WORKDIR>\\cmake-fixture\\build",
+        "-G",
+        "Ninja"
+      ],
+      "code": 0,
+      "output": "-- Configuring done (0.6s)\n-- Generating done (0.3s)\n-- Build files have been written to: <TEST_WORKDIR>/cmake-fixture/build",
+      "status": "passed"
+    },
+    {
+      "package": "ninja",
+      "command": "ninja",
+      "args": [
+        "-C",
+        "<TEST_WORKDIR>\\cmake-fixture\\build"
+      ],
+      "code": 0,
+      "output": "ninja: Entering directory `<TEST_WORKDIR>\\cmake-fixture\\build'\r\n[1/1] C:\\WINDOWS\\system32\\cmd.exe /C \"cd /D <TEST_WORKDIR>\\cmake-fixture\\build && <PIKO_TEST_HOME>\\apps\\cmake--bdf93f63457cfbcd\\4.4.5\\bin\\cmake.exe -E echo piko-cmake-ninja-ok\"\r\npiko-cmake-ninja-ok",
+      "status": "passed"
+    },
+    {
+      "package": "go",
+      "command": "go",
+      "args": [
+        "run",
+        "<TEST_WORKDIR>\\hello.go"
+      ],
+      "code": 0,
+      "output": "piko-go-ok",
+      "status": "passed"
+    },
+    {
+      "package": "ffmpeg",
+      "command": "ffmpeg",
+      "args": [
+        "-f",
+        "lavfi",
+        "-i",
+        "sine=frequency=1000:duration=0.05",
+        "-y",
+        "<TEST_WORKDIR>\\tone.wav"
+      ],
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "package": "localsend",
+      "status": "passed",
+      "check": "in-place settings writer + hardlink identity + uninstall/reinstall preservation; GUI not executed"
+    }
+  ],
+  "notes": [
+    "Pinned installed versions, not an upstream automatic-update service.",
+    "LocalSend uses the current publisher digest; the old local Scoop cache digest differed and was not used.",
+    "lazygit asset name corrected to the exact lowercase windows filename.",
+    "No existing software, actual user PATH/Profile, credentials, services or administrator integrations were changed.",
+    "GUI applications were checked for layout and entry files; full GUI interaction and LocalSend GUI saving were not certified.",
+    "LocalSend in-place settings writes and uninstall/reinstall data preservation passed; hardlink replacement drift is still rejected.",
+    "Codex complete native package includes bundled resources; only --version/--help were executed, no login/model call or sandbox-service installation."
+  ]
+}

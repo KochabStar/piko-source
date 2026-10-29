@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "name": "z.lua",
+  "version": "1.8.26",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/skywind3000/z.lua/archive/refs/tags/1.8.26.zip",
+      "sha256": "c8f9a88657d88ec1c91c7a827ab3463935e3baca308029b72cd2f8d64792169a",
+      "format": "zip",
+      "stripPrefix": "z.lua-1.8.26",
+      "bin": {},
+      "depends": [
+        {
+          "package": "lua@5",
+          "commands": [
+            "lua"
+          ]
+        }
+      ],
+      "shell": {
+        "powershell": "$existingZ = Get-Command z -ErrorAction Ignore\nif ($existingZ -and (($script:ZLUA_SCRIPT -ne (Join-Path $PikoPackageRoot 'z.lua')) -or ($script:ZLUA_LUAEXE -ne $PikoDependencies['lua']))) { throw 'An existing z command or z.lua initialization was detected; remove it manually before enabling Piko z.lua.' }\n$lua = $PikoDependencies['lua']\n$script = Join-Path $PikoPackageRoot 'z.lua'\nInvoke-Expression ((& $lua $script --init powershell) -join \"`n\")"
+      }
+    }
+  }
+}

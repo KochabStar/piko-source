@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "name": "pixi",
+  "version": "0.83.0",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/prefix-dev/pixi/releases/download/v0.83.0/pixi-x86_64-pc-windows-msvc.zip",
+      "sha256": "77bed9f9d2795c94f9ab5744353892eb82bd3b1eaa09ecbbe7573e22ef70a2f4",
+      "format": "zip",
+      "bin": {
+        "pixi": "pixi.exe"
+      },
+      "persist": ["home"],
+      "env": {
+        "PIXI_HOME": "{persist}/home"
+      }
+    }
+  }
+}

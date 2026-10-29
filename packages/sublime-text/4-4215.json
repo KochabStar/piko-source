@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "name": "sublime-text",
+  "version": "4-4215",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://download.sublimetext.com/sublime_text_build_4215_x64.zip",
+      "sha256": "14f9d6190d5d118bd61a7067a6b00e27e6a82f5f42a94e675792ec7734e09aca",
+      "format": "zip",
+      "bin": {
+        "subl": "subl.exe"
+      },
+      "persist": ["Data"],
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "Sublime Text 4",
+            "path": "sublime_text.exe"
+          }
+        ],
+        "menus": [
+          {
+            "id": "open",
+            "label": "Open with Sublime Text",
+            "target": "file",
+            "path": "sublime_text.exe",
+            "args": ["%1"]
+          }
+        ]
+      }
+    }
+  }
+}

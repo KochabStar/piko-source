@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "name": "dbgate",
+  "version": "7.3.2",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/dbgate/dbgate/releases/download/v7.3.2/dbgate-7.3.2-win_x64.zip",
+      "sha256": "be05ba046bf1532ac1ccd6b7acdd7bebac1224d295780b5be2bf65b724de1eea",
+      "format": "zip",
+      "bin": {
+        "dbgate": "DbGate.exe"
+      },
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "DbGate",
+            "path": "DbGate.exe"
+          }
+        ]
+      }
+    }
+  }
+}

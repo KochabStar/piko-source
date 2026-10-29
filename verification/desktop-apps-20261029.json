@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-29",
+  "status": "passed",
+  "sourcePackages": 46,
+  "addedPackages": 8,
+  "packages": [
+    {
+      "name": "orca",
+      "version": "1.4.243",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 2
+    },
+    {
+      "name": "listary",
+      "version": "6.3.5.94",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 1
+    },
+    {
+      "name": "todesk",
+      "version": "4.9.8.0",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 1
+    },
+    {
+      "name": "dingtalk",
+      "version": "8.2.5.260113006",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 1
+    },
+    {
+      "name": "wechat",
+      "version": "4.2.0.9",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 2
+    },
+    {
+      "name": "sunlogin",
+      "version": "16.8.0.33445",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 2
+    },
+    {
+      "name": "tabbit",
+      "version": "1.19.25.0",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 1
+    },
+    {
+      "name": "wecom",
+      "version": "5.0.13.6005",
+      "status": "passed",
+      "verified": true,
+      "installLeavesDefaultsUnchanged": true,
+      "commandCount": 2
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "orca",
+      "version": "1.4.243",
+      "url": "https://github.com/stablyai/orca/releases/download/v1.4.243/orca-windows-setup.exe",
+      "sha256": "0399692f7d9843b1a2cb97c233848dc3e9b037a6f5ca8f07d248d24c219c5fdf",
+      "bytes": 202940360,
+      "provenance": "Official stablyai/orca GitHub release asset digest"
+    },
+    {
+      "name": "listary",
+      "version": "6.3.5.94",
+      "url": "https://www.listary.com/download/Listary.exe?version=6.3.5.94",
+      "sha256": "c62249e0d4d49bd3f062d55635cf6a3ab089ea8ee7f6c03947f6febfafaa0288",
+      "bytes": 12914736,
+      "provenance": "Official Listary download endpoint, independently verify payload and publisher"
+    },
+    {
+      "name": "wecom",
+      "version": "5.0.13.6005",
+      "url": "https://dldir1.qq.com/wework/work_weixin/WeCom_5.0.13.6005.exe",
+      "sha256": "5df50a240038a2de7c3b17e4f25f4747e74d97f9028be9baec6f7379fc97e1be",
+      "bytes": 659236832,
+      "provenance": "Official Tencent CDN, exact installed-version endpoint"
+    },
+    {
+      "name": "tabbit",
+      "version": "1.19.25.0",
+      "url": "https://releases.tabbit.com/upgrade/windows/stable_x64_cn/Tabbit%20Browser_stable_x64_cn_1.19.25.exe",
+      "sha256": "7c06e4aa7726d102d48a52677650e994512e627e7f695a5514fd8b2db3ac0f79",
+      "bytes": 241712392,
+      "provenance": "Official Tabbit website frontend identifies this domestic release CDN and versioned Windows asset layout"
+    },
+    {
+      "name": "todesk",
+      "version": "4.9.8.0",
+      "url": "https://update.todesk.com/irrigation/ToDesk_Setup_4.9.8.0_x64.exe",
+      "sha256": "dcb7c5d2d9361fd7d7898986a3e0de6f0d2ea616114c36c5fc1ca4a4275abd32",
+      "bytes": 97961104,
+      "provenance": "Official ToDesk versioned release CDN, matched to the installed executable version"
+    },
+    {
+      "name": "dingtalk",
+      "version": "8.2.5.260113006",
+      "url": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_updater/Release/DingTalkUpdate_v8.2.5.260113006.zip",
+      "sha256": "75db8147ec8b726a7f41d56545c5b151b28c1418cc0d735be01a3cfc2ef78464",
+      "bytes": 708153766,
+      "provenance": "Official DingTalk versioned full updater ZIP; installed executable is 8.2.5.260113006 although uninstall registry is stale"
+    },
+    {
+      "name": "wechat",
+      "version": "4.2.0.9",
+      "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.2.0.exe",
+      "sha256": "fc948730e854ae0e03e64ac57ffde0f61b530d7a571d16df411914bad30a1526",
+      "bytes": 259938920,
+      "provenance": "Current official Weixin Windows download page; installed 4.1.0.34 is retained, its old official URL no longer serves that version"
+    },
+    {
+      "name": "sunlogin",
+      "version": "16.8.0.33445",
+      "url": "https://d-cdn.oray.com/sl/windows/AweSun_16.8.0.33445_x64.exe",
+      "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
+      "bytes": 98196416,
+      "provenance": "Official Oray release CDN; verify against official SUNLOGIN_X_WINDOWS x64 API metadata and pin computed SHA256",
+      "officialMetadataMd5": "3794C80726B92F2FB06C31C597EF9EDF"
+    }
+  ],
+  "checks": [
+    {
+      "package": "orca",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "1.4.243",
+      "signature": "Valid",
+      "publisher": "CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
+    },
+    {
+      "package": "listary",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "6.3.5.94",
+      "signature": "Valid",
+      "publisher": "CN=\"Beijing Xiaozhuo Technology Co., Ltd.\", O=\"Beijing Xiaozhuo Technology Co., Ltd.\", L=Beijing, S=Beijing, C=CN"
+    },
+    {
+      "package": "todesk",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "4.9.8.0",
+      "signature": "Valid",
+      "publisher": "CN=\"Hainan YouQu Technology Co., Ltd\", O=\"Hainan YouQu Technology Co., Ltd\", L=Sanya, S=Hainan, C=CN, SERIALNUMBER=91460000MA5T92TJ7C, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Hainan, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+    },
+    {
+      "package": "dingtalk",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "8.2.5.260113006",
+      "signature": "Valid",
+      "publisher": "CN=\"DingTalk Technology Co.,Ltd.\", O=\"DingTalk Technology Co.,Ltd.\", L=Hangzhou, S=Zhejiang, C=CN, SERIALNUMBER=91330110MA2B00R29G, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Yuhang District, OID.1.3.6.1.4.1.311.60.2.1.2=Zhejiang, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+    },
+    {
+      "package": "wechat",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "4.2.0.9",
+      "signature": "Valid",
+      "publisher": "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+    },
+    {
+      "package": "sunlogin",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "16.8.0.33445",
+      "signature": "Valid",
+      "publisher": "CN=上海贝锐信息科技股份有限公司, O=上海贝锐信息科技股份有限公司, S=上海市, C=CN, SERIALNUMBER=91310110787862412B, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=上海市, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+    },
+    {
+      "package": "tabbit",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "1.19.25.0",
+      "signature": "Valid",
+      "publisher": "CN=北京三快在线科技有限公司, O=北京三快在线科技有限公司, S=北京市, C=CN"
+    },
+    {
+      "package": "wecom",
+      "check": "native PE file version and publisher metadata",
+      "status": "passed",
+      "fileVersion": "5.0.13.6005",
+      "signature": "Valid",
+      "publisher": "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+    },
+    {
+      "package": "todesk",
+      "check": "in-place settings fixture, hardlink identity, uninstall/reinstall preservation; GUI not run",
+      "status": "passed"
+    },
+    {
+      "package": "sunlogin",
+      "check": "in-place settings fixture, hardlink identity, uninstall/reinstall preservation; GUI not run",
+      "status": "passed"
+    }
+  ],
+  "notes": [
+    "All eight payloads installed and selected in an independent temporary Piko root. Existing host software was not taken over.",
+    "Installed main executable versions and Windows Authenticode publisher metadata were checked without launching the GUIs.",
+    "ToDesk and Sunlogin persistence passed an in-place write, hardlink identity and uninstall/reinstall model test; actual GUI saving remains unverified.",
+    "WeChat and Sunlogin use obtainable current official releases; older pinned local releases were not substituted from third-party mirrors. Existing installations were not upgraded.",
+    "No actual user PATH/Profile, login credentials, browser/chat data, remote-control services, drivers, startup registrations or default browser settings were changed.",
+    "Desktop shortcuts are declarations requiring separate approval. Remote-control services, unattended operation, virtual display/audio/USB drivers and application protocols remain separate acceptance work.",
+    "Initial verification inside the active worktree hit Windows EPERM while publishing Orca; the failed staging and logs were preserved privately, and final verification used an independent temporary root.",
+    "Windows PowerShell 5.1 metadata verification imports its own Security module explicitly, avoiding an inherited PowerShell 7 module path; no shell installation or host module configuration was changed.",
+    "This release adds explicit NSIS file mapping, explicit PE archive resource selection and bounded larger intermediate archives; the final application file limit remains 512 MiB.",
+    "PowerShell 7 remains excluded; WPS Office, Annie Office and Perplexity are not added by this change."
+  ],
+  "clientFullRegression": {
+    "passed": 165,
+    "failed": 0,
+    "assertions": 1660,
+    "files": 24,
+    "logSha256": "d8b4947bd322e6acf96825bff61cea048d91ec635d0456c5039b7320c6930091"
+  },
+  "clientExecutableSha256": "7cc519aecea643cfb71b6cb3fc6771946365d1743d762f533bdbea46ed484998",
+  "originalManifestsPreserved": 38
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "name": "sudo",
+  "version": "0.2020.01.26",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://raw.githubusercontent.com/lukesampson/psutils/c7116ac143ca81f223e6091d0974f45ac241eb1d/sudo.ps1",
+      "sha256": "0d3cf564dc584ea98b213b4763228dee523c32388b1293e77eff70344d294aa8",
+      "format": "file",
+      "file": "sudo.ps1",
+      "bin": {
+        "sudo": {
+          "kind": "powershell",
+          "path": "sudo.ps1"
+        }
+      }
+    }
+  }
+}

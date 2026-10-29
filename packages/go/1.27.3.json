@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "go",
+  "version": "1.27.3",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://dl.google.com/go/go1.27.3.windows-amd64.zip",
+      "sha256": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff",
+      "format": "zip",
+      "stripPrefix": "go",
+      "bin": {
+        "go": "bin/go.exe",
+        "gofmt": "bin/gofmt.exe"
+      },
+      "env": {
+        "GOROOT": "{root}"
+      },
+      "desktop": {
+        "environment": {
+          "GOROOT": "{root}"
+        },
+        "path": ["bin"]
+      }
+    }
+  }
+}

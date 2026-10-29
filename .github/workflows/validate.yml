@@ -1,0 +1,48 @@
+name: Validate source
+
+on:
+  push:
+    paths:
+      [
+        "index.json",
+        "packages/**",
+        "automation/**",
+        "scripts/**",
+        "tests/**",
+        "package.json",
+        ".github/**",
+      ]
+  pull_request:
+    paths:
+      [
+        "index.json",
+        "packages/**",
+        "automation/**",
+        "scripts/**",
+        "tests/**",
+        "package.json",
+        ".github/**",
+      ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: Check source and immutable published versions
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/check.mjs
+      - name: Test updater
+        run: npm test

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "name": "todesk",
+  "version": "4.9.8.0",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://update.todesk.com/irrigation/ToDesk_Setup_4.9.8.0_x64.exe",
+      "sha256": "dcb7c5d2d9361fd7d7898986a3e0de6f0d2ea616114c36c5fc1ca4a4275abd32",
+      "maxBytes": 106954752,
+      "format": "nsis",
+      "bin": {
+        "todesk": "ToDesk.exe"
+      },
+      "maxExpandedBytes": 4294967296,
+      "nested": [
+        {
+          "path": "app64.7z",
+          "format": "7z"
+        }
+      ],
+      "persist": [
+        "Logs",
+        {
+          "path": "config.ini",
+          "kind": "file",
+          "mode": "hardlink",
+          "initial": "[ConfigInfo]\nautoStart=0\n"
+        }
+      ],
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "ToDesk",
+            "path": "ToDesk.exe"
+          }
+        ]
+      }
+    }
+  }
+}

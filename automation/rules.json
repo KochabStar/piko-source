@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "node": {
+      "provider": "node"
+    },
+    "ripgrep": {
+      "provider": "github-release",
+      "repo": "BurntSushi/ripgrep",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^ripgrep-[0-9]+(?:\\.[0-9]+)+-x86_64-pc-windows-msvc\\.zip$"
+    },
+    "lua": {
+      "provider": "regex",
+      "url": "https://sourceforge.net/projects/luabinaries/rss?path=/",
+      "versionRegex": "lua-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)_Win64_bin\\.zip",
+      "urlTemplate": "https://downloads.sourceforge.net/project/luabinaries/{version}/Tools%20Executables/lua-{version}_Win64_bin.zip",
+      "layout": "lua"
+    },
+    "z.lua": {
+      "provider": "github-tags",
+      "repo": "skywind3000/z.lua",
+      "required": ["z.lua"],
+      "versionRegex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$"
+    },
+    "starship": {
+      "provider": "github-release",
+      "repo": "starship/starship",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^starship-x86_64-pc-windows-msvc\\.zip$"
+    },
+    "fzf": {
+      "provider": "github-release",
+      "repo": "junegunn/fzf",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^fzf-[0-9]+(?:\\.[0-9]+)+-windows_amd64\\.zip$"
+    },
+    "psfzf": {
+      "provider": "nuget",
+      "required": ["PSFzf.psd1", "PSFzf.psm1"],
+      "url": "https://www.powershellgallery.com/api/v2/FindPackagesById()?id='PSFzf'",
+      "urlTemplate": "https://cdn.powershellgallery.com/packages/psfzf.{version}.nupkg"
+    },
+    "sudo": {
+      "provider": "github-file",
+      "repo": "lukesampson/psutils",
+      "path": "sudo.ps1"
+    },
+    "snipaste": {
+      "provider": "json",
+      "url": "https://www.snipaste.com/versions",
+      "versionPath": "win_desktop_version",
+      "urlTemplate": "https://download.snipaste.com/archives/Snipaste-{version}-x64.zip"
+    },
+    "7zip": {
+      "provider": "github-release",
+      "repo": "ip7z/7zip",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^7z[0-9]+-x64\\.msi$"
+    },
+    "beyondcompare-zh-cn": {
+      "provider": "regex",
+      "url": "https://www.scootersoftware.com/download",
+      "versionRegex": "BCompare-(?:zh-)?(?<version>[0-9]+(?:\\.[0-9]+)+)\\.exe",
+      "urlTemplate": "https://www.scootersoftware.com/BCompare-zh-{version}.exe"
+    },
+    "obsidian": {
+      "provider": "github-release",
+      "repo": "obsidianmd/obsidian-releases",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^Obsidian-[0-9]+(?:\\.[0-9]+)+\\.exe$"
+    },
+    "tabby": {
+      "provider": "github-release",
+      "repo": "Eugeny/tabby",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^tabby-[0-9]+(?:\\.[0-9]+)+-setup-x64\\.exe$"
+    },
+    "llvm": {
+      "provider": "github-release",
+      "repo": "llvm/llvm-project",
+      "versionRegex": "^llvmorg-(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^LLVM-[0-9]+(?:\\.[0-9]+)+-win64\\.msi$"
+    },
+    "firacode-nf": {
+      "provider": "github-release",
+      "repo": "ryanoasis/nerd-fonts",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^FiraCode\\.zip$"
+    },
+    "hack-nf-mono": {
+      "provider": "github-release",
+      "repo": "ryanoasis/nerd-fonts",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^Hack\\.zip$"
+    },
+    "rustup": {
+      "provider": "rustup",
+      "url": "https://static.rust-lang.org/rustup/release-stable.toml",
+      "urlTemplate": "https://static.rust-lang.org/rustup/archive/{version}/x86_64-pc-windows-msvc/rustup-init.exe"
+    },
+    "flclash": {
+      "provider": "github-release",
+      "repo": "chen08209/FlClash",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^FlClash-[0-9]+(?:\\.[0-9]+)+-windows-amd64\\.zip$"
+    },
+    "tortoise-svn": {
+      "provider": "regex",
+      "url": "https://tortoisesvn.net/downloads.html",
+      "versionRegex": "TortoiseSVN-(?<version>[0-9.]+)-x64-svn-(?<svn>[0-9.]+)\\.msi",
+      "urlTemplate": "https://downloads.sourceforge.net/project/tortoisesvn/{major}.{minor}.{patch}/Application/TortoiseSVN-{version}-x64-svn-{svn}.msi"
+    },
+    "aria2": {
+      "provider": "github-release",
+      "repo": "aria2/aria2",
+      "versionRegex": "^release-(?<version>[0-9.]+)$",
+      "assetRegex": "^aria2-(?<version>[0-9.]+)-win-64bit-build(?<build>[0-9]+)\\.zip$",
+      "versionFrom": "aria2",
+      "stripPrefixFromAsset": true
+    },
+    "cmake": {
+      "provider": "github-release",
+      "repo": "Kitware/CMake",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^cmake-[0-9]+(?:\\.[0-9]+)+-windows-x86_64\\.zip$"
+    },
+    "dbgate": {
+      "provider": "github-release",
+      "repo": "dbgate/dbgate",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^dbgate-[0-9]+(?:\\.[0-9]+)+-win_x64\\.zip$"
+    },
+    "ffmpeg": {
+      "provider": "github-release",
+      "repo": "GyanD/codexffmpeg",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^ffmpeg-[0-9]+(?:\\.[0-9]+)+-full_build\\.7z$"
+    },
+    "gh": {
+      "provider": "github-release",
+      "repo": "cli/cli",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^gh_[0-9]+(?:\\.[0-9]+)+_windows_amd64\\.zip$"
+    },
+    "git": {
+      "provider": "github-release",
+      "repo": "git-for-windows/git",
+      "versionRegex": "^v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)\\.windows\\.[0-9]+$",
+      "assetRegex": "^PortableGit-(?<version>[0-9.]+)-64-bit\\.7z\\.exe$",
+      "versionFrom": "asset"
+    },
+    "inno-setup": {
+      "provider": "github-release",
+      "repo": "jrsoftware/issrc",
+      "versionRegex": "^is-(?<version>[0-9_]+)$",
+      "assetRegex": "^innosetup-[0-9]+(?:\\.[0-9]+)+-x64\\.exe$"
+    },
+    "innounp": {
+      "provider": "manual",
+      "reason": "Audited executable comes from a fixed upstream commit. Review the helper release and executable digest before changing this pin; never auto-run a new unpacker."
+    },
+    "lazygit": {
+      "provider": "github-release",
+      "repo": "jesseduffield/lazygit",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^lazygit_[0-9]+(?:\\.[0-9]+)+_windows_x86_64\\.zip$"
+    },
+    "localsend": {
+      "provider": "github-release",
+      "repo": "localsend/localsend",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^LocalSend-[0-9]+(?:\\.[0-9]+)+-windows-x86-64\\.zip$"
+    },
+    "ninja": {
+      "provider": "github-release",
+      "repo": "ninja-build/ninja",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^ninja-win\\.zip$"
+    },
+    "oh-my-pi": {
+      "provider": "github-release",
+      "repo": "can1357/oh-my-pi",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^omp-windows-x64\\.exe$"
+    },
+    "sublime-text": {
+      "provider": "json",
+      "url": "https://www.sublimetext.com/updates/4/stable_update_check",
+      "versionPath": "latest_version",
+      "versionPrefix": "4-",
+      "urlTemplate": "https://download.sublimetext.com/sublime_text_build_{build}_x64.zip"
+    },
+    "wave-terminal": {
+      "provider": "github-release",
+      "repo": "wavetermdev/waveterm",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^Wave-win32-x64-[0-9]+(?:\\.[0-9]+)+\\.zip$"
+    },
+    "xmake": {
+      "provider": "github-release",
+      "repo": "xmake-io/xmake",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^xmake-v[0-9]+(?:\\.[0-9]+)+\\.win64\\.zip$"
+    },
+    "go": {
+      "provider": "go"
+    },
+    "uv": {
+      "provider": "github-release",
+      "repo": "astral-sh/uv",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^uv-x86_64-pc-windows-msvc\\.zip$"
+    },
+    "pixi": {
+      "provider": "github-release",
+      "repo": "prefix-dev/pixi",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^pixi-x86_64-pc-windows-msvc\\.zip$"
+    },
+    "codex": {
+      "provider": "github-release",
+      "repo": "openai/codex",
+      "versionRegex": "^rust-v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^codex-package-x86_64-pc-windows-msvc\\.tar\\.gz$"
+    },
+    "orca": {
+      "provider": "github-release",
+      "repo": "stablyai/orca",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^orca-windows-setup\\.exe$",
+      "signature": true
+    },
+    "listary": {
+      "provider": "regex",
+      "url": "https://dl.listary.com/auto_update_v2.xml",
+      "versionRegex": "<version>\\s*(?<version>[0-9]+(?:\\.[0-9]+)+)\\s*</version>",
+      "urlTemplate": "https://www.listary.com/download/Listary.exe?version={version}",
+      "signature": true
+    },
+    "wecom": {
+      "provider": "redirect",
+      "url": "https://work.weixin.qq.com/wework_admin/commdownload?platform=win&from=wwindex",
+      "versionRegex": "WeCom_(?<version>[0-9.]+)\\.exe",
+      "urlTemplate": "https://dldir1.qq.com/wework/work_weixin/WeCom_{version}.exe",
+      "layout": "wecom",
+      "signature": true
+    },
+    "tabbit": {
+      "provider": "tabbit",
+      "url": "https://www.tabbit.ai/api/v0/upgrade/latest?from=website",
+      "urlTemplate": "https://releases.tabbit.com/upgrade/windows/stable_x64_cn/Tabbit%20Browser_stable_x64_cn_{version3}.exe",
+      "layout": "tabbit",
+      "signature": true,
+      "verifyPEVersion": true
+    },
+    "todesk": {
+      "provider": "regex",
+      "url": "https://www.todesk.com/download.html",
+      "versionRegex": "\\bwin_link:\\s*\"https://dl\\.todesk\\.com/irrigation/ToDesk_(?<version>[0-9.]+)\\.exe\"",
+      "urlTemplate": "https://dl.todesk.com/irrigation/ToDesk_{version}.exe",
+      "signature": true
+    },
+    "dingtalk": {
+      "provider": "manual",
+      "reason": "The CN full updater ZIP and the public international installer do not share a reliable version feed. Do not silently change region/channel or publish a web bootstrap instead of the full application."
+    },
+    "wechat": {
+      "provider": "regex",
+      "url": "https://pc.weixin.qq.com/",
+      "versionRegex": "WeChatWin_(?<version>[0-9.]+)\\.exe",
+      "urlTemplate": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_{version}.exe",
+      "versionFromPE": true,
+      "signature": true
+    },
+    "sunlogin": {
+      "provider": "json",
+      "url": "https://client-api.oray.com/softwares/SUNLOGIN_X_WINDOWS?x64=1",
+      "versionPath": "versionno",
+      "md5Path": "md5",
+      "urlTemplate": "https://d-cdn.oray.com/sl/windows/AweSun_{version}_x64.exe",
+      "signature": true
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "name": "obsidian",
+  "version": "1.14.5",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.14.5/Obsidian-1.14.5.exe",
+      "sha256": "4b95aa855062fb253439c392a32b536c3f9f22ac7fad04f1a6cbf176ecbcfa2a",
+      "format": "nsis",
+      "nested": [
+        {
+          "path": "$PLUGINSDIR/app-64.7z",
+          "format": "7z"
+        }
+      ],
+      "bin": {
+        "obsidian": "obsidian.com"
+      },
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "obsidian",
+            "path": "Obsidian.exe"
+          }
+        ],
+        "associations": [
+          {
+            "extension": ".md",
+            "label": "Markdown in Obsidian",
+            "path": "Obsidian.exe",
+            "args": [
+              "%1"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "name": "dingtalk",
+  "version": "8.2.5.260113006",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_updater/Release/DingTalkUpdate_v8.2.5.260113006.zip",
+      "sha256": "75db8147ec8b726a7f41d56545c5b151b28c1418cc0d735be01a3cfc2ef78464",
+      "maxBytes": 717225984,
+      "format": "zip",
+      "bin": {
+        "dingtalk": "DingTalk.exe"
+      },
+      "maxExpandedBytes": 4294967296,
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "钉钉",
+            "path": "DingTalk.exe"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "name": "hack-nf-mono",
+  "version": "3.5.1",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/Hack.zip",
+      "sha256": "fa24da7de7cefe7766614d27762570b20453c852fc1d5b657111666df9a5e449",
+      "format": "zip",
+      "bin": {},
+      "desktop": {
+        "fonts": [
+          "HackNerdFontMono-Bold.ttf",
+          "HackNerdFontMono-BoldItalic.ttf",
+          "HackNerdFontMono-Italic.ttf",
+          "HackNerdFontMono-Regular.ttf"
+        ]
+      }
+    }
+  }
+}

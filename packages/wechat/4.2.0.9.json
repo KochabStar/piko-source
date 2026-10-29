@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "name": "wechat",
+  "version": "4.2.0.9",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.2.0.exe",
+      "sha256": "fc948730e854ae0e03e64ac57ffde0f61b530d7a571d16df411914bad30a1526",
+      "maxBytes": 268435456,
+      "format": "nsis",
+      "bin": {
+        "wechat": "Weixin.exe",
+        "weixin": "Weixin.exe"
+      },
+      "maxExpandedBytes": 4294967296,
+      "nested": [
+        {
+          "path": "install.7z",
+          "format": "7z"
+        }
+      ],
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "微信",
+            "path": "Weixin.exe"
+          }
+        ]
+      }
+    }
+  }
+}
