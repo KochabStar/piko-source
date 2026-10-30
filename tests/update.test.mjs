@@ -579,13 +579,18 @@ test("ToDesk stable links are read without evaluating Nuxt or selecting gray rel
     url: "https://www.todesk.com/download.html",
     versionRegex:
       '\\bwin_link:\\s*"https://dl\\.todesk\\.com/irrigation/ToDesk_(?<version>[0-9.]+)\\.exe"',
-    urlTemplate: "https://dl.todesk.com/irrigation/ToDesk_{version}.exe",
+    urlTemplate:
+      "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
   };
   const r = await discover(rule, fixtureManifest(), {
     text: async () =>
       String.raw`win_link:"https:\u002F\u002Fdl.todesk.com\u002Firrigation\u002FToDesk_5.2.3.0.exe",win_link_gray:"https:\u002F\u002Fdl.todesk.com\u002Firrigation\u002FToDesk_5.3.0.0.exe"`,
   });
   assert.equal(r.version, "5.2.3.0");
+  assert.equal(
+    r.url,
+    "https://update.todesk.com/irrigation/ToDesk_Setup_5.2.3.0_x64.exe",
+  );
 });
 
 test("Tabbit chooses the Windows x64 release while preserving the full CN payload", async () => {

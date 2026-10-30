@@ -258,7 +258,7 @@
       "provider": "regex",
       "url": "https://www.todesk.com/download.html",
       "versionRegex": "\\bwin_link:\\s*\"https://dl\\.todesk\\.com/irrigation/ToDesk_(?<version>[0-9.]+)\\.exe\"",
-      "urlTemplate": "https://dl.todesk.com/irrigation/ToDesk_{version}.exe",
+      "urlTemplate": "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
       "signature": true
     },
     "dingtalk": {
