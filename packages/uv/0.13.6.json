@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "uv",
+  "version": "0.13.6",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/astral-sh/uv/releases/download/0.13.6/uv-x86_64-pc-windows-msvc.zip",
+      "sha256": "a2a8820d5eea32f08ef467ef3b7f66883a9b076d5737a2fc2fbb5f458d1bb50f",
+      "format": "zip",
+      "bin": {
+        "uv": "uv.exe",
+        "uvx": "uvx.exe",
+        "uvw": "uvw.exe"
+      },
+      "persist": [
+        "cache",
+        "python",
+        "tools"
+      ],
+      "env": {
+        "UV_CACHE_DIR": "{persist}/cache",
+        "UV_PYTHON_INSTALL_DIR": "{persist}/python",
+        "UV_TOOL_DIR": "{persist}/tools"
+      },
+      "maxBytes": 536870912
+    }
+  }
+}
