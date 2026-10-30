@@ -66,9 +66,10 @@
       }
     },
     "beyondcompare-zh-cn": {
-      "latest": "5.2.6.32774",
+      "latest": "5.2.7.32913",
       "versions": {
-        "5.2.6.32774": "packages/beyondcompare-zh-cn/5.2.6.32774.json"
+        "5.2.6.32774": "packages/beyondcompare-zh-cn/5.2.6.32774.json",
+        "5.2.7.32913": "packages/beyondcompare-zh-cn/5.2.7.32913.json"
       }
     },
     "obsidian": {
@@ -114,9 +115,10 @@
       }
     },
     "tortoise-svn": {
-      "latest": "1.14.9.29743",
+      "latest": "1.15.0.29830",
       "versions": {
-        "1.14.9.29743": "packages/tortoise-svn/1.14.9.29743.json"
+        "1.14.9.29743": "packages/tortoise-svn/1.14.9.29743.json",
+        "1.15.0.29830": "packages/tortoise-svn/1.15.0.29830.json"
       }
     },
     "aria2": {
@@ -132,9 +134,10 @@
       }
     },
     "dbgate": {
-      "latest": "7.3.2",
+      "latest": "7.3.3",
       "versions": {
-        "7.3.2": "packages/dbgate/7.3.2.json"
+        "7.3.2": "packages/dbgate/7.3.2.json",
+        "7.3.3": "packages/dbgate/7.3.3.json"
       }
     },
     "ffmpeg": {
@@ -239,9 +242,10 @@
       }
     },
     "orca": {
-      "latest": "1.4.243",
+      "latest": "1.4.245",
       "versions": {
-        "1.4.243": "packages/orca/1.4.243.json"
+        "1.4.243": "packages/orca/1.4.243.json",
+        "1.4.245": "packages/orca/1.4.245.json"
       }
     },
     "listary": {
