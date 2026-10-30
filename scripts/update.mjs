@@ -98,7 +98,7 @@ export function markdownReport(report) {
     "",
     `Mode: ${report.mode}. Validated changes: ${report.changed}. Blocked: ${report.blocked}.`,
     "",
-    "This workflow only reads metadata and unpacks payloads. It does not run downloaded applications, installers, bootstrap hooks, services or drivers. Updates require PR review; there is no auto-merge.",
+    "This workflow only reads metadata and unpacks payloads. It does not run downloaded applications, installers, bootstrap hooks, services or drivers. Generated update PRs auto-merge only after a successful zero-blocked run, passing tests and an exact verified file-tree match; failed or changed candidates remain unmerged.",
     "",
     "| Package | Current | Upstream | Result | Details |",
     "| --- | --- | --- | --- | --- |",

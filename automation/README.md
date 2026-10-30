@@ -11,9 +11,9 @@
 3. 下载候选载荷，计算 SHA-256；GitHub、Node、Go、rustup 提供官方摘要时必须比对，PowerShell Gallery 比对 SHA-512，向日葵另比对官方 MD5。部分桌面分发同时要求 Windows 签名状态为 `Valid`。
 4. 使用单独固定版本、固定摘要的 7-Zip、innounp、lessmsi 读取或解包元数据。检查命令、快捷方式、字体及执行配方引用的文件，检查显式文件映射、嵌套载荷、文件类型、大小、链接和路径冲突。MSI 同时核对数据库中的文件标识和 CAB 内容；不会运行 MSI 安装动作。
 5. 仅追加 `packages/<name>/<version>.json`，再更新 `index.json`。旧版本文件不可覆盖、删除或换路径；源在验证期间被手动修改时拒绝覆盖。
-6. 再校验生成的源并运行测试，向 `automation/upstream-updates` 分支创建或刷新一个 PR。**不自动合并，不直接提交到默认分支。**
+6. 再校验生成的源并运行测试，向 `automation/upstream-updates` 分支创建或刷新一个 PR。**当轮无失败时，核对远端完整文件树和提交 SHA 后自动 squash 合并。** 不绕过仓库策略，不自动合并其他分支或其他 PR。
 
-一个包校验失败不会发布该包，也不会清除旧索引。其他已验证的候选仍可进入 PR；工作流最终标红，详情在运行摘要中，避免把部分成功标成全部通过。无更新时不会提交只有时间戳的变更。
+一个包校验失败不会发布该包，也不会清除旧索引。其他已验证的候选仍可进入 PR，但**当轮只要有任何失败就不自动合并**；工作流最终标红，详情在运行摘要中，避免把部分成功标成全部通过。无更新时不会提交只有时间戳的变更。
 
 ## 保持的边界
 
@@ -23,7 +23,7 @@
 - 上游同版本摘要变化时阻止更新，不重写历史；上游接口返回旧版本时保留当前版本，不降级。
 - 企业微信按候选载荷生成精确 NSIS 文件映射；Tabbit 动态查找唯一 Offline GUID 路径，保留 CN x64 完整载荷地址，并核对实际 PE 版本。不会把网站的小型下载器当作完整程序。
 - 微信官网文件名不是完整程序版本，必须读出解包后 `Weixin.exe` 的 PE 版本；重复发布同版本而摘要变化也不会覆盖旧清单。
-- 布局和签名通过不等于新版本的 GUI、服务、驱动、Shell API 或真实数据迁移已验收。PR 仍需人工审核。
+- 布局和签名通过不等于新版本的 GUI、服务、驱动、Shell API 或真实数据迁移已验收。自动合并只更新软件源元数据，不执行本机安装或迁移；`innounp` 和 `dingtalk` 的人工维护策略不变。
 - 自动化私有解包工具的版本及文件摘要在 `automation/tools.json` 中固定，需要独立审计后修改；不会跟着软件源里的同名包自动替换正在执行的解包器。
 
 ### 人工维护包
@@ -42,11 +42,22 @@
 1. 把本仓库推送到你选择的 GitHub 仓库，设 `main` 为默认分支。当前配置没有写死仓库拥有者或远端地址。
 2. 在 **Settings → Actions → General → Workflow permissions** 允许工作流写入，并启用 **Allow GitHub Actions to create and approve pull requests**。组织策略若禁用此项，需要仓库管理员处理。
 3. 手动运行一次 **Update upstream packages**，检查 Job Summary 和生成的 PR。没有新版本时不会生成空 PR。
-4. 审核后手动合并。合并只更新软件源，不会升级本机软件。
+4. 工作流在所有检查成功后自动合并本次更新 PR。失败或远端文件树、基准提交、PR 头提交变化时停止，保留 PR。合并只更新软件源，不会升级本机软件。
 
-默认使用 GitHub 自动提供的 `GITHUB_TOKEN`，无需保存个人令牌。默认令牌创建的 PR 不会再触发新的 `pull_request` 工作流，因此更新作业在创建 PR **之前**已执行完整源校验和测试。若启用了必须在 PR 提交上运行的分支保护检查，可在仓库 Secret 中配置受限令牌 **`SOURCE_UPDATE_TOKEN`**，仅授予本仓库的 Contents / Pull requests 写权限；该令牌仅供创建 PR 的 Action 使用，发现上游仍使用默认令牌。也可使用符合相同权限要求的 GitHub App 令牌。
+默认使用 GitHub 自动提供的 `GITHUB_TOKEN`，无需保存个人令牌。默认令牌创建的 PR 不能依赖后续 `pull_request` 工作流立即自动运行（可能需要额外审批），因此更新作业在创建 PR **之前**已执行完整源校验和测试，合并前另外核对远端完整文件树。若启用了必须在 PR 提交上运行的分支保护检查，可在仓库 Secret 中配置受限令牌 **`SOURCE_UPDATE_TOKEN`**，仅授予本仓库的 Contents / Pull requests 写权限；该令牌仅供创建 PR 和合并脚本使用，发现上游仍使用默认令牌。也可使用符合相同权限要求的 GitHub App 令牌。
 
 GitHub Actions 本身全部固定到提交 SHA。仓库变更和 PR 另由 `.github/workflows/validate.yml` 校验；PR 检查会和基准提交逐字节比较已发布清单。
+
+### 自动合并约束
+
+`scripts/auto-merge.mjs` 不依赖付费的分支保护或 GitHub 原生延迟合并开关。它只在本次更新作业完成校验及测试后执行：
+
+- 必须为 `--write` 的成功报告，`blocked = 0` 且有已验证更新；不以“创建了 PR”代替校验成功。
+- 只允许改动 `index.json` 和本次报告列出的新版本清单。整个候选 Git tree 在创建 PR 前绑定，远端 PR 的完整 tree SHA 必须完全一致。
+- PR 必须来自同一仓库的 `automation/upstream-updates`，目标必须为本次运行的默认分支；不合并 fork、任意 PR 或 draft。
+- PR head SHA 必须等于创建 Action 返回的 SHA，默认分支必须仍为本轮基准提交；出现冲突、未知合并状态或并发变动时停止。
+- 使用 GitHub 合并接口并传入确切 head SHA，只做 squash；不使用管理员绕过、强推或自动审批。已有分支保护仍由 GitHub 强制执行。
+- 失败 PR 不会被挂上一个日后可能意外生效的延迟自动合并请求；须下一次完整成功的更新作业重新验证后才会尝试合并。
 
 ## 本地命令
 
@@ -68,4 +79,4 @@ npm run update -- --packages node,uv
 
 ## 发布软件源
 
-更新流水线负责生成待审核清单，**不自动启用 Pages、创建公开仓库或部署 HTTPS 站点**。部署时只发布 `index.json` 与 `packages/`；不要直接公开含本机盘点的工作目录。`inventory/` 仅留在本地并由 `.gitignore` 排除。
+更新流水线负责生成并按上述约束自动合并已验证清单，**不自动启用 Pages、创建公开仓库或部署 HTTPS 站点**。部署时只发布 `index.json` 与 `packages/`；不要直接公开含本机盘点的工作目录。`inventory/` 仅留在本地并由 `.gitignore` 排除。

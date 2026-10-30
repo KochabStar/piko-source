@@ -9,6 +9,7 @@
 /downloads/
 /update-report.json
 /update-report.md
+/update-merge-plan.json
 /.tmp-index-*.json
 *.log
 

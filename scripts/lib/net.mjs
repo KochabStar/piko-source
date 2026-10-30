@@ -15,6 +15,7 @@ export async function request(
   {
     fetcher = fetch,
     method = "GET",
+    body,
     token = process.env.GITHUB_TOKEN,
     headers = {},
     maxRedirects = 8,
@@ -32,12 +33,17 @@ export async function request(
     const response = await fetcher(u, {
       method,
       headers: h,
+      ...(body === undefined ? {} : { body }),
       redirect: "manual",
       signal: AbortSignal.timeout(120000),
     });
     if ([301, 302, 303, 307, 308].includes(response.status)) {
       const location = response.headers.get("location");
       await response.body?.cancel();
+      requireThat(
+        method === "GET" || method === "HEAD",
+        "Refusing to redirect a write request",
+      );
       requireThat(location, "Redirect has no location");
       url = new URL(location, u).href;
       continue;

@@ -654,7 +654,7 @@ test("reports state blocked/manual packages and do not claim GUI or service cert
       { name: "other", status: "blocked", reason: "bad | input\nnext" },
     ],
   });
-  assert.match(md, /no auto-merge/);
+  assert.match(md, /auto-merge only after a successful zero-blocked run/);
   assert.match(md, /Blocked: 1/);
   assert.match(md, /bad \\\| input next/);
   assert.match(md, /not GUI, service\/driver/);

@@ -53,7 +53,11 @@ jobs:
           node scripts/check.mjs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm test
-      - name: Open or refresh the reviewed update PR
+      - name: Bind the successful update to its exact file tree
+        if: steps.update.outcome == 'success' && steps.update.outputs.changed_count != '' && steps.update.outputs.changed_count != '0'
+        run: node scripts/auto-merge.mjs --prepare
+      - name: Open or refresh the update PR
+        id: update_pr
         if: steps.update.outputs.changed_count != '' && steps.update.outputs.changed_count != '0'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -67,6 +71,13 @@ jobs:
           title: "chore(source): update verified upstream packages"
           body-path: update-report.md
           delete-branch: true
+      - name: Auto-merge the fully verified update PR
+        if: steps.update.outcome == 'success' && steps.update_pr.outputs.pull-request-number != '' && steps.update_pr.outputs.pull-request-head-sha != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.SOURCE_UPDATE_TOKEN || github.token }}
+          UPDATE_PR_NUMBER: ${{ steps.update_pr.outputs.pull-request-number }}
+          UPDATE_PR_HEAD_SHA: ${{ steps.update_pr.outputs.pull-request-head-sha }}
+        run: node scripts/auto-merge.mjs --merge
       - name: Report blocked upstreams or updater failure
         if: always() && steps.update.outcome == 'failure'
         run: |
