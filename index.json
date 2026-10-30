@@ -220,9 +220,10 @@
       }
     },
     "uv": {
-      "latest": "0.13.5",
+      "latest": "0.13.6",
       "versions": {
-        "0.13.5": "packages/uv/0.13.5.json"
+        "0.13.5": "packages/uv/0.13.5.json",
+        "0.13.6": "packages/uv/0.13.6.json"
       }
     },
     "pixi": {
