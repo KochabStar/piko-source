@@ -274,9 +274,10 @@
       }
     },
     "dingtalk": {
-      "latest": "8.2.5.260113006",
+      "latest": "9.0.2.261013001",
       "versions": {
-        "8.2.5.260113006": "packages/dingtalk/8.2.5.260113006.json"
+        "8.2.5.260113006": "packages/dingtalk/8.2.5.260113006.json",
+        "9.0.2.261013001": "packages/dingtalk/9.0.2.261013001.json"
       }
     },
     "wechat": {

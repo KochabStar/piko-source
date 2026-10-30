@@ -29,8 +29,22 @@ import {
   parseListing,
   innoEntries,
   checkLayout,
+  peFileVersion,
 } from "../scripts/lib/layout.mjs";
 import { msiTable } from "../scripts/lib/msi.mjs";
+test("PE versions accept an explicit localized build without guessing ambiguous discovery", () => {
+  const info =
+    "FileVersion: 9.0.2.1013\r\nFileVersion: 9.0.2.261013001\r\nProductVersion: 9.0.2.261013001\r\n";
+  assert.equal(peFileVersion(info, "9.0.2.261013001"), "9.0.2.261013001");
+  assert.throws(() => peFileVersion(info), /Ambiguous/);
+  assert.throws(() => peFileVersion(info, "9.0.2.999"), /differs/);
+  assert.equal(
+    peFileVersion("FileVersion: 1.2.3\nFileVersion: 1.2.3\n"),
+    "1.2.3",
+  );
+  assert.throws(() => peFileVersion("ProductVersion: 1.2.3\n"), /missing/);
+});
+
 const source = fileURLToPath(new URL("../", import.meta.url));
 const body = Buffer.from("new verified archive"),
   sha = digest(body);

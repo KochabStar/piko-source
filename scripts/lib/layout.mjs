@@ -198,6 +198,29 @@ function mapped(entries, d, { inno = false, msi = false } = {}) {
   );
   return files;
 }
+export function peFileVersion(info, expected) {
+  const versions = [
+    ...new Set(
+      [...info.matchAll(/^FileVersion:\s*([0-9]+(?:\.[0-9]+)+)\s*$/gm)].map(
+        (m) => m[1],
+      ),
+    ),
+  ];
+  requireThat(versions.length > 0, "Application PE file version missing");
+  if (expected) {
+    requireThat(
+      versions.includes(expected),
+      "Application PE version differs from upstream release hint",
+    );
+    return expected;
+  }
+  requireThat(
+    versions.length === 1,
+    "Ambiguous application PE versions; explicit upstream version required",
+  );
+  return versions[0];
+}
+
 export async function checkLayout(manifest, artifacts, rule, tools, temp) {
   const p = manifest.platforms["windows-x64"],
     outputs = new Map(),
@@ -501,13 +524,10 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
       "-sccUTF-8",
       image,
     ]);
-    version = info.match(/(?:^|\n)FileVersion:\s*([0-9]+(?:\.[0-9]+)+)/)?.[1];
-    requireThat(version, "Application PE file version missing");
-    if (rule.verifyPEVersion)
-      requireThat(
-        version === manifest.version,
-        "Application PE version differs from upstream release hint",
-      );
+    version = peFileVersion(
+      info,
+      rule.verifyPEVersion ? manifest.version : undefined,
+    );
   }
   if (rule.signature) {
     // Check the official signed distribution itself, never run its entrypoint.
