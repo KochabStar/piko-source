@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-31T06:36:59.642Z",
+  "package": "pi",
+  "version": "1.4.0",
+  "platform": "windows-x64",
+  "source": "https://github.com/earendil-works/pi/releases/download/v1.4.0/pi-windows-x64.zip",
+  "sha256": "0f7256ea8bdac3af20012b94fdc1252a31cc6dc0d2f9b9eb539555d22e3e321b",
+  "archiveBytes": 45136547,
+  "publisherChecks": ["GitHub release asset SHA-256", "release SHA256SUMS"],
+  "layout": {
+    "files": 211,
+    "knownExpandedBytes": 118674315,
+    "unknownSizeFiles": 0,
+    "reviewSensitive": false
+  },
+  "pikoExecutableSha256": "2e5ed42936a5611e6573a18cf1add76704aa954ae0038edcfd5d31f686e643ca",
+  "executable": {
+    "path": "pi.exe",
+    "machine": "AMD64",
+    "sha256": "af1d8e3ad5bf00e527cef1e7405fb8e6fd5c24fedbd65f3f0ff2caf4a5a47d7b",
+    "directVersion": "1.4.0",
+    "shimVersion": "1.4.0"
+  },
+  "checks": {
+    "isolatedPikoSetup": true,
+    "sourceRegistration": true,
+    "checksumVerifiedInstall": true,
+    "installLeavesDefaultUnchanged": true,
+    "declaredResourceFilesPresent": true,
+    "nativePeAmd64": true,
+    "directVersion": true,
+    "selectLatest": true,
+    "shimVersion": true,
+    "shimHelp": true,
+    "commandResolution": true,
+    "doctorWithoutOrphans": true
+  },
+  "pathDiagnostics": {
+    "shadowedCommands": ["pi", "piko"],
+    "explanation": "The temporary root was deliberately not added to the host PATH. Existing external Pi/Piko launchers still take priority; validation explicitly invoked the isolated native executable and full shim paths. No external launchers were modified."
+  },
+  "scope": "Temporary isolated PIKO_HOME and PI_CODING_AGENT_DIR; verified payload was preseeded in the checksum-addressed cache after official download. No host install, default, PATH, Profile, credentials or sessions were changed.",
+  "notVerified": [
+    "Interactive terminal UI",
+    "Model authentication or requests",
+    "User extension compatibility",
+    "Cross-version migration",
+    "Upstream self-update"
+  ]
+}

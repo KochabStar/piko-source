@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-31T06:42:17.326Z",
+  "package": "oh-my-pi",
+  "previousVersion": "18.13.2",
+  "version": "18.14.1",
+  "upstream": {
+    "release": "https://github.com/can1357/oh-my-pi/releases/tag/v18.14.1",
+    "publishedAt": "2026-10-31T01:13:19Z",
+    "asset": "omp-windows-x64.exe",
+    "assetBytes": 242863104,
+    "sha256": "5b72f0e46e9cd441793d399d36f319a656f2e3c9a3f1997342e46fa885614913",
+    "publisherChecks": [
+      "GitHub release asset SHA-256",
+      "release SHA256SUMS.txt"
+    ]
+  },
+  "ciEvidence": {
+    "run": "https://github.com/KochabStar/piko-source/actions/runs/41175558383",
+    "runId": 41175558383,
+    "startedAt": "2026-10-31T06:11:21Z",
+    "conclusion": "failure",
+    "baselineCommit": "54a51884fbb576a4fc2978659e75c52693f1a5c3",
+    "ohMyPiResult": "updated",
+    "changedCandidates": 5,
+    "blockedPackages": [
+      {
+        "name": "inno-setup",
+        "version": "7.1.1",
+        "reason": "Unpacker failed; input is unsupported, corrupt or timed out"
+      }
+    ],
+    "pullRequest": 4,
+    "candidateCommit": "2a06897ca83a5d6f30debb66b82e73aee8d70750",
+    "mergePreparation": "skipped",
+    "autoMerge": "skipped"
+  },
+  "localRecovery": {
+    "manifest": "packages/oh-my-pi/18.14.1.json",
+    "manifestSha256": "90d45f2e33b246378b5f9698d2164b0a52b5ad866dac3997d70f2fefd460e52c",
+    "byteIdenticalToVerifiedPR": true,
+    "releaseChecksumMatches": true,
+    "previousManifestPreserved": true,
+    "latest": "18.14.1",
+    "discoveryResultAfterRecovery": "current"
+  },
+  "scope": "Recovered the exact candidate manifest already downloaded, checksum-verified and inspected by the recorded Windows CI run. Independently compared official release metadata and SHA256SUMS.txt. No new local payload download or execution, host package upgrade, remote commit, PR merge or policy relaxation was performed.",
+  "notVerified": [
+    "Interactive application behavior",
+    "Model authentication or requests",
+    "User-data migration",
+    "Resolution of the unrelated inno-setup unpacking failure"
+  ]
+}

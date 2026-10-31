@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 46 个包**。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段为准。
+**当前共 47 个包**，新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段与 Pi 原生 CLI 为准。
 
 ## 目录
 
@@ -95,11 +95,32 @@
 
 PowerShell 7 不在本轮管理范围；WPS Office、安妮Office、Perplexity 未加入。上游版本发现已由下节的独立源流水线配置覆盖；应用自更新器和跨版本数据迁移未据此认证。
 
+## Pi 原生 CLI
+
+- 新增 `pi` **1.4.0**，来自官方 `earendil-works/pi` 的 `pi-windows-x64.zip`；SHA-256 与发布资源摘要及 `SHA256SUMS` 核对。完整保留主题、WASM、Windows 原生辅助模块、文档与示例，不只复制 `pi.exe`。
+- 使用独立原生发行包，无需 Node/npm，不执行官方安装脚本。`pi` 与 `oh-my-pi`（`omp`）是不同包；若已有 npm 安装提供 `pi` 命令，须先显式处理命令归属，不静默覆盖。
+- 配置、凭据、会话和扩展沿用 Pi 原生用户目录 `~/.pi/agent/`；不复制、迁移或接管现有数据，不在清单中强制改写该目录。Windows Bash 工具需要 Git Bash 或自行配置 `shellPath`，本包不修改 PATH、PowerShell Profile 或用户 Shell 配置。
+- 自动更新仅匹配官方稳定版的 Windows x64 ZIP，并检查主题、WASM 和原生模块等必要资源。通过 Piko 管理版本，不运行官方安装器或自更新流程。
+- 隔离验证通过官方双重摘要、211 个文件的布局校验、Piko 安装后不选默认、`use @latest`、原生及 shim 的版本／帮助输出。未启动交互会话、登录或调用模型；既有外部 Pi 启动器保持不变。证据见 [Pi 验证记录](verification/pi-20261031.json)。
+
+已有 `main` 源时：
+
+```sh
+piko source refresh main
+piko install main/pi@1.4.0
+piko use main/pi@latest
+piko which pi
+pi --version
+```
+
+若已有独立安装的 Pi，先用 `Get-Command -All pi` 检查 PATH 遮蔽；`piko which pi` 显示受管理入口，不代表当前 Shell 已优先使用该入口。本清单不删除旧启动器、不自动调整宿主 PATH。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为全部 **46 包**登记更新策略：**44 包自动发现，2 包人工审计**。`innounp` 保留可信工具固定提交；`dingtalk` 保留国内完整载荷渠道，避免改成国际版或下载引导器。
-- 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加新版本清单并生成 PR；**当轮无失败、校验和测试通过、远端完整文件树与已验证内容一致后自动 squash 合并**。不会升级本机软件，失败时保留 PR 待处理。
+- 已为全部 **47 包**登记更新策略：**45 包自动发现，2 包人工审计**。`innounp` 保留可信工具固定提交；`dingtalk` 保留国内完整载荷渠道，避免改成国际版或下载引导器。
+- 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加新版本清单并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本清单保留；PR 校验逐字节保护已发布版本。
+- `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。
 - 脚本只依赖 Node.js 24.6+ 标准库；载荷验证在 Windows x64 运行。`npm run check`、`npm test`、`npm run update:discover` 可在本地检查。
 - 配置文件已加入独立 Git 仓库；远端地址、GitHub 权限与 HTTPS 部署需要按实际仓库配置。详见 [自动更新说明](automation/README.md)。
 

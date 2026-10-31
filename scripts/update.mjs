@@ -99,8 +99,16 @@ export function markdownReport(report) {
     "",
     `Mode: ${report.mode}. Validated changes: ${report.changed}. Blocked: ${report.blocked}.`,
     "",
-    "This workflow only reads metadata and unpacks payloads. It does not run downloaded applications, installers, bootstrap hooks, services or drivers. Generated update PRs auto-merge only after a successful zero-blocked run, passing tests and an exact verified file-tree match; failed or changed candidates remain unmerged.",
+    "This workflow only reads metadata and unpacks payloads. It does not run downloaded applications, installers, bootstrap hooks, services or drivers. Generated update PRs contain only independently verified package updates and auto-merge after passing catalog checks, tests and an exact verified file-tree match. Blocked packages retain their published versions and do not prevent valid updates from merging; global validation or merge failures still stop publication.",
     "",
+    ...(report.mode === "write" && report.changed > 0
+      ? [
+          report.blocked > 0
+            ? "> **Partial success:** Blocked packages keep their published versions. Verified updates can still auto-merge after catalog validation, tests and exact-tree checks pass. The `updated` result means written to the candidate branch, not merged into the default branch or installed locally."
+            : "> **Pending merge:** The `updated` result means written to the candidate branch, not merged into the default branch or installed locally. Publication still requires successful validation and an exact verified file-tree match.",
+          "",
+        ]
+      : []),
     "| Package | Current | Upstream | Result | Details |",
     "| --- | --- | --- | --- | --- |",
   ];
@@ -417,12 +425,6 @@ async function main() {
     JSON.stringify(report, null, 2) + "\n",
   );
   await writeFile(join(root, "update-report.md"), md);
-  if (process.env.GITHUB_OUTPUT)
-    await writeFile(
-      process.env.GITHUB_OUTPUT,
-      `changed_count=${report.changed}\nblocked_count=${report.blocked}\n`,
-      { flag: "a" },
-    );
   if (process.env.GITHUB_STEP_SUMMARY)
     await writeFile(process.env.GITHUB_STEP_SUMMARY, md, { flag: "a" });
   console.log(
@@ -442,6 +444,15 @@ async function main() {
       2,
     ),
   );
+  // Publish completion only after the report and summary were fully written.
+  // Per-package failures may still yield a verified subset; fatal failures must
+  // never make a stale or incomplete report eligible for automatic merging.
+  if (process.env.GITHUB_OUTPUT)
+    await writeFile(
+      process.env.GITHUB_OUTPUT,
+      `changed_count=${report.changed}\nblocked_count=${report.blocked}\nreport_complete=true\n`,
+      { flag: "a" },
+    );
   if (report.blocked) process.exitCode = 1;
 }
 if (

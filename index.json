@@ -190,10 +190,17 @@
         "1.13.2": "packages/ninja/1.13.2.json"
       }
     },
-    "oh-my-pi": {
-      "latest": "18.13.2",
+    "pi": {
+      "latest": "1.4.0",
       "versions": {
-        "18.13.2": "packages/oh-my-pi/18.13.2.json"
+        "1.4.0": "packages/pi/1.4.0.json"
+      }
+    },
+    "oh-my-pi": {
+      "latest": "18.14.1",
+      "versions": {
+        "18.13.2": "packages/oh-my-pi/18.13.2.json",
+        "18.14.1": "packages/oh-my-pi/18.14.1.json"
       }
     },
     "sublime-text": {

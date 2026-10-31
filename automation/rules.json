@@ -178,6 +178,20 @@
       "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
       "assetRegex": "^ninja-win\\.zip$"
     },
+    "pi": {
+      "provider": "github-release",
+      "repo": "earendil-works/pi",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^pi-windows-x64\\.zip$",
+      "required": [
+        "package.json",
+        "photon_rs_bg.wasm",
+        "theme/dark.json",
+        "theme/light.json",
+        "assets/clankolas.png",
+        "native/win32/prebuilds/win32-x64/win32-platform.node"
+      ]
+    },
     "oh-my-pi": {
       "provider": "github-release",
       "repo": "can1357/oh-my-pi",

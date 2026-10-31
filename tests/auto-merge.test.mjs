@@ -198,12 +198,28 @@ async function fixture(t) {
       },
     };
   await writeFile(join(root, "packages/demo/1.0.0.json"), JSON.stringify(m));
+  const other = structuredClone(m);
+  other.name = "other";
+  other.platforms["windows-x64"].url = "https://vendor.example/other-1.0.0.zip";
+  other.platforms["windows-x64"].bin = { other: "other.exe" };
+  await mkdir(join(root, "packages/other"));
+  await writeFile(
+    join(root, "packages/other/1.0.0.json"),
+    JSON.stringify(other),
+  );
+  index.packages.other = {
+    latest: "1.0.0",
+    versions: { "1.0.0": "packages/other/1.0.0.json" },
+  };
   await writeFile(join(root, "index.json"), JSON.stringify(index));
   await writeFile(
     join(root, "automation/rules.json"),
     JSON.stringify({
       schemaVersion: 1,
-      packages: { demo: { provider: "manual", reason: "test fixture" } },
+      packages: {
+        demo: { provider: "manual", reason: "test fixture" },
+        other: { provider: "manual", reason: "test fixture" },
+      },
     }),
   );
   await writeFile(
@@ -260,12 +276,110 @@ test("prepare binds the entire candidate tree and does not mutate the real index
   git(["add", "index.json", "packages/demo/2.0.0.json"]);
   assert.equal(p.treeSha, git(["write-tree"]));
 });
-test("any failed upstream prevents preparation even when another candidate is valid", async (t) => {
+test("a blocked package does not prevent exact-tree preparation and merging of the verified subset", async (t) => {
+  const { root, git, report } = await fixture(t);
+  report.blocked = 1;
+  report.results.push({
+    name: "other",
+    version: "2.0.0",
+    status: "blocked",
+    reason: "Unpacker failed",
+  });
+  const p = await prepareMerge(root, report, {
+    repository: "owner/piko-source",
+  });
+  assert.deepEqual(p.files, ["index.json", "packages/demo/2.0.0.json"]);
+  assert.deepEqual(
+    p.verifiedUpdates.map((r) => r.name),
+    ["demo"],
+  );
+  const current = JSON.parse(await readFile(join(root, "index.json"), "utf8"));
+  const baseline = JSON.parse(git(["show", "HEAD:index.json"]));
+  assert.deepEqual(current.packages.other, baseline.packages.other);
+  const b = backend({
+    tree: p.treeSha,
+    base: p.baseSha,
+    mutatePull: (pr) => {
+      pr.base.sha = p.baseSha;
+    },
+  });
+  const result = await mergeVerified(p, { number: 12, headSha, api: b.api });
+  assert.equal(result.merged, true);
+  assert.deepEqual(result.packages, ["demo"]);
+  assert.equal(b.calls.filter((c) => c.method === "PUT").length, 1);
+});
+
+test("blocked package count must agree with the individual report results", async (t) => {
   const { root, report } = await fixture(t);
   report.blocked = 1;
   await assert.rejects(
     () => prepareMerge(root, report, { repository: "owner/piko-source" }),
-    /zero blocked/,
+    /Blocked package count/,
+  );
+  report.blocked = 0;
+  report.results.push({ name: "other", status: "blocked" });
+  await assert.rejects(
+    () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+    /Blocked package count/,
+  );
+});
+
+test("an all-blocked run has no verified update set to merge", async (t) => {
+  const { root, report } = await fixture(t);
+  report.changed = 0;
+  report.blocked = 1;
+  report.results = [{ name: "demo", status: "blocked" }];
+  await assert.rejects(
+    () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+    /No complete verified update set/,
+  );
+});
+
+for (const status of ["blocked", "current", "manual"])
+  test(
+    "index changes to a " +
+      status +
+      " package cannot hitchhike on a verified update",
+    async (t) => {
+      const { root, report } = await fixture(t);
+      report.blocked = status === "blocked" ? 1 : 0;
+      report.results.push({ name: "other", status });
+      const path = join(root, "index.json");
+      const index = JSON.parse(await readFile(path, "utf8"));
+      index.packages.other.aliases = { stable: "1.0.0" };
+      await writeFile(path, JSON.stringify(index));
+      await assert.rejects(
+        () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+        /outside the verified updates/,
+      );
+    },
+  );
+
+test("unverified metadata on an updated package cannot enter the generated index", async (t) => {
+  const { root, report } = await fixture(t);
+  const path = join(root, "index.json");
+  const index = JSON.parse(await readFile(path, "utf8"));
+  index.packages.demo.aliases = { stable: "2.0.0" };
+  await writeFile(path, JSON.stringify(index));
+  await assert.rejects(
+    () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+    /outside the verified updates/,
+  );
+});
+
+test("duplicate or incomplete package results cannot qualify a partial report for merging", async (t) => {
+  const { root, report } = await fixture(t);
+  report.results.push({ name: "demo", status: "blocked" });
+  report.blocked = 1;
+  await assert.rejects(
+    () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+    /Duplicate package results/,
+  );
+  report.results = [report.results[0], { name: "other", status: "available" }];
+  report.blocked = 0;
+  await assert.rejects(
+    () => prepareMerge(root, report, { repository: "owner/piko-source" }),
+    /unverified results/,
   );
 });
 test("unexpected workflow or script changes cannot enter an automatic update merge", async (t) => {

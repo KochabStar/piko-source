@@ -14,6 +14,7 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { runUpdate, nextManifest, markdownReport } from "../scripts/update.mjs";
 import { checkSource } from "../scripts/check.mjs";
+import { prepareMerge } from "../scripts/auto-merge.mjs";
 import {
   component,
   pathName,
@@ -255,8 +256,26 @@ test("older feeds cannot downgrade a source and manual policies perform no netwo
   assert.equal(r.changed, 0);
   assert.equal(r.blocked, 0);
 });
-test("layout failures keep one package unchanged while independently valid packages are retained", async (t) => {
+test("layout failures preserve the failed package and prepare only independently verified updates for merging", async (t) => {
   const root = await fixture(t, ["demo", "other"]);
+  const git = (args) =>
+    execFileSync("git", args, { cwd: root, stdio: ["ignore", "pipe", "pipe"] });
+  git(["init", "--initial-branch=main"]);
+  git(["add", "index.json", "packages", "automation"]);
+  git([
+    "-c",
+    "user.name=Source fixture",
+    "-c",
+    "user.email=fixture@example.invalid",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "core.hooksPath=" + join(root, "empty-hooks"),
+    "commit",
+    "-m",
+    "fixture baseline",
+  ]);
+  const oldIndex = JSON.parse(await readFile(join(root, "index.json"), "utf8"));
   const r = await runUpdate(root, {
     ...dependencies,
     mode: "write",
@@ -270,6 +289,14 @@ test("layout failures keep one package unchanged while independently valid packa
   const c = await loadCatalog(root);
   assert.equal(c.index.packages.demo.latest, "1.0.0");
   assert.equal(c.index.packages.other.latest, "2.0.0");
+  assert.deepEqual(c.index.packages.demo, oldIndex.packages.demo);
+  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  const plan = await prepareMerge(root, r, { repository: "owner/piko-source" });
+  assert.deepEqual(plan.files, ["index.json", "packages/other/2.0.0.json"]);
+  assert.deepEqual(
+    plan.verifiedUpdates.map((v) => v.name),
+    ["other"],
+  );
 });
 test("selection is validated before a network request", async (t) => {
   const root = await fixture(t);
@@ -673,8 +700,29 @@ test("reports state blocked/manual packages and do not claim GUI or service cert
       { name: "other", status: "blocked", reason: "bad | input\nnext" },
     ],
   });
-  assert.match(md, /auto-merge only after a successful zero-blocked run/);
+  assert.match(md, /only independently verified package updates/);
   assert.match(md, /Blocked: 1/);
+  assert.match(md, /Partial success/);
+  assert.match(md, /Verified updates can still auto-merge/);
+  assert.match(md, /Blocked packages keep their published versions/);
+  assert.match(md, /not merged into the default branch or installed locally/);
   assert.match(md, /bad \\\| input next/);
   assert.match(md, /not GUI, service\/driver/);
+});
+
+test("successful write reports distinguish candidate updates from publication or local upgrades", () => {
+  const report = { mode: "write", changed: 1, blocked: 0, results: [] };
+  const md = markdownReport(report);
+  assert.match(md, /Pending merge/);
+  assert.match(md, /not merged into the default branch or installed locally/);
+  assert.doesNotMatch(md, /Auto-merge blocked/);
+  for (const variant of [
+    { ...report, changed: 0 },
+    { ...report, mode: "check" },
+    { ...report, mode: "discover" },
+  ])
+    assert.doesNotMatch(
+      markdownReport(variant),
+      /Pending merge|Partial success/,
+    );
 });

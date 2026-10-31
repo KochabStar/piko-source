@@ -53,12 +53,13 @@ jobs:
           node scripts/check.mjs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm test
-      - name: Bind the successful update to its exact file tree
-        if: steps.update.outcome == 'success' && steps.update.outputs.changed_count != '' && steps.update.outputs.changed_count != '0'
+      - name: Bind verified package updates to their exact file tree
+        id: prepare_merge
+        if: steps.update.outputs.report_complete == 'true' && steps.update.outputs.changed_count != '' && steps.update.outputs.changed_count != '0'
         run: node scripts/auto-merge.mjs --prepare
       - name: Open or refresh the update PR
         id: update_pr
-        if: steps.update.outputs.changed_count != '' && steps.update.outputs.changed_count != '0'
+        if: steps.prepare_merge.outcome == 'success'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.SOURCE_UPDATE_TOKEN || github.token }}
@@ -72,7 +73,7 @@ jobs:
           body-path: update-report.md
           delete-branch: true
       - name: Auto-merge the fully verified update PR
-        if: steps.update.outcome == 'success' && steps.update_pr.outputs.pull-request-number != '' && steps.update_pr.outputs.pull-request-head-sha != ''
+        if: steps.prepare_merge.outcome == 'success' && steps.update_pr.outputs.pull-request-number != '' && steps.update_pr.outputs.pull-request-head-sha != ''
         env:
           GITHUB_TOKEN: ${{ secrets.SOURCE_UPDATE_TOKEN || github.token }}
           UPDATE_PR_NUMBER: ${{ steps.update_pr.outputs.pull-request-number }}
@@ -81,5 +82,5 @@ jobs:
       - name: Report blocked upstreams or updater failure
         if: always() && steps.update.outcome == 'failure'
         run: |
-          Write-Error 'Some upstream updates were blocked. Read the job summary. Valid candidates, when present, are preserved in the update PR.'
+          Write-Error 'Some upstream updates were blocked or the updater failed. Read the job summary. Independently verified package updates are merged when all catalog, test and exact-tree checks pass; failed packages retain their published versions.'
           exit 1

@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdtemp, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
+import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
 import { component, requireThat } from "./lib/catalog.mjs";
 import { checkSource } from "./check.mjs";
@@ -24,10 +25,21 @@ export async function prepareMerge(
     "Invalid base branch",
   );
   requireThat(
-    report.mode === "write" && report.blocked === 0,
-    "Auto-merge requires a successful updater run with zero blocked packages",
+    report.mode === "write" && Array.isArray(report.results),
+    "Auto-merge requires a completed write report",
   );
   const updates = report.results.filter((r) => r.status === "updated");
+  requireThat(
+    Number.isSafeInteger(report.blocked) &&
+      report.blocked >= 0 &&
+      report.blocked ===
+        report.results.filter((r) => r.status === "blocked").length,
+    "Blocked package count differs from the report results",
+  );
+  requireThat(
+    new Set(report.results.map((r) => r.name)).size === report.results.length,
+    "Duplicate package results in updater report",
+  );
   requireThat(
     Number.isSafeInteger(report.changed) &&
       report.changed > 0 &&
@@ -42,6 +54,7 @@ export async function prepareMerge(
         "manual",
         "provider-behind",
         "already-indexed",
+        "blocked",
       ].includes(r.status),
     ),
     "Updater report contains unverified results",
@@ -58,6 +71,12 @@ export async function prepareMerge(
   await checkSource(root, { base: baseSha });
   const expected = new Set(["index.json"]);
   const index = JSON.parse(await readFile(join(root, "index.json"), "utf8"));
+  const expectedIndex = JSON.parse(git(["show", baseSha + ":index.json"]));
+  for (const result of report.results)
+    requireThat(
+      Object.hasOwn(expectedIndex.packages, result.name),
+      "Updater report references an unknown baseline package",
+    );
   for (const update of updates) {
     component(update.name);
     component(update.version);
@@ -65,6 +84,13 @@ export async function prepareMerge(
     requireThat(!expected.has(file), "Duplicate verified update");
     expected.add(file);
     const entry = index.packages[update.name];
+    const baselineEntry = expectedIndex.packages[update.name];
+    requireThat(
+      !Object.hasOwn(baselineEntry.versions, update.version),
+      "Verified updates must append a new package version",
+    );
+    baselineEntry.versions[update.version] = file;
+    baselineEntry.latest = update.version;
     requireThat(
       entry?.latest === update.version &&
         entry.versions[update.version] === file,
@@ -80,6 +106,10 @@ export async function prepareMerge(
       "Report differs from verified payload checksums",
     );
   }
+  requireThat(
+    isDeepStrictEqual(index, expectedIndex),
+    "Generated index contains changes outside the verified updates",
+  );
   const changed = new Set([
     ...splitNames(git(["diff", "--name-only", "-z", baseSha, "--"])),
     ...splitNames(git(["ls-files", "--others", "--exclude-standard", "-z"])),
