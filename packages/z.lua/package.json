@@ -27,12 +27,43 @@
           "maxBytes": "{maxBytes}"
         }
       }
+    },
+    "r438041b4ea3cb9d1": {
+      "schemaVersion": 1,
+      "name": "z.lua",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/skywind3000/z.lua/archive/e088f154d35270c1cde6cb6ce12e18b0c2c82ee3.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "z.lua-e088f154d35270c1cde6cb6ce12e18b0c2c82ee3",
+          "bin": {},
+          "depends": [
+            {
+              "package": "lua@5",
+              "commands": [
+                "lua"
+              ]
+            }
+          ],
+          "shell": {
+            "powershell": "$existingZ = Get-Command z -ErrorAction Ignore\nif ($existingZ -and (($script:ZLUA_SCRIPT -ne (Join-Path $PikoPackageRoot 'z.lua')) -or ($script:ZLUA_LUAEXE -ne $PikoDependencies['lua']))) { throw 'An existing z command or z.lua initialization was detected; remove it manually before enabling Piko z.lua.' }\n$lua = $PikoDependencies['lua']\n$script = Join-Path $PikoPackageRoot 'z.lua'\nInvoke-Expression ((& $lua $script --init powershell) -join \"`n\")"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
     }
   },
   "versions": {
     "1.8.26": {
       "recipe": "r496d45c0bacc2f44",
       "sha256": "c8f9a88657d88ec1c91c7a827ab3463935e3baca308029b72cd2f8d64792169a"
+    },
+    "1.8.27": {
+      "recipe": "r438041b4ea3cb9d1",
+      "maxBytes": 536870912,
+      "sha256": "90759b03980cde1c7021b0c2161ef44eed5199ab4b2861e2b528f93b3d707748"
     }
   }
 }
