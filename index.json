@@ -6,9 +6,10 @@
         "family": "node",
         "distribution": "official"
       },
-      "latest": "26.12.1",
+      "latest": "26.13.0",
       "versions": {
-        "26.12.1": "packages/node/package.json"
+        "26.12.1": "packages/node/package.json",
+        "26.13.0": "packages/node/package.json"
       }
     },
     "ripgrep": {
@@ -24,9 +25,10 @@
       }
     },
     "z.lua": {
-      "latest": "1.8.26",
+      "latest": "1.8.27",
       "versions": {
-        "1.8.26": "packages/z.lua/package.json"
+        "1.8.26": "packages/z.lua/package.json",
+        "1.8.27": "packages/z.lua/package.json"
       }
     },
     "starship": {
@@ -245,9 +247,10 @@
       }
     },
     "codex": {
-      "latest": "0.164.0",
+      "latest": "0.166.0",
       "versions": {
-        "0.164.0": "packages/codex/package.json"
+        "0.164.0": "packages/codex/package.json",
+        "0.166.0": "packages/codex/package.json"
       }
     },
     "orca": {
@@ -290,9 +293,10 @@
       }
     },
     "wechat": {
-      "latest": "4.2.0.9",
+      "latest": "4.2.0.12",
       "versions": {
-        "4.2.0.9": "packages/wechat/package.json"
+        "4.2.0.9": "packages/wechat/package.json",
+        "4.2.0.12": "packages/wechat/package.json"
       }
     },
     "sunlogin": {
