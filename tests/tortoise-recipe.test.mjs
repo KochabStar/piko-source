@@ -1,6 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile, writeFile, mkdtemp, mkdir, rm } from "node:fs/promises";
+import {
+  readFile,
+  writeFile,
+  mkdtemp,
+  mkdir,
+  rm,
+  realpath,
+} from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -90,7 +97,9 @@ test(
   "real PowerShell recipe switches versions with retryable ownership, never deleting loaded old payloads",
   { skip: process.platform !== "win32" },
   async () => {
-    const temp = await mkdtemp(join(tmpdir(), "piko-svn-recipe-"));
+    const temp = await realpath(
+      await mkdtemp(join(tmpdir(), "piko-svn-recipe-")),
+    );
     const key = "Software\\PikoSourceRecipeTests\\" + randomUUID();
     const prefix = key + "\\";
     const ps =
