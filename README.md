@@ -9,6 +9,7 @@
 - `index.json`：软件、已登记版本与清单路径索引。
 - `packages/<name>/<version>.json`：Windows x64 分发清单。
 - [TortoiseSVN 升级与 DLL 占用处理](guides/tortoise-svn.md)：版本化 Shell 配方、旧版本延后清理，以及旧 Scoop 安装的一次性撤销边界。修订 `1.15.0.29830-piko.1` 保留原载荷，后续上游更新自动继承新配方；历史阶段说明中的旧配方行为不适用于此修订。
+- [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
 
 原始两份清单复制自客户端的 `examples/source/`：Node 26.12.1、ripgrep 15.2.0。现已增加 Lua 5.5.0、z.lua 1.8.26、Starship 1.27.0、fzf 0.74.5、PSFzf 2.7.12、sudo 0.2020.01.26、Snipaste 2.11.3；已在第六阶段加入 GitHub Actions 上游更新配置；推送并启用仓库权限后运行，正式 HTTPS 托管仍未部署。后续清单在此维护，客户端示例不自动同步。
 
@@ -78,13 +79,13 @@
 | wecom    | 5.0.13.6005     | `wecom`、`wxwork`                                      |
 | listary  | 6.3.5.94        | `listary`                                              |
 | todesk   | 4.9.8.0         | `todesk`                                               |
-| sunlogin | 16.8.0.33445    | `sunlogin`、`awesun`                                   |
+| sunlogin | 16.8.0.33445-piko.1 | `sunlogin`、`awesun`（`flutter/AweSun.exe`）         |
 
 - 全部使用官方分发站点或官方发布仓库的载荷，并固定 SHA-256。Orca 对照发布资源的官方 SHA-256；向日葵另比对官方 API 的 MD5，最终仍以 SHA-256 作为 Piko 校验值。其他载荷由官方 HTTPS 获取并独立计算摘要；提取后的 8 款主程序均检查 Windows 签名状态为 Valid。
 - 优先匹配实际程序版本，不能只信卸载注册表：Listary 真实版本为完整四段版本，钉钉原注册表版本落后于其实际程序。微信、向日葵旧版官方载荷无法可靠获取，本次固定可核验的官方新版；添加清单不会升级既有安装。
 - Orca 仅提取明确的 NSIS 内层包，保留完整资源布局；CLI 使用 `resources/bin/orca.exe`，避免误把 GUI 当 CLI。Tabbit 依次选择 `updater.7z`、精确 GUID 路径的 `mini_installer.exe`、`chrome.7z`，最终只发布 `Chrome-bin` 应用布局，不执行更新器或安装器。
 - 钉钉使用官方完整 updater ZIP 的程序载荷，不运行 updater、提权助手或安装动作。企业微信以 NSIS `files` 精确声明程序文件，排除安装插件和卸载器；微信只提取明确的 `install.7z`。不自动注册应用协议、微盘驱动或其他系统集成。
-- Listary 使用 Inno 只解包。ToDesk 只选择 `app64.7z`。向日葵保留官方 `AweSun.exe` 作为应用入口，同时以 `pe` 精确提取 `.rsrc/2052/SUN_SKIN/111` 中的 ZIP 资源；不执行其安装／服务逻辑。
+- Listary 使用 Inno 只解包。ToDesk 只选择 `app64.7z`。向日葵以 `pe` 精确提取 `.rsrc/2052/SUN_SKIN/111` 中的 ZIP 资源。原清单误将外层 `AweSun.exe` 安装器作为入口；修订 `16.8.0.33445-piko.1` 将快捷方式及两条命令改为 `flutter/AweSun.exe`，外层文件仅保留为原始载荷／辅助程序，不自动执行其安装／服务逻辑。历史载荷／签名检查不代表启动入口正确。
 - ToDesk／向日葵的 `config.ini` 使用硬链接持久化，日志与声明的数据目录独立保留。已验证模拟原位写入、文件身份及卸载／重装保留；真实 GUI 保存、原子替换行为、设备身份迁移和跨版本兼容仍未认证，分叉时客户端继续拒绝破坏性操作。其他程序沿用原生用户数据位置，不自动复制聊天记录、浏览器资料、账户或凭据。
 - 所有快捷方式仍需单独 `integrate --desktop` 预览与确认；不改默认浏览器，不创建远控服务、无人值守、启动项、虚拟屏／音频／USB 驱动。本轮没有启动 GUI 或接管现有服务，后续真实业务与系统集成验收须分别进行。
 - 需要本轮新版客户端，尤其是企业微信的显式 NSIS 文件映射、Tabbit 的大中间层和向日葵的 PE 资源选择。中间层最多 2 GiB 且计入共享预算，最终应用文件仍限 512 MiB；源清单使用有上限的 4 GiB 展开预算。

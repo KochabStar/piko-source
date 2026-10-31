@@ -289,9 +289,10 @@
       }
     },
     "sunlogin": {
-      "latest": "16.8.0.33445",
+      "latest": "16.8.0.33445-piko.1",
       "versions": {
-        "16.8.0.33445": "packages/sunlogin/16.8.0.33445.json"
+        "16.8.0.33445": "packages/sunlogin/16.8.0.33445.json",
+        "16.8.0.33445-piko.1": "packages/sunlogin/16.8.0.33445-piko.1.json"
       }
     }
   }

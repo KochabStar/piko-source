@@ -279,7 +279,12 @@
       "versionPath": "versionno",
       "md5Path": "md5",
       "urlTemplate": "https://d-cdn.oray.com/sl/windows/AweSun_{version}_x64.exe",
-      "signature": true
+      "signature": true,
+      "required": [
+        "flutter/flutter_windows.dll",
+        "flutter/data/icudtl.dat",
+        "flutter/data/app.so"
+      ]
     }
   }
 }
