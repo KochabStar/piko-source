@@ -85,9 +85,10 @@
       }
     },
     "llvm": {
-      "latest": "23.1.4",
+      "latest": "23.1.4-piko.1",
       "versions": {
-        "23.1.4": "packages/llvm/23.1.4.json"
+        "23.1.4": "packages/llvm/23.1.4.json",
+        "23.1.4-piko.1": "packages/llvm/23.1.4-piko.1.json"
       }
     },
     "firacode-nf": {

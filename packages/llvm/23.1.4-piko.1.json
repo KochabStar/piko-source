@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "name": "llvm",
+  "version": "23.1.4-piko.1",
+  "platforms": {
+    "windows-x64": {
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.4/LLVM-23.1.4-win64.msi",
+      "sha256": "15e49aca3540991a6f28a0e57babab67da82155c4f73f79dd5e8666a851f9127",
+      "format": "msi",
+      "stripPrefix": "LLVM",
+      "maxBytes": 1073741824,
+      "maxExpandedBytes": 4294967296,
+      "bin": {
+        "clang": "bin/clang.exe",
+        "clang++": "bin/clang++.exe",
+        "clangd": "bin/clangd.exe",
+        "lld": "bin/lld.exe",
+        "llvm-ar": "bin/llvm-ar.exe",
+        "lld-link": "bin/lld-link.exe"
+      },
+      "env": {
+        "LIBCLANG_PATH": "{root}/bin",
+        "LLVM_LIB_DIR": "{root}/lib"
+      },
+      "desktop": {
+        "environment": {
+          "LIBCLANG_PATH": "{root}/bin",
+          "LLVM_LIB_DIR": "{root}/lib"
+        },
+        "path": ["bin"]
+      }
+    }
+  }
+}
