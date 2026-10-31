@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 2,
+  "name": "uv",
+  "recipes": {
+    "r36bff38ca83420cc": {
+      "schemaVersion": 1,
+      "name": "uv",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/astral-sh/uv/releases/download/{version}/uv-x86_64-pc-windows-msvc.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "uv": "uv.exe",
+            "uvx": "uvx.exe",
+            "uvw": "uvw.exe"
+          },
+          "persist": [
+            "cache",
+            "python",
+            "tools"
+          ],
+          "env": {
+            "UV_CACHE_DIR": "{persist}/cache",
+            "UV_PYTHON_INSTALL_DIR": "{persist}/python",
+            "UV_TOOL_DIR": "{persist}/tools"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.13.5": {
+      "recipe": "r36bff38ca83420cc",
+      "sha256": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a"
+    },
+    "0.13.6": {
+      "recipe": "r36bff38ca83420cc",
+      "maxBytes": 536870912,
+      "sha256": "a2a8820d5eea32f08ef467ef3b7f66883a9b076d5737a2fc2fbb5f458d1bb50f"
+    }
+  }
+}

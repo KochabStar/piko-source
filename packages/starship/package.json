@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "name": "starship",
+  "recipes": {
+    "r9eebb87fff5f3444": {
+      "schemaVersion": 1,
+      "name": "starship",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/starship/starship/releases/download/v{version}/starship-x86_64-pc-windows-msvc.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "starship": "starship.exe"
+          },
+          "shell": {
+            "powershell": "Invoke-Expression ((& (Join-Path $PikoPackageRoot 'starship.exe') init powershell) -join \"`n\")"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.27.0": {
+      "recipe": "r9eebb87fff5f3444",
+      "sha256": "7764f861805376af2812dd78c84fadc16b714cf3f346baed9b597bfda8484403"
+    }
+  }
+}

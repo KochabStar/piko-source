@@ -10,19 +10,13 @@ import {
   validateManifest,
 } from "../scripts/lib/catalog.mjs";
 import { network } from "../scripts/lib/net.mjs";
+import { fileURLToPath } from "node:url";
 
-const original = JSON.parse(
-  await readFile(
-    new URL("../packages/sunlogin/16.8.0.33445.json", import.meta.url),
-    "utf8",
-  ),
+const catalog = await loadCatalog(
+  fileURLToPath(new URL("../", import.meta.url)),
 );
-const revision = JSON.parse(
-  await readFile(
-    new URL("../packages/sunlogin/16.8.0.33445-piko.1.json", import.meta.url),
-    "utf8",
-  ),
-);
+const original = catalog.manifests.get("sunlogin@16.8.0.33445");
+const revision = catalog.manifests.get("sunlogin@16.8.0.33445-piko.1");
 
 test("Sunlogin revision launches the extracted GUI, not the outer installer", () => {
   validateManifest(revision, "sunlogin", "16.8.0.33445-piko.1");
@@ -63,12 +57,10 @@ test("Sunlogin index retains the revision and latest keeps the corrected GUI ent
   );
   assert.equal(
     index.packages.sunlogin.versions[revision.version],
-    "packages/sunlogin/16.8.0.33445-piko.1.json",
+    "packages/sunlogin/package.json",
   );
-  const latestFile =
-    index.packages.sunlogin.versions[index.packages.sunlogin.latest];
-  const latest = JSON.parse(
-    await readFile(new URL("../" + latestFile, import.meta.url), "utf8"),
+  const latest = catalog.manifests.get(
+    "sunlogin@" + index.packages.sunlogin.latest,
   );
   assert.deepEqual(
     latest.platforms["windows-x64"].bin,

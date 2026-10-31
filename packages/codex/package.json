@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "name": "codex",
+  "recipes": {
+    "r3f9977d9ed0708c9": {
+      "schemaVersion": 1,
+      "name": "codex",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/openai/codex/releases/download/rust-v{version}/codex-package-x86_64-pc-windows-msvc.tar.gz",
+          "sha256": "{sha256}",
+          "format": "tar.gz",
+          "bin": {
+            "codex": "bin/codex.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.164.0": {
+      "recipe": "r3f9977d9ed0708c9",
+      "sha256": "700116be3143576d006467af8576f7f4c9dada1feddfdb7f69743bfde0997018"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "gh",
+  "recipes": {
+    "r19e4e7b1494db86d": {
+      "schemaVersion": 1,
+      "name": "gh",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/cli/cli/releases/download/v{version}/gh_{version}_windows_amd64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "gh": "bin/gh.exe"
+          },
+          "depends": [
+            {
+              "package": "git",
+              "commands": [
+                "git"
+              ]
+            }
+          ],
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.103.3": {
+      "recipe": "r19e4e7b1494db86d",
+      "sha256": "98d0cfa794721665d7973dd728c78aff7bd836d58f10f6d7a03568eccb0a22e0"
+    }
+  }
+}

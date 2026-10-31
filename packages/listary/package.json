@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "name": "listary",
+  "recipes": {
+    "re38e0c906cd1aefa": {
+      "schemaVersion": 1,
+      "name": "listary",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://www.listary.com/download/Listary.exe?version={version}",
+          "sha256": "{sha256}",
+          "maxBytes": "{maxBytes}",
+          "format": "inno",
+          "bin": {
+            "listary": "Listary.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Listary",
+                "path": "Listary.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "6.3.5.94": {
+      "recipe": "re38e0c906cd1aefa",
+      "maxBytes": 67108864,
+      "sha256": "c62249e0d4d49bd3f062d55635cf6a3ab089ea8ee7f6c03947f6febfafaa0288"
+    }
+  }
+}

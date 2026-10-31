@@ -1,25 +1,29 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { validateManifest } from "../scripts/lib/catalog.mjs";
+import { validateManifest, loadCatalog } from "../scripts/lib/catalog.mjs";
+import { fileURLToPath } from "node:url";
 import { discover } from "../scripts/lib/providers.mjs";
 
 const json = async (path) =>
   JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"));
 const index = await json("../index.json");
-const old = await json("../packages/oh-my-pi/18.13.2.json");
-const next = await json("../packages/oh-my-pi/18.14.1.json");
+const catalog = await loadCatalog(
+  fileURLToPath(new URL("../", import.meta.url)),
+);
+const old = catalog.manifests.get("oh-my-pi@18.13.2");
+const next = catalog.manifests.get("oh-my-pi@18.14.1");
 const rule = (await json("../automation/rules.json")).packages["oh-my-pi"];
 
 test("oh-my-pi retains its published pin and registers the CI-verified native update", () => {
   validateManifest(next, "oh-my-pi", "18.14.1");
   assert.equal(
     index.packages["oh-my-pi"].versions["18.13.2"],
-    "packages/oh-my-pi/18.13.2.json",
+    "packages/oh-my-pi/package.json",
   );
   assert.equal(
     index.packages["oh-my-pi"].versions["18.14.1"],
-    "packages/oh-my-pi/18.14.1.json",
+    "packages/oh-my-pi/package.json",
   );
   assert.equal(
     old.platforms["windows-x64"].sha256,

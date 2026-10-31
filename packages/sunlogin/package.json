@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "name": "sunlogin",
+  "recipes": {
+    "r071d60311733c514": {
+      "schemaVersion": 1,
+      "name": "sunlogin",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "bin": {
+            "sunlogin": "AweSun.exe",
+            "awesun": "AweSun.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "downloads": [
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_{version}_x64.exe",
+              "sha256": "{sha256}",
+              "maxBytes": "{maxBytes}",
+              "format": "file",
+              "file": "AweSun.exe"
+            },
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_{version}_x64.exe",
+              "sha256": "{sha2562}",
+              "maxBytes": "{maxBytes2}",
+              "format": "pe",
+              "nested": [
+                {
+                  "path": ".rsrc/2052/SUN_SKIN/111",
+                  "format": "zip"
+                }
+              ]
+            }
+          ],
+          "persist": [
+            "log",
+            "FileTransferFiles",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": ""
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "向日葵",
+                "path": "AweSun.exe"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "r8af2b864ef7562f2": {
+      "schemaVersion": 1,
+      "name": "sunlogin",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "bin": {
+            "sunlogin": "flutter/AweSun.exe",
+            "awesun": "flutter/AweSun.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "downloads": [
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_16.8.0.33445_x64.exe",
+              "sha256": "{sha256}",
+              "maxBytes": "{maxBytes}",
+              "format": "file",
+              "file": "AweSun.exe"
+            },
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_16.8.0.33445_x64.exe",
+              "sha256": "{sha2562}",
+              "maxBytes": "{maxBytes2}",
+              "format": "pe",
+              "nested": [
+                {
+                  "path": ".rsrc/2052/SUN_SKIN/111",
+                  "format": "zip"
+                }
+              ]
+            }
+          ],
+          "persist": [
+            "log",
+            "FileTransferFiles",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": ""
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "向日葵",
+                "path": "flutter/AweSun.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "16.8.0.33445": {
+      "recipe": "r071d60311733c514",
+      "maxBytes": 106954752,
+      "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
+      "maxBytes2": 106954752,
+      "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
+    },
+    "16.8.0.33445-piko.1": {
+      "recipe": "r8af2b864ef7562f2",
+      "maxBytes": 106954752,
+      "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
+      "maxBytes2": 106954752,
+      "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
+    }
+  }
+}

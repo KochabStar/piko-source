@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "lazygit",
+  "recipes": {
+    "ra51b424fc6b6a080": {
+      "schemaVersion": 1,
+      "name": "lazygit",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/jesseduffield/lazygit/releases/download/v{version}/lazygit_{version}_windows_x86_64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "lazygit": "lazygit.exe"
+          },
+          "depends": [
+            {
+              "package": "git",
+              "commands": [
+                "git"
+              ]
+            }
+          ],
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.66.2": {
+      "recipe": "ra51b424fc6b6a080",
+      "sha256": "8b1e2194c2d8ac660f0a132cb4384e9d2fe1405217a144e280df16383c18d45c"
+    }
+  }
+}

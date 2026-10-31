@@ -4,7 +4,8 @@ import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
 import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
-import { component, requireThat } from "./lib/catalog.mjs";
+import { component, requireThat, loadCatalog } from "./lib/catalog.mjs";
+import { appendManifest } from "./lib/manifest-template.mjs";
 import { checkSource } from "./check.mjs";
 import { request } from "./lib/net.mjs";
 
@@ -70,7 +71,8 @@ export async function prepareMerge(
   requireThat(sha(baseSha), "Invalid baseline commit");
   await checkSource(root, { base: baseSha });
   const expected = new Set(["index.json"]);
-  const index = JSON.parse(await readFile(join(root, "index.json"), "utf8"));
+  const catalog = await loadCatalog(root);
+  const index = catalog.index;
   const expectedIndex = JSON.parse(git(["show", baseSha + ":index.json"]));
   for (const result of report.results)
     requireThat(
@@ -80,7 +82,11 @@ export async function prepareMerge(
   for (const update of updates) {
     component(update.name);
     component(update.version);
-    const file = `packages/${update.name}/${update.version}.json`;
+    const file = index.packages[update.name]?.versions[update.version];
+    requireThat(
+      typeof file === "string",
+      "Updated version is missing from the index",
+    );
     requireThat(!expected.has(file), "Duplicate verified update");
     expected.add(file);
     const entry = index.packages[update.name];
@@ -96,7 +102,15 @@ export async function prepareMerge(
         entry.versions[update.version] === file,
       "Report differs from the generated index",
     );
-    const manifest = JSON.parse(await readFile(join(root, file), "utf8"));
+    const manifest = catalog.manifests.get(update.name + "@" + update.version);
+    if (file === `packages/${update.name}/package.json`) {
+      const previous = JSON.parse(git(["show", baseSha + ":" + file]));
+      const expectedDocument = appendManifest(previous, manifest);
+      requireThat(
+        isDeepStrictEqual(catalog.documents.get(file), expectedDocument),
+        "Template contains changes outside the verified update",
+      );
+    }
     const platform = manifest.platforms["windows-x64"];
     requireThat(
       /^[a-f0-9]{64}$/.test(update.sha256) &&
@@ -117,7 +131,7 @@ export async function prepareMerge(
   requireThat(
     changed.size === expected.size &&
       [...changed].every((file) => expected.has(file)),
-    "Auto-merge may only include this run's index and new version files",
+    "Auto-merge may only include this run's index and verified package files",
   );
   // A separate temporary Git index builds the ENTIRE expected tree without
   // altering the real staging area. The remote PR must match it exactly.

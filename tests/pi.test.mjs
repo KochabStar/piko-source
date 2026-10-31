@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { validateManifest } from "../scripts/lib/catalog.mjs";
+import { validateManifest, loadCatalog } from "../scripts/lib/catalog.mjs";
+import { fileURLToPath } from "node:url";
 import { discover } from "../scripts/lib/providers.mjs";
 import { nextManifest } from "../scripts/update.mjs";
 
@@ -9,7 +10,10 @@ const json = async (path) =>
   JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"));
 const index = await json("../index.json");
 const entry = index.packages.pi;
-const manifest = await json("../" + entry.versions[entry.latest]);
+const catalog = await loadCatalog(
+  fileURLToPath(new URL("../", import.meta.url)),
+);
+const manifest = catalog.manifests.get("pi@" + entry.latest);
 const rules = await json("../automation/rules.json");
 const rule = rules.packages.pi;
 const platform = manifest.platforms["windows-x64"];

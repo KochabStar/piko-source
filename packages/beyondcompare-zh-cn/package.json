@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "name": "beyondcompare-zh-cn",
+  "recipes": {
+    "rd460666d237513d7": {
+      "schemaVersion": 1,
+      "name": "beyondcompare-zh-cn",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://www.scootersoftware.com/BCompare-zh-{version}.exe",
+          "sha256": "{sha256}",
+          "format": "inno",
+          "bin": {
+            "bcompare": "BCompare.exe"
+          },
+          "files": {
+            "7z,2.dll": "7z.dll",
+            "BCompare,2.exe": "BCompare.exe",
+            "BCompare,2.tr": "BCompare.tr",
+            "BCShellEx.msix": "BCShellEx.msix",
+            "BCShellEx64.dll": "BCShellEx64.dll",
+            "mscoree,2.dll": "mscoree.dll",
+            "PdfToText,2.exe": "PdfToText.exe",
+            "BCUnRAR,2.dll": "BCUnRAR.dll",
+            "BCClipboard.exe": "BCClipboard.exe",
+            "BCDarkTheme.vsf": "BCDarkTheme.vsf",
+            "BComp.com": "BComp.com",
+            "BComp.exe": "BComp.exe",
+            "BCompare.chm": "BCompare.chm",
+            "BCShellEx.dll": "BCShellEx.dll",
+            "License.html": "License.html",
+            "Readme.txt": "Readme.txt"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Beyond Compare",
+                "path": "BCompare.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "5.2.6.32774": {
+      "recipe": "rd460666d237513d7",
+      "sha256": "c5439ae1cd8fb02871d990f5bd0b396326e72890b6d78ef9f870dbd1a1242f56"
+    },
+    "5.2.7.32913": {
+      "recipe": "rd460666d237513d7",
+      "maxBytes": 536870912,
+      "sha256": "9335650936a75a5337cb303e737fba957e6bc6f4b75f0e8682ee5f8a031318d2"
+    }
+  }
+}

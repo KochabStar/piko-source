@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-31T07:27:55.608Z",
+  "baselineCommit": "c7f9a2d0fff4c0f683f8ec33f0647a1ff6792566",
+  "packages": 47,
+  "versions": 58,
+  "filesBefore": 58,
+  "filesAfter": 47,
+  "allResolvedManifestHashesUnchanged": true,
+  "recipeCount": 51,
+  "versionsChecked": [
+    {
+      "name": "node",
+      "version": "26.12.1",
+      "manifestHash": "2798caf796da43af3843fcb6d66da8413c9bd8319143c635da4a9a712282afe3"
+    },
+    {
+      "name": "ripgrep",
+      "version": "15.2.0",
+      "manifestHash": "6a1d0eddc70cb75a7dd9d87854b0ae2c288d7487e4ab54feaee340c05f57f9e9"
+    },
+    {
+      "name": "lua",
+      "version": "5.5.0",
+      "manifestHash": "e79a8b46d6955c8739cc15d75398e1754d106db72f57d0e05d08131c5de67808"
+    },
+    {
+      "name": "z.lua",
+      "version": "1.8.26",
+      "manifestHash": "ae74a64e260f71e1bf461b7db29cd1daa678cf9aa8989b8e126ebd25b1800be2"
+    },
+    {
+      "name": "starship",
+      "version": "1.27.0",
+      "manifestHash": "0af43f4963775e56af9aa7b9a1362c283156999c8ce7c761b649f41c5ea91bc1"
+    },
+    {
+      "name": "fzf",
+      "version": "0.74.5",
+      "manifestHash": "7059342bbf6bcb970369d3706a1f7e546435614ead016e98b8d33840a42c8f2e"
+    },
+    {
+      "name": "psfzf",
+      "version": "2.7.12",
+      "manifestHash": "a4764423ec5ea39111bac59f1bc2a1a40c906e42db883fdd2552dcffd4acd2e5"
+    },
+    {
+      "name": "sudo",
+      "version": "0.2020.01.26",
+      "manifestHash": "515f8d4bf10912ef5cd483fed89e0c9618d410036af81428b76f0cc2b161184b"
+    },
+    {
+      "name": "snipaste",
+      "version": "2.11.3",
+      "manifestHash": "f9ceb1892aaf3b3cf49c84510ec1585975e006a2234f9a0ece323eb8f411ae69"
+    },
+    {
+      "name": "7zip",
+      "version": "26.05",
+      "manifestHash": "72af22662f9c8cded00134c82b7947fc16a167fc558018345d4d3309ede88095"
+    },
+    {
+      "name": "beyondcompare-zh-cn",
+      "version": "5.2.6.32774",
+      "manifestHash": "7c2549519ffb2c3ebb8106364c46b824cfa3e7184f1e1fe417108942edc6dc80"
+    },
+    {
+      "name": "beyondcompare-zh-cn",
+      "version": "5.2.7.32913",
+      "manifestHash": "ec77e1e8561eb8faca2bd6da07faec43bbd802e5824e7e5c92040fd09aacd847"
+    },
+    {
+      "name": "obsidian",
+      "version": "1.14.5",
+      "manifestHash": "814b85a54d4c85a596d5b38f0f7049760349950b39a72090378b8543e7a9b73d"
+    },
+    {
+      "name": "tabby",
+      "version": "1.0.238",
+      "manifestHash": "b07cac9815d2de7b34e56c9aaea8f2093c4f8e5d3d3adecd2d29ff40240a7092"
+    },
+    {
+      "name": "llvm",
+      "version": "23.1.4",
+      "manifestHash": "1dc346276c5b493c7e7280854029a14dcf233036ac659dc00353bf26629b4ef1"
+    },
+    {
+      "name": "llvm",
+      "version": "23.1.4-piko.1",
+      "manifestHash": "04fee30273de27029e009174aca245a557f99ad7bff20d9e353a8ca68893cf27"
+    },
+    {
+      "name": "firacode-nf",
+      "version": "3.5.1",
+      "manifestHash": "190ac4ec50ca3692b54243cb3dae7775213a2299af94d8e55172b70c89922def"
+    },
+    {
+      "name": "hack-nf-mono",
+      "version": "3.5.1",
+      "manifestHash": "deac6dbeae66638e34c7c552707bd1b3edde81c86b6ef9e3261e5fed5ae270da"
+    },
+    {
+      "name": "rustup",
+      "version": "1.29.2",
+      "manifestHash": "62e83d772e64331855dbbdeca888003be41020636a0d75999ef39402498eb850"
+    },
+    {
+      "name": "flclash",
+      "version": "0.9.2",
+      "manifestHash": "db0d753929e2ea381119c04394934be2cc8b740ead3c8d590222c1262861a6b5"
+    },
+    {
+      "name": "tortoise-svn",
+      "version": "1.14.9.29743",
+      "manifestHash": "75c0c8b93fd3d4244e2adc91330c48d36f8936ae4b3a2b44448010f13c7673ba"
+    },
+    {
+      "name": "tortoise-svn",
+      "version": "1.15.0.29830",
+      "manifestHash": "9faa2c068d97cf453ffb89674eb781c87db30895d74bd1f741554490195ed638"
+    },
+    {
+      "name": "tortoise-svn",
+      "version": "1.15.0.29830-piko.1",
+      "manifestHash": "b2c97da390988c7a9ea30f532f889cf8529a70cff5aabffb7d5614b40529ac81"
+    },
+    {
+      "name": "aria2",
+      "version": "1.37.0-1",
+      "manifestHash": "b2940f6c14b84c742ceadb266643e38dff4941bcef09e401b1bca246a837fd58"
+    },
+    {
+      "name": "cmake",
+      "version": "4.4.5",
+      "manifestHash": "7ce483caf1038a7ea2cd8d64cd102acb041011fc3ceda96d4d72ad6f5b762496"
+    },
+    {
+      "name": "dbgate",
+      "version": "7.3.2",
+      "manifestHash": "35ecdfb7cac6edf3ee2e63ed34820dbad17e32f479316807763a959ae0708906"
+    },
+    {
+      "name": "dbgate",
+      "version": "7.3.3",
+      "manifestHash": "998b76ff729f5921d495d64a2113436211ee7959d2bb13609236730f1974ab74"
+    },
+    {
+      "name": "ffmpeg",
+      "version": "9.0.2",
+      "manifestHash": "6040d19025036ab4f3b71634bf3f72dc9897460d40c985132a098bb0cfae6f8f"
+    },
+    {
+      "name": "gh",
+      "version": "2.103.3",
+      "manifestHash": "fece8bb0f6c654be45bb9bd5b411b75ec5b544d44ad3138c1a43ecda750b4370"
+    },
+    {
+      "name": "git",
+      "version": "2.56.0.4",
+      "manifestHash": "6896ec87a7e1080f16a037c975d17d75ab1c703bef2d6fb7c4b7d379bf992715"
+    },
+    {
+      "name": "inno-setup",
+      "version": "7.1.0",
+      "manifestHash": "ff3daf065ff63fba418e5e1755cf4215d2d74fc7f6e025f451005ddaff026afc"
+    },
+    {
+      "name": "innounp",
+      "version": "2.71.2",
+      "manifestHash": "621ccd49b071d9a1b4dd265a7a6df9257c80de441dc217b8432199a75bc41df5"
+    },
+    {
+      "name": "lazygit",
+      "version": "0.66.2",
+      "manifestHash": "50f72105d70a13eba8729971958360dae65f3e50a7d36a9249bfbd6c17239f23"
+    },
+    {
+      "name": "localsend",
+      "version": "1.18.2",
+      "manifestHash": "0ee4bc8ae276f57bc2ac6ccfc2743cd3de4488bf59360bd89b798e74f668f7ee"
+    },
+    {
+      "name": "ninja",
+      "version": "1.13.2",
+      "manifestHash": "0e9972a677bf2312e0d9c8b1ebc2ecea57048209bea8897e2c3a340859b965a1"
+    },
+    {
+      "name": "pi",
+      "version": "1.4.0",
+      "manifestHash": "9077eccf581b5fadd7650b0d8de661d39f425fa74693a657fd721e1280c13772"
+    },
+    {
+      "name": "oh-my-pi",
+      "version": "18.13.2",
+      "manifestHash": "da028710b3ee3c9a7f5838b5c5a45d1b1c26da1a6a11b172765c641908bd6885"
+    },
+    {
+      "name": "oh-my-pi",
+      "version": "18.14.1",
+      "manifestHash": "31e382ee3094b8103daae935acab218e59652a7e8bf1fa1b43d9c8bd8c22bae2"
+    },
+    {
+      "name": "sublime-text",
+      "version": "4-4215",
+      "manifestHash": "cec9e49208a6dad6bfb30002fa558334e570da3b55927538e36f3bde79120463"
+    },
+    {
+      "name": "wave-terminal",
+      "version": "0.14.5",
+      "manifestHash": "c5013ec5d041442c73d86586dcaaded4c608fcc7fa4b02e0b60df884f1e5bacf"
+    },
+    {
+      "name": "xmake",
+      "version": "3.1.2",
+      "manifestHash": "f59e5d5b212a515a5474953733f9566834a601b6d0f252dfd427ab0edd390fbe"
+    },
+    {
+      "name": "go",
+      "version": "1.27.3",
+      "manifestHash": "7b3c51159e9244213819996563e561711fc95b93aaa623a7f862b3eb7ac01dd8"
+    },
+    {
+      "name": "uv",
+      "version": "0.13.5",
+      "manifestHash": "d995dae04c95374ca8f9d75da2c7d95c2d440872f5a1e489081e2ec8e3d920b1"
+    },
+    {
+      "name": "uv",
+      "version": "0.13.6",
+      "manifestHash": "91e76cdd1f8192b9c37896e5569227a132d65a7df4c4c8851744ce04876705c2"
+    },
+    {
+      "name": "pixi",
+      "version": "0.83.0",
+      "manifestHash": "52d37d9f7c313650ce45989be1184ab28d9a930a0a4d4d54aeffcda1c4c9f11c"
+    },
+    {
+      "name": "codex",
+      "version": "0.164.0",
+      "manifestHash": "21abaa1dd42baad34fc15172b454c0b5be85e54b24d87fa9728249d7135a7374"
+    },
+    {
+      "name": "orca",
+      "version": "1.4.243",
+      "manifestHash": "ee6c44ae99e35c6af422eb8f831f75a4865b1cc209e8e907614f05f979a47c18"
+    },
+    {
+      "name": "orca",
+      "version": "1.4.245",
+      "manifestHash": "a608777d13734d52d5c3e9749963ade8394b312f470408827983de68df735b55"
+    },
+    {
+      "name": "listary",
+      "version": "6.3.5.94",
+      "manifestHash": "62cb800d3ae16ee45233ff1d21433f720c1e23b1ab3daba172dbcc833195eb69"
+    },
+    {
+      "name": "wecom",
+      "version": "5.0.13.6005",
+      "manifestHash": "21f923055c33515ddd5285995328843282a0358756b378d70266c4e9fcd2bd40"
+    },
+    {
+      "name": "tabbit",
+      "version": "1.19.25.0",
+      "manifestHash": "a18449c1e3b96a7c822fa9c21d328b5e52330f48cc06109fef55d10c55dc4ddc"
+    },
+    {
+      "name": "todesk",
+      "version": "4.9.8.0",
+      "manifestHash": "0c6174a436f40e831be02af1d0c9c6cab1a1c91961d168cbc24d0d61b00644e6"
+    },
+    {
+      "name": "todesk",
+      "version": "5.2.3.0",
+      "manifestHash": "360a72469aad50676180f762fc175fdbd4e194b769e2a5edf1f544940d55d57b"
+    },
+    {
+      "name": "dingtalk",
+      "version": "8.2.5.260113006",
+      "manifestHash": "49d291caee07ee4b5a937a84cd72c03a042afb7f0f28fb73b905069e570991e8"
+    },
+    {
+      "name": "dingtalk",
+      "version": "9.0.2.261013001",
+      "manifestHash": "a4678c41c8ebacb4d9160b881275128c1039f2f35dc72d6749a7447826e54973"
+    },
+    {
+      "name": "wechat",
+      "version": "4.2.0.9",
+      "manifestHash": "02e9907c05f4cc9e261ded30fcc50cc3ac74c9297db7e6898d3a845e99312073"
+    },
+    {
+      "name": "sunlogin",
+      "version": "16.8.0.33445",
+      "manifestHash": "92522cf2b4b74b4e9112ce6c85297b8a050d80e04edecfda521b4bea5d5f9e7b"
+    },
+    {
+      "name": "sunlogin",
+      "version": "16.8.0.33445-piko.1",
+      "manifestHash": "9ac4ce0c69228f7e452cb2b349eea0f4b8f05e60005ec2bb7560168d892f1ef2"
+    }
+  ],
+  "validation": {
+    "sourceTests": {
+      "passed": 83,
+      "failed": 0
+    },
+    "clientTests": {
+      "passed": 248,
+      "failed": 0,
+      "assertions": 2521,
+      "timeoutMilliseconds": 30000
+    },
+    "clientTypecheck": true,
+    "clientBuild": true,
+    "legacySourceCheck": true,
+    "templateSourceCheck": true,
+    "realPiInstall": {
+      "version": "1.4.0",
+      "isolated": true,
+      "verifiedChecksums": true,
+      "directVersion": "1.4.0",
+      "shimVersion": "1.4.0",
+      "files": 211
+    }
+  },
+  "clientExecutable": {
+    "path": "../piko/dist/piko.exe",
+    "sha256": "590092fdae2738eecdcedfee1020112f9ab0e24ae55e217c56c37c7f3076ae09"
+  },
+  "scope": "Working-tree migration only. Existing independent client changes were preserved. No host Piko executable, PATH, settings, installed package, Git commit or remote branch was changed. Deploy the new client before publishing the schema 2 source."
+}

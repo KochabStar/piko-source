@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "name": "lua",
+  "recipes": {
+    "rb6da8404d96c915c": {
+      "schemaVersion": 1,
+      "name": "lua",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://downloads.sourceforge.net/project/luabinaries/{version}/Tools%20Executables/lua-{version}_Win64_bin.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "lua": "lua55.exe",
+            "luac": "luac55.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "5.5.0": {
+      "recipe": "rb6da8404d96c915c",
+      "sha256": "7825cb261d0dc61cb0e1511d451ceaf10bf72d2bba1855bfd3350add190e0024"
+    }
+  }
+}

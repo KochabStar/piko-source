@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 2,
+  "name": "llvm",
+  "recipes": {
+    "r8bb7e1c7fd8eb5d2": {
+      "schemaVersion": 1,
+      "name": "llvm",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.msi",
+          "sha256": "{sha256}",
+          "format": "msi",
+          "stripPrefix": "LLVM",
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 4294967296,
+          "bin": {
+            "clang": "bin/clang.exe",
+            "clang++": "bin/clang++.exe",
+            "clangd": "bin/clangd.exe",
+            "lld": "bin/lld.exe",
+            "llvm-ar": "bin/llvm-ar.exe"
+          },
+          "env": {
+            "LIBCLANG_PATH": "{root}/bin",
+            "LLVM_LIB_DIR": "{root}/lib"
+          },
+          "desktop": {
+            "environment": {
+              "LIBCLANG_PATH": "{root}/bin",
+              "LLVM_LIB_DIR": "{root}/lib"
+            },
+            "path": [
+              "bin"
+            ]
+          }
+        }
+      }
+    },
+    "re55b4915556d8f45": {
+      "schemaVersion": 1,
+      "name": "llvm",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.4/LLVM-23.1.4-win64.msi",
+          "sha256": "{sha256}",
+          "format": "msi",
+          "stripPrefix": "LLVM",
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 4294967296,
+          "bin": {
+            "clang": "bin/clang.exe",
+            "clang++": "bin/clang++.exe",
+            "clangd": "bin/clangd.exe",
+            "lld": "bin/lld.exe",
+            "llvm-ar": "bin/llvm-ar.exe",
+            "lld-link": "bin/lld-link.exe"
+          },
+          "env": {
+            "LIBCLANG_PATH": "{root}/bin",
+            "LLVM_LIB_DIR": "{root}/lib"
+          },
+          "desktop": {
+            "environment": {
+              "LIBCLANG_PATH": "{root}/bin",
+              "LLVM_LIB_DIR": "{root}/lib"
+            },
+            "path": [
+              "bin"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "23.1.4": {
+      "recipe": "r8bb7e1c7fd8eb5d2",
+      "maxBytes": 1073741824,
+      "sha256": "15e49aca3540991a6f28a0e57babab67da82155c4f73f79dd5e8666a851f9127"
+    },
+    "23.1.4-piko.1": {
+      "recipe": "re55b4915556d8f45",
+      "maxBytes": 1073741824,
+      "sha256": "15e49aca3540991a6f28a0e57babab67da82155c4f73f79dd5e8666a851f9127"
+    }
+  }
+}

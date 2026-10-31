@@ -17,22 +17,14 @@ import {
   applyTortoiseRecipe,
 } from "../scripts/lib/tortoise-recipe.mjs";
 import { nextManifest } from "../scripts/update.mjs";
+import { fileURLToPath } from "node:url";
+import { loadCatalog } from "../scripts/lib/catalog.mjs";
 
-const original = JSON.parse(
-  await readFile(
-    new URL("../packages/tortoise-svn/1.15.0.29830.json", import.meta.url),
-    "utf8",
-  ),
+const catalog = await loadCatalog(
+  fileURLToPath(new URL("../", import.meta.url)),
 );
-const revision = JSON.parse(
-  await readFile(
-    new URL(
-      "../packages/tortoise-svn/1.15.0.29830-piko.1.json",
-      import.meta.url,
-    ),
-    "utf8",
-  ),
-);
+const original = catalog.manifests.get("tortoise-svn@1.15.0.29830");
+const revision = catalog.manifests.get("tortoise-svn@1.15.0.29830-piko.1");
 const recipe = (m) =>
   m.platforms["windows-x64"].configFiles["piko-shell-extension.ps1"];
 test("SVN recipe revision uses identical payload, version-specific registration and no shared overlay junction", async () => {

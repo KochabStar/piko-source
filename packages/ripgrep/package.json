@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "name": "ripgrep",
+  "recipes": {
+    "rd30071f84d08f8f9": {
+      "schemaVersion": 1,
+      "name": "ripgrep",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/BurntSushi/ripgrep/releases/download/{version}/ripgrep-{version}-x86_64-pc-windows-msvc.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "ripgrep-{version}-x86_64-pc-windows-msvc",
+          "bin": {
+            "rg": "rg.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "15.2.0": {
+      "recipe": "rd30071f84d08f8f9",
+      "sha256": "71b2fef860abe467217a538ff31de02f5258807c0129f771846f87bd029aafc5"
+    }
+  }
+}

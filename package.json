@@ -7,6 +7,8 @@
   },
   "scripts": {
     "check": "node scripts/check.mjs",
+    "compact:check": "node scripts/compact.mjs --check",
+    "compact": "node scripts/compact.mjs --write",
     "test": "node --test tests/*.test.mjs",
     "update:discover": "node scripts/update.mjs --discover",
     "update:check": "node scripts/update.mjs --check",

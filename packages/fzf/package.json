@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "name": "fzf",
+  "recipes": {
+    "r2939b9059aa5765e": {
+      "schemaVersion": 1,
+      "name": "fzf",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/junegunn/fzf/releases/download/v{version}/fzf-{version}-windows_amd64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "fzf": "fzf.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.74.5": {
+      "recipe": "r2939b9059aa5765e",
+      "sha256": "01f854ec8b9b47c99a7d78023638f7d2056cfb0af56b72dabd112032eed3993e"
+    }
+  }
+}

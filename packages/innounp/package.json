@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "name": "innounp",
+  "recipes": {
+    "r78062e536723f2b8": {
+      "schemaVersion": 1,
+      "name": "innounp",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "innounp": "innounp.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.71.2": {
+      "recipe": "r78062e536723f2b8",
+      "sha256": "10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd"
+    }
+  }
+}

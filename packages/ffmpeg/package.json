@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "name": "ffmpeg",
+  "recipes": {
+    "rf761ba69e84e3580": {
+      "schemaVersion": 1,
+      "name": "ffmpeg",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/GyanD/codexffmpeg/releases/download/{version}/ffmpeg-{version}-full_build.7z",
+          "sha256": "{sha256}",
+          "format": "7z",
+          "bin": {
+            "ffmpeg": "bin/ffmpeg.exe",
+            "ffplay": "bin/ffplay.exe",
+            "ffprobe": "bin/ffprobe.exe"
+          },
+          "stripPrefix": "ffmpeg-{version}-full_build",
+          "persist": [
+            "fonts"
+          ],
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "9.0.2": {
+      "recipe": "rf761ba69e84e3580",
+      "sha256": "f0e46253c70dfe902bac915dfb4224f0cf1b7c6eeab9da2ccc9a5581f9a71b13"
+    }
+  }
+}

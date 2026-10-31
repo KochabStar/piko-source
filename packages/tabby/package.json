@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 2,
+  "name": "tabby",
+  "recipes": {
+    "re8f55c6ca02b9100": {
+      "schemaVersion": 1,
+      "name": "tabby",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/Eugeny/tabby/releases/download/v{version}/tabby-{version}-setup-x64.exe",
+          "sha256": "{sha256}",
+          "format": "nsis",
+          "nested": [
+            {
+              "path": "$PLUGINSDIR/app-64.7z",
+              "format": "7z"
+            }
+          ],
+          "bin": {
+            "tabby": "Tabby.exe"
+          },
+          "persist": [
+            "data"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "tabby",
+                "path": "Tabby.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.0.238": {
+      "recipe": "re8f55c6ca02b9100",
+      "sha256": "55d15ddd2ed4307d13359a5f9f79ea0728cead4c5c723d4a5029715ccfb7886b"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "firacode-nf",
+  "recipes": {
+    "r7a3582f6cb0f584a": {
+      "schemaVersion": 1,
+      "name": "firacode-nf",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v{version}/FiraCode.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {},
+          "desktop": {
+            "fonts": [
+              "FiraCodeNerdFont-Bold.ttf",
+              "FiraCodeNerdFont-Light.ttf",
+              "FiraCodeNerdFont-Medium.ttf",
+              "FiraCodeNerdFont-Regular.ttf",
+              "FiraCodeNerdFont-Retina.ttf",
+              "FiraCodeNerdFont-SemiBold.ttf"
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "3.5.1": {
+      "recipe": "r7a3582f6cb0f584a",
+      "sha256": "239395baf60c89b2eaf4862b6b09db0ef95605cd3e8eef51c00345822a81a665"
+    }
+  }
+}

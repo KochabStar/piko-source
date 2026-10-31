@@ -1,6 +1,7 @@
 import { readFile, lstat, readdir } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
 import { createHash } from "node:crypto";
+import { resolveManifestDocument } from "./manifest-template.mjs";
 export const MiB = 1024 * 1024,
   GiB = 1024 * MiB;
 export const digest = (data) => createHash("sha256").update(data).digest("hex");
@@ -377,6 +378,8 @@ export async function loadCatalog(root) {
     "Invalid index",
   );
   const manifests = new Map(),
+    documents = new Map(),
+    fileBytes = new Map(),
     indexed = new Set();
   for (const [name, entry] of Object.entries(index.packages)) {
     component(name);
@@ -401,18 +404,47 @@ export async function loadCatalog(root) {
     for (const [version, file] of Object.entries(entry.versions)) {
       component(version);
       requireThat(
-        file === `packages/${name}/${version}.json`,
+        file === `packages/${name}/${version}.json` ||
+          file === `packages/${name}/package.json`,
         "Noncanonical manifest path",
       );
-      await noSymlinks(root, join(root, file));
+      if (!documents.has(file)) {
+        await noSymlinks(root, join(root, file));
+        const bytes = await readFile(join(root, file));
+        fileBytes.set(file, bytes);
+        documents.set(file, JSON.parse(bytes.toString("utf8")));
+      }
+      const document = documents.get(file);
+      requireThat(
+        file !== `packages/${name}/package.json` ||
+          document.schemaVersion === 2,
+        "Shared package files require a template document",
+      );
       const m = validateManifest(
-        JSON.parse(await readFile(join(root, file), "utf8")),
+        resolveManifestDocument(document, name, version),
         name,
         version,
       );
       manifests.set(name + "@" + version, m);
       indexed.add(file);
     }
+  }
+  for (const [file, document] of documents) {
+    if (document.schemaVersion !== 2) continue;
+    const entry = index.packages[document.name];
+    requireThat(
+      Object.keys(document.versions).length ===
+        Object.values(entry.versions).filter((p) => p === file).length &&
+        Object.keys(document.versions).every((v) => entry.versions[v] === file),
+      "Template versions differ from index",
+    );
+    const used = new Set(
+      Object.values(document.versions).map((row) => row.recipe),
+    );
+    requireThat(
+      Object.keys(document.recipes).every((id) => used.has(id)),
+      "Unreferenced template recipe",
+    );
   }
   for (const folder of await readdir(join(root, "packages"), {
     withFileTypes: true,
@@ -431,7 +463,7 @@ export async function loadCatalog(root) {
         "Unindexed package manifest",
       );
   }
-  return { root, index, manifests, indexBytes };
+  return { root, index, manifests, indexBytes, documents, fileBytes };
 }
 export function validateRules(catalog, config) {
   requireThat(

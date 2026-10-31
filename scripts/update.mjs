@@ -25,6 +25,7 @@ import { network } from "./lib/net.mjs";
 import { applyTortoiseRecipe } from "./lib/tortoise-recipe.mjs";
 import { Tools } from "./lib/tools.mjs";
 import { checkLayout } from "./lib/layout.mjs";
+import { appendManifest } from "./lib/manifest-template.mjs";
 
 export function nextManifest(current, candidate, rule) {
   const next = structuredClone(current),
@@ -330,38 +331,62 @@ export async function runUpdate(
             catalog.index.packages[name].latest
           ];
         requireThat(
-          JSON.stringify(
-            JSON.parse(await readFile(join(root, file), "utf8")),
-          ) ===
-            JSON.stringify(
-              catalog.manifests.get(
-                name + "@" + catalog.index.packages[name].latest,
-              ),
-            ),
+          (await readFile(join(root, file))).equals(
+            catalog.fileBytes.get(file),
+          ),
           "Manifest changed during verification; rerun without overwriting concurrent edits",
         );
       }
-      // New version files are written exclusively before switching the index.
-      // Existing bytes are immutable. Interrupted unindexed writes are removed.
-      const created = [];
+      // Append verified rows to shared package documents, or create legacy
+      // version files. Retained resolved manifests stay immutable; restore
+      // replaced documents if the index cannot be published.
+      const created = [],
+        replaced = [],
+        temporary = [];
       const draft = structuredClone(catalog.index);
       let published = false,
         stage;
       try {
         for (const { name, manifest } of planned) {
-          const file = `packages/${name}/${manifest.version}.json`,
-            path = join(root, file);
+          const entry = catalog.index.packages[name];
+          const previousFile = entry.versions[entry.latest];
+          const template =
+            catalog.documents.get(previousFile)?.schemaVersion === 2;
+          const file = template
+            ? previousFile
+            : `packages/${name}/${manifest.version}.json`;
+          const path = join(root, file);
           await mkdir(join(root, "packages", name), { recursive: true });
-          try {
-            await lstat(path);
-            throw Error("Version file already exists: " + file);
-          } catch (e) {
-            if (e.code !== "ENOENT") throw e;
+          if (template) {
+            const nextDocument = appendManifest(
+              catalog.documents.get(file),
+              manifest,
+            );
+            const tempFile = path + ".tmp-" + process.pid;
+            temporary.push(tempFile);
+            await writeFile(
+              tempFile,
+              JSON.stringify(nextDocument, null, 2) + "\n",
+              { flag: "wx" },
+            );
+            requireThat(
+              (await readFile(path)).equals(catalog.fileBytes.get(file)),
+              "Template changed during verification",
+            );
+            await rename(tempFile, path);
+            replaced.push({ path, before: catalog.fileBytes.get(file) });
+          } else {
+            try {
+              await lstat(path);
+              throw Error("Version file already exists: " + file);
+            } catch (e) {
+              if (e.code !== "ENOENT") throw e;
+            }
+            await writeFile(path, JSON.stringify(manifest, null, 2) + "\n", {
+              flag: "wx",
+            });
+            created.push(path);
           }
-          await writeFile(path, JSON.stringify(manifest, null, 2) + "\n", {
-            flag: "wx",
-          });
-          created.push(path);
           draft.packages[name].versions[manifest.version] = file;
           draft.packages[name].latest = manifest.version;
         }
@@ -372,8 +397,12 @@ export async function runUpdate(
         await rename(stage, join(root, "index.json"));
         published = true;
       } finally {
-        if (!published)
+        if (!published) {
+          for (const { path, before } of replaced.reverse())
+            await writeFile(path, before);
           for (const path of created) await rm(path, { force: true });
+        }
+        for (const path of temporary) await rm(path, { force: true });
         if (stage) await rm(stage, { force: true });
       }
       await loadCatalog(root);

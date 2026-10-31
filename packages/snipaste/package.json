@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "name": "snipaste",
+  "recipes": {
+    "ra8b3c413205d9d72": {
+      "schemaVersion": 1,
+      "name": "snipaste",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://download.snipaste.com/archives/Snipaste-{version}-x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "snipaste": "Snipaste.exe"
+          },
+          "persist": [
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "seed",
+              "initial": ""
+            },
+            "history"
+          ],
+          "configTemplates": {
+            "config.ini": {
+              "text": "[General]\nconfig={{persist}}/config.ini\n"
+            }
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Snipaste",
+                "path": "Snipaste.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.11.3": {
+      "recipe": "ra8b3c413205d9d72",
+      "sha256": "cbf572e18a79c93f9a573bbccab2ed8566141759a0c656c768932f0fedf94189"
+    }
+  }
+}

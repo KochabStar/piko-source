@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "name": "todesk",
+  "recipes": {
+    "r9e3b307c3beddebe": {
+      "schemaVersion": 1,
+      "name": "todesk",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
+          "sha256": "{sha256}",
+          "maxBytes": "{maxBytes}",
+          "format": "nsis",
+          "bin": {
+            "todesk": "ToDesk.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "nested": [
+            {
+              "path": "app64.7z",
+              "format": "7z"
+            }
+          ],
+          "persist": [
+            "Logs",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": "[ConfigInfo]\nautoStart=0\n"
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "ToDesk",
+                "path": "ToDesk.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "4.9.8.0": {
+      "recipe": "r9e3b307c3beddebe",
+      "maxBytes": 106954752,
+      "sha256": "dcb7c5d2d9361fd7d7898986a3e0de6f0d2ea616114c36c5fc1ca4a4275abd32"
+    },
+    "5.2.3.0": {
+      "recipe": "r9e3b307c3beddebe",
+      "maxBytes": 119537664,
+      "sha256": "ee810161d81054f4458f9d0fc2ef8e0cbe5ed9bf489559aae8b4c6e71d80389e"
+    }
+  }
+}

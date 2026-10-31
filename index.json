@@ -8,223 +8,223 @@
       },
       "latest": "26.12.1",
       "versions": {
-        "26.12.1": "packages/node/26.12.1.json"
+        "26.12.1": "packages/node/package.json"
       }
     },
     "ripgrep": {
       "latest": "15.2.0",
       "versions": {
-        "15.2.0": "packages/ripgrep/15.2.0.json"
+        "15.2.0": "packages/ripgrep/package.json"
       }
     },
     "lua": {
       "latest": "5.5.0",
       "versions": {
-        "5.5.0": "packages/lua/5.5.0.json"
+        "5.5.0": "packages/lua/package.json"
       }
     },
     "z.lua": {
       "latest": "1.8.26",
       "versions": {
-        "1.8.26": "packages/z.lua/1.8.26.json"
+        "1.8.26": "packages/z.lua/package.json"
       }
     },
     "starship": {
       "latest": "1.27.0",
       "versions": {
-        "1.27.0": "packages/starship/1.27.0.json"
+        "1.27.0": "packages/starship/package.json"
       }
     },
     "fzf": {
       "latest": "0.74.5",
       "versions": {
-        "0.74.5": "packages/fzf/0.74.5.json"
+        "0.74.5": "packages/fzf/package.json"
       }
     },
     "psfzf": {
       "latest": "2.7.12",
       "versions": {
-        "2.7.12": "packages/psfzf/2.7.12.json"
+        "2.7.12": "packages/psfzf/package.json"
       }
     },
     "sudo": {
       "latest": "0.2020.01.26",
       "versions": {
-        "0.2020.01.26": "packages/sudo/0.2020.01.26.json"
+        "0.2020.01.26": "packages/sudo/package.json"
       }
     },
     "snipaste": {
       "latest": "2.11.3",
       "versions": {
-        "2.11.3": "packages/snipaste/2.11.3.json"
+        "2.11.3": "packages/snipaste/package.json"
       }
     },
     "7zip": {
       "latest": "26.05",
       "versions": {
-        "26.05": "packages/7zip/26.05.json"
+        "26.05": "packages/7zip/package.json"
       }
     },
     "beyondcompare-zh-cn": {
       "latest": "5.2.7.32913",
       "versions": {
-        "5.2.6.32774": "packages/beyondcompare-zh-cn/5.2.6.32774.json",
-        "5.2.7.32913": "packages/beyondcompare-zh-cn/5.2.7.32913.json"
+        "5.2.6.32774": "packages/beyondcompare-zh-cn/package.json",
+        "5.2.7.32913": "packages/beyondcompare-zh-cn/package.json"
       }
     },
     "obsidian": {
       "latest": "1.14.5",
       "versions": {
-        "1.14.5": "packages/obsidian/1.14.5.json"
+        "1.14.5": "packages/obsidian/package.json"
       }
     },
     "tabby": {
       "latest": "1.0.238",
       "versions": {
-        "1.0.238": "packages/tabby/1.0.238.json"
+        "1.0.238": "packages/tabby/package.json"
       }
     },
     "llvm": {
       "latest": "23.1.4-piko.1",
       "versions": {
-        "23.1.4": "packages/llvm/23.1.4.json",
-        "23.1.4-piko.1": "packages/llvm/23.1.4-piko.1.json"
+        "23.1.4": "packages/llvm/package.json",
+        "23.1.4-piko.1": "packages/llvm/package.json"
       }
     },
     "firacode-nf": {
       "latest": "3.5.1",
       "versions": {
-        "3.5.1": "packages/firacode-nf/3.5.1.json"
+        "3.5.1": "packages/firacode-nf/package.json"
       }
     },
     "hack-nf-mono": {
       "latest": "3.5.1",
       "versions": {
-        "3.5.1": "packages/hack-nf-mono/3.5.1.json"
+        "3.5.1": "packages/hack-nf-mono/package.json"
       }
     },
     "rustup": {
       "latest": "1.29.2",
       "versions": {
-        "1.29.2": "packages/rustup/1.29.2.json"
+        "1.29.2": "packages/rustup/package.json"
       }
     },
     "flclash": {
       "latest": "0.9.2",
       "versions": {
-        "0.9.2": "packages/flclash/0.9.2.json"
+        "0.9.2": "packages/flclash/package.json"
       }
     },
     "tortoise-svn": {
       "latest": "1.15.0.29830-piko.1",
       "versions": {
-        "1.14.9.29743": "packages/tortoise-svn/1.14.9.29743.json",
-        "1.15.0.29830": "packages/tortoise-svn/1.15.0.29830.json",
-        "1.15.0.29830-piko.1": "packages/tortoise-svn/1.15.0.29830-piko.1.json"
+        "1.14.9.29743": "packages/tortoise-svn/package.json",
+        "1.15.0.29830": "packages/tortoise-svn/package.json",
+        "1.15.0.29830-piko.1": "packages/tortoise-svn/package.json"
       }
     },
     "aria2": {
       "latest": "1.37.0-1",
       "versions": {
-        "1.37.0-1": "packages/aria2/1.37.0-1.json"
+        "1.37.0-1": "packages/aria2/package.json"
       }
     },
     "cmake": {
       "latest": "4.4.5",
       "versions": {
-        "4.4.5": "packages/cmake/4.4.5.json"
+        "4.4.5": "packages/cmake/package.json"
       }
     },
     "dbgate": {
       "latest": "7.3.3",
       "versions": {
-        "7.3.2": "packages/dbgate/7.3.2.json",
-        "7.3.3": "packages/dbgate/7.3.3.json"
+        "7.3.2": "packages/dbgate/package.json",
+        "7.3.3": "packages/dbgate/package.json"
       }
     },
     "ffmpeg": {
       "latest": "9.0.2",
       "versions": {
-        "9.0.2": "packages/ffmpeg/9.0.2.json"
+        "9.0.2": "packages/ffmpeg/package.json"
       }
     },
     "gh": {
       "latest": "2.103.3",
       "versions": {
-        "2.103.3": "packages/gh/2.103.3.json"
+        "2.103.3": "packages/gh/package.json"
       }
     },
     "git": {
       "latest": "2.56.0.4",
       "versions": {
-        "2.56.0.4": "packages/git/2.56.0.4.json"
+        "2.56.0.4": "packages/git/package.json"
       }
     },
     "inno-setup": {
       "latest": "7.1.0",
       "versions": {
-        "7.1.0": "packages/inno-setup/7.1.0.json"
+        "7.1.0": "packages/inno-setup/package.json"
       }
     },
     "innounp": {
       "latest": "2.71.2",
       "versions": {
-        "2.71.2": "packages/innounp/2.71.2.json"
+        "2.71.2": "packages/innounp/package.json"
       }
     },
     "lazygit": {
       "latest": "0.66.2",
       "versions": {
-        "0.66.2": "packages/lazygit/0.66.2.json"
+        "0.66.2": "packages/lazygit/package.json"
       }
     },
     "localsend": {
       "latest": "1.18.2",
       "versions": {
-        "1.18.2": "packages/localsend/1.18.2.json"
+        "1.18.2": "packages/localsend/package.json"
       }
     },
     "ninja": {
       "latest": "1.13.2",
       "versions": {
-        "1.13.2": "packages/ninja/1.13.2.json"
+        "1.13.2": "packages/ninja/package.json"
       }
     },
     "pi": {
       "latest": "1.4.0",
       "versions": {
-        "1.4.0": "packages/pi/1.4.0.json"
+        "1.4.0": "packages/pi/package.json"
       }
     },
     "oh-my-pi": {
       "latest": "18.14.1",
       "versions": {
-        "18.13.2": "packages/oh-my-pi/18.13.2.json",
-        "18.14.1": "packages/oh-my-pi/18.14.1.json"
+        "18.13.2": "packages/oh-my-pi/package.json",
+        "18.14.1": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
       "latest": "4-4215",
       "versions": {
-        "4-4215": "packages/sublime-text/4-4215.json"
+        "4-4215": "packages/sublime-text/package.json"
       }
     },
     "wave-terminal": {
       "latest": "0.14.5",
       "versions": {
-        "0.14.5": "packages/wave-terminal/0.14.5.json"
+        "0.14.5": "packages/wave-terminal/package.json"
       }
     },
     "xmake": {
       "latest": "3.1.2",
       "versions": {
-        "3.1.2": "packages/xmake/3.1.2.json"
+        "3.1.2": "packages/xmake/package.json"
       }
     },
     "go": {
       "latest": "1.27.3",
       "versions": {
-        "1.27.3": "packages/go/1.27.3.json"
+        "1.27.3": "packages/go/package.json"
       },
       "runtime": {
         "family": "go",
@@ -234,72 +234,72 @@
     "uv": {
       "latest": "0.13.6",
       "versions": {
-        "0.13.5": "packages/uv/0.13.5.json",
-        "0.13.6": "packages/uv/0.13.6.json"
+        "0.13.5": "packages/uv/package.json",
+        "0.13.6": "packages/uv/package.json"
       }
     },
     "pixi": {
       "latest": "0.83.0",
       "versions": {
-        "0.83.0": "packages/pixi/0.83.0.json"
+        "0.83.0": "packages/pixi/package.json"
       }
     },
     "codex": {
       "latest": "0.164.0",
       "versions": {
-        "0.164.0": "packages/codex/0.164.0.json"
+        "0.164.0": "packages/codex/package.json"
       }
     },
     "orca": {
       "latest": "1.4.245",
       "versions": {
-        "1.4.243": "packages/orca/1.4.243.json",
-        "1.4.245": "packages/orca/1.4.245.json"
+        "1.4.243": "packages/orca/package.json",
+        "1.4.245": "packages/orca/package.json"
       }
     },
     "listary": {
       "latest": "6.3.5.94",
       "versions": {
-        "6.3.5.94": "packages/listary/6.3.5.94.json"
+        "6.3.5.94": "packages/listary/package.json"
       }
     },
     "wecom": {
       "latest": "5.0.13.6005",
       "versions": {
-        "5.0.13.6005": "packages/wecom/5.0.13.6005.json"
+        "5.0.13.6005": "packages/wecom/package.json"
       }
     },
     "tabbit": {
       "latest": "1.19.25.0",
       "versions": {
-        "1.19.25.0": "packages/tabbit/1.19.25.0.json"
+        "1.19.25.0": "packages/tabbit/package.json"
       }
     },
     "todesk": {
       "latest": "5.2.3.0",
       "versions": {
-        "4.9.8.0": "packages/todesk/4.9.8.0.json",
-        "5.2.3.0": "packages/todesk/5.2.3.0.json"
+        "4.9.8.0": "packages/todesk/package.json",
+        "5.2.3.0": "packages/todesk/package.json"
       }
     },
     "dingtalk": {
       "latest": "9.0.2.261013001",
       "versions": {
-        "8.2.5.260113006": "packages/dingtalk/8.2.5.260113006.json",
-        "9.0.2.261013001": "packages/dingtalk/9.0.2.261013001.json"
+        "8.2.5.260113006": "packages/dingtalk/package.json",
+        "9.0.2.261013001": "packages/dingtalk/package.json"
       }
     },
     "wechat": {
       "latest": "4.2.0.9",
       "versions": {
-        "4.2.0.9": "packages/wechat/4.2.0.9.json"
+        "4.2.0.9": "packages/wechat/package.json"
       }
     },
     "sunlogin": {
       "latest": "16.8.0.33445-piko.1",
       "versions": {
-        "16.8.0.33445": "packages/sunlogin/16.8.0.33445.json",
-        "16.8.0.33445-piko.1": "packages/sunlogin/16.8.0.33445-piko.1.json"
+        "16.8.0.33445": "packages/sunlogin/package.json",
+        "16.8.0.33445-piko.1": "packages/sunlogin/package.json"
       }
     }
   }

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "name": "psfzf",
+  "recipes": {
+    "r975811328aba39ed": {
+      "schemaVersion": 1,
+      "name": "psfzf",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://cdn.powershellgallery.com/packages/psfzf.{version}.nupkg",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {},
+          "depends": [
+            {
+              "package": "fzf",
+              "commands": [
+                "fzf"
+              ]
+            }
+          ],
+          "shell": {
+            "powershell": "$module = Join-Path $PikoPackageRoot 'PSFzf.psd1'\n$loaded = Get-Module PSFzf\nif ($loaded -and ($loaded.ModuleBase -ne $PikoPackageRoot)) { throw 'Another PSFzf module is already loaded; open a clean Shell.' }\n$oldPath = $env:PATH\ntry {\n  $env:PATH = (Split-Path $PikoDependencies['fzf']) + ';' + $oldPath\n  Import-Module $module -Global -ErrorAction Stop\n} finally { $env:PATH = $oldPath }"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.7.12": {
+      "recipe": "r975811328aba39ed",
+      "sha256": "5d5c55df79d24b5efbb6c6715c12ec12cb34f32dca57f5c90868de7f47a9b1ad"
+    }
+  }
+}

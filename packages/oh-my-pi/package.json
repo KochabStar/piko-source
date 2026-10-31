@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "name": "oh-my-pi",
+  "recipes": {
+    "r607104fb13f7aa5b": {
+      "schemaVersion": 1,
+      "name": "oh-my-pi",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/can1357/oh-my-pi/releases/download/v{version}/omp-windows-x64.exe",
+          "sha256": "{sha256}",
+          "format": "file",
+          "bin": {
+            "omp": "omp.exe"
+          },
+          "file": "omp.exe",
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "18.13.2": {
+      "recipe": "r607104fb13f7aa5b",
+      "sha256": "95c45f53fff419ae4aff5cf07e6af38f297fc7e754947bcb85d9d2253fcae17a"
+    },
+    "18.14.1": {
+      "recipe": "r607104fb13f7aa5b",
+      "maxBytes": 536870912,
+      "sha256": "5b72f0e46e9cd441793d399d36f319a656f2e3c9a3f1997342e46fa885614913"
+    }
+  }
+}

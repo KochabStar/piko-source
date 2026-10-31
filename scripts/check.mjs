@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveManifestDocument } from "./lib/manifest-template.mjs";
 import { loadCatalog, validateRules, requireThat } from "./lib/catalog.mjs";
 export async function checkSource(root, { base } = {}) {
   const catalog = await loadCatalog(root),
@@ -20,19 +21,33 @@ export async function checkSource(root, { base } = {}) {
         maxBuffer: 32 * 1024 * 1024,
       });
     const before = JSON.parse(show("index.json").toString("utf8"));
+    const oldDocuments = new Map();
     for (const [name, entry] of Object.entries(before.packages))
       for (const [version, file] of Object.entries(entry.versions)) {
+        const nextFile = catalog.index.packages[name]?.versions[version];
         requireThat(
-          catalog.index.packages[name]?.versions[version] === file,
-          "Previously published version removed or repointed: " +
-            name +
-            "@" +
-            version,
+          nextFile,
+          "Previously published version removed: " + name + "@" + version,
         );
+        if (!oldDocuments.has(file)) {
+          const bytes = show(file);
+          oldDocuments.set(file, {
+            bytes,
+            document: JSON.parse(bytes.toString("utf8")),
+          });
+        }
+        const old = oldDocuments.get(file);
+        const previous = resolveManifestDocument(old.document, name, version);
+        const current = catalog.manifests.get(name + "@" + version);
         requireThat(
-          show(file).equals(await readFile(join(root, file))),
-          "Previously published manifest modified: " + file,
+          JSON.stringify(previous) === JSON.stringify(current),
+          "Previously published manifest modified: " + name + "@" + version,
         );
+        if (old.document.schemaVersion === 1 && nextFile === file)
+          requireThat(
+            old.bytes.equals(catalog.fileBytes.get(file)),
+            "Previously published manifest modified: " + file,
+          );
       }
   }
   return {

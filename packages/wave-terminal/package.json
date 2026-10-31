@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "wave-terminal",
+  "recipes": {
+    "ra10fd1b7726656de": {
+      "schemaVersion": 1,
+      "name": "wave-terminal",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/wavetermdev/waveterm/releases/download/v{version}/Wave-win32-x64-{version}.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "wave": "Wave.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Wave",
+                "path": "Wave.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.14.5": {
+      "recipe": "ra10fd1b7726656de",
+      "sha256": "61d132770a5b44a4ab1d6f4fe111fcb270047b97ef0e6f2d4f7d93562eea79dd"
+    }
+  }
+}

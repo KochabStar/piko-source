@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "name": "orca",
+  "recipes": {
+    "r6f5a5ea39a8dbd7e": {
+      "schemaVersion": 1,
+      "name": "orca",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/stablyai/orca/releases/download/v{version}/orca-windows-setup.exe",
+          "sha256": "{sha256}",
+          "maxBytes": "{maxBytes}",
+          "format": "nsis",
+          "bin": {
+            "orca": "resources/bin/orca.exe",
+            "orca-gui": "Orca.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "nested": [
+            {
+              "path": "$PLUGINSDIR/app-64.7z",
+              "format": "7z"
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Orca",
+                "path": "Orca.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.4.243": {
+      "recipe": "r6f5a5ea39a8dbd7e",
+      "maxBytes": 211812352,
+      "sha256": "0399692f7d9843b1a2cb97c233848dc3e9b037a6f5ca8f07d248d24c219c5fdf"
+    },
+    "1.4.245": {
+      "recipe": "r6f5a5ea39a8dbd7e",
+      "maxBytes": 216006656,
+      "sha256": "e1c96fd574878fa57257ca28cdf7298c586639153fb25ebe6253c47b1cb07803"
+    }
+  }
+}

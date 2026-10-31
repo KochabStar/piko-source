@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "name": "rustup",
+  "recipes": {
+    "r4ac6c50505b1a41a": {
+      "schemaVersion": 1,
+      "name": "rustup",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",
+          "sha256": "{sha256}",
+          "format": "file",
+          "file": "rustup-init.exe",
+          "bin": {
+            "rustup": {
+              "path": ".cargo/bin/rustup.exe",
+              "kind": "native",
+              "data": true
+            },
+            "cargo": {
+              "path": ".cargo/bin/cargo.exe",
+              "kind": "native",
+              "data": true
+            },
+            "rustc": {
+              "path": ".cargo/bin/rustc.exe",
+              "kind": "native",
+              "data": true
+            },
+            "rustdoc": {
+              "path": ".cargo/bin/rustdoc.exe",
+              "kind": "native",
+              "data": true
+            },
+            "rustfmt": {
+              "path": ".cargo/bin/rustfmt.exe",
+              "kind": "native",
+              "data": true
+            },
+            "cargo-fmt": {
+              "path": ".cargo/bin/cargo-fmt.exe",
+              "kind": "native",
+              "data": true
+            },
+            "cargo-clippy": {
+              "path": ".cargo/bin/cargo-clippy.exe",
+              "kind": "native",
+              "data": true
+            },
+            "clippy-driver": {
+              "path": ".cargo/bin/clippy-driver.exe",
+              "kind": "native",
+              "data": true
+            }
+          },
+          "persist": [
+            ".cargo",
+            ".rustup"
+          ],
+          "env": {
+            "CARGO_HOME": "{persist}/.cargo",
+            "RUSTUP_HOME": "{persist}/.rustup"
+          },
+          "bootstrap": {
+            "path": "rustup-init.exe",
+            "args": [
+              "-y",
+              "--no-modify-path",
+              "--default-toolchain",
+              "none",
+              "--profile",
+              "minimal"
+            ],
+            "env": {
+              "CARGO_HOME": "{persist}/.cargo",
+              "RUSTUP_HOME": "{persist}/.rustup"
+            },
+            "outputs": [
+              ".cargo/bin/rustup.exe",
+              ".cargo/bin/cargo.exe",
+              ".cargo/bin/rustc.exe",
+              ".cargo/bin/rustdoc.exe",
+              ".cargo/bin/rustfmt.exe",
+              ".cargo/bin/cargo-fmt.exe",
+              ".cargo/bin/cargo-clippy.exe",
+              ".cargo/bin/clippy-driver.exe"
+            ]
+          },
+          "desktop": {
+            "environment": {
+              "CARGO_HOME": "{persist}/.cargo",
+              "RUSTUP_HOME": "{persist}/.rustup"
+            }
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.29.2": {
+      "recipe": "r4ac6c50505b1a41a",
+      "sha256": "00f139da614dced87d3c3d4121c43eebdac3c1bf8a5ee86b9d80dfd71c8d70fd"
+    }
+  }
+}

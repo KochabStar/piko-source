@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "name": "tabbit",
+  "recipes": {
+    "rd55f36226f5e9ec6": {
+      "schemaVersion": 1,
+      "name": "tabbit",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://releases.tabbit.com/upgrade/windows/stable_x64_cn/Tabbit%20Browser_stable_x64_cn_1.19.25.exe",
+          "sha256": "{sha256}",
+          "maxBytes": "{maxBytes}",
+          "format": "7z",
+          "bin": {
+            "tabbit": "Tabbit Browser.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "nested": [
+            {
+              "path": "updater.7z",
+              "format": "7z"
+            },
+            {
+              "path": "bin/Offline/{8394846c-3997-4070-89f0-204bedbfb9c8}/{908E3278-51FC-4D62-A1D5-CCB182BCCC26}/mini_installer.exe",
+              "format": "7z"
+            },
+            {
+              "path": "chrome.7z",
+              "format": "7z",
+              "stripPrefix": "Chrome-bin"
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Tabbit",
+                "path": "Tabbit Browser.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.19.25.0": {
+      "recipe": "rd55f36226f5e9ec6",
+      "maxBytes": 250609664,
+      "sha256": "7c06e4aa7726d102d48a52677650e994512e627e7f695a5514fd8b2db3ac0f79"
+    }
+  }
+}

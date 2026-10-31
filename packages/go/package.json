@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "name": "go",
+  "recipes": {
+    "r2cd87f7373f10627": {
+      "schemaVersion": 1,
+      "name": "go",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://dl.google.com/go/go{version}.windows-amd64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "go",
+          "bin": {
+            "go": "bin/go.exe",
+            "gofmt": "bin/gofmt.exe"
+          },
+          "env": {
+            "GOROOT": "{root}"
+          },
+          "desktop": {
+            "environment": {
+              "GOROOT": "{root}"
+            },
+            "path": [
+              "bin"
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.27.3": {
+      "recipe": "r2cd87f7373f10627",
+      "sha256": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff"
+    }
+  }
+}

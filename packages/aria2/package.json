@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "name": "aria2",
+  "recipes": {
+    "r932670e581f7dfd2": {
+      "schemaVersion": 1,
+      "name": "aria2",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0-win-64bit-build1.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "aria2-1.37.0-win-64bit-build1",
+          "bin": {
+            "aria2c": "aria2c.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.37.0-1": {
+      "recipe": "r932670e581f7dfd2",
+      "sha256": "67d015301eef0b612191212d564c5bb0a14b5b9c4796b76454276a4d28d9b288"
+    }
+  }
+}

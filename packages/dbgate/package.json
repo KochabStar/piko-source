@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "name": "dbgate",
+  "recipes": {
+    "r3c1aac104f4416aa": {
+      "schemaVersion": 1,
+      "name": "dbgate",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/dbgate/dbgate/releases/download/v{version}/dbgate-{version}-win_x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "dbgate": "DbGate.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "DbGate",
+                "path": "DbGate.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "7.3.2": {
+      "recipe": "r3c1aac104f4416aa",
+      "sha256": "be05ba046bf1532ac1ccd6b7acdd7bebac1224d295780b5be2bf65b724de1eea"
+    },
+    "7.3.3": {
+      "recipe": "r3c1aac104f4416aa",
+      "maxBytes": 536870912,
+      "sha256": "35a20d01c53e0762a6b990afeee8c9cf2036656ff47a2043fcf05670f5b3665f"
+    }
+  }
+}

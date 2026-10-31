@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "name": "inno-setup",
+  "recipes": {
+    "r05095f0e1fa58035": {
+      "schemaVersion": 1,
+      "name": "inno-setup",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/jrsoftware/issrc/releases/download/is-7_1_0/innosetup-{version}-x64.exe",
+          "sha256": "{sha256}",
+          "format": "inno",
+          "bin": {
+            "iscc": "ISCC.exe",
+            "issigtool": "ISSigTool.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Inno Setup Compiler",
+                "path": "ISIDE.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "7.1.0": {
+      "recipe": "r05095f0e1fa58035",
+      "sha256": "0362a383ed217d4c4239b5933866dd96d3eb2102737da92f80f6057a4b40df2f"
+    }
+  }
+}
