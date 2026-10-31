@@ -116,10 +116,11 @@
       }
     },
     "tortoise-svn": {
-      "latest": "1.15.0.29830",
+      "latest": "1.15.0.29830-piko.1",
       "versions": {
         "1.14.9.29743": "packages/tortoise-svn/1.14.9.29743.json",
-        "1.15.0.29830": "packages/tortoise-svn/1.15.0.29830.json"
+        "1.15.0.29830": "packages/tortoise-svn/1.15.0.29830.json",
+        "1.15.0.29830-piko.1": "packages/tortoise-svn/1.15.0.29830-piko.1.json"
       }
     },
     "aria2": {

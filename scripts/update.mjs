@@ -22,6 +22,7 @@ import {
 } from "./lib/catalog.mjs";
 import { discover, compareVersions } from "./lib/providers.mjs";
 import { network } from "./lib/net.mjs";
+import { applyTortoiseRecipe } from "./lib/tortoise-recipe.mjs";
 import { Tools } from "./lib/tools.mjs";
 import { checkLayout } from "./lib/layout.mjs";
 
@@ -249,8 +250,9 @@ export async function runUpdate(
           row.status = "current";
           continue;
         }
-        const next = nextManifest(current, candidate, rule),
-          ds = downloads(next.platforms["windows-x64"]);
+        const next = nextManifest(current, candidate, rule);
+        if (name === "tortoise-svn") await applyTortoiseRecipe(next);
+        const ds = downloads(next.platforms["windows-x64"]);
         for (const d of ds) {
           d.url = candidate.url;
           d.sha256 = artifact.sha256;
