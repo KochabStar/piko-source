@@ -199,10 +199,11 @@
       }
     },
     "oh-my-pi": {
-      "latest": "18.14.1",
+      "latest": "18.14.2",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
-        "18.14.1": "packages/oh-my-pi/package.json"
+        "18.14.1": "packages/oh-my-pi/package.json",
+        "18.14.2": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
