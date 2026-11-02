@@ -301,10 +301,11 @@
       }
     },
     "sunlogin": {
-      "latest": "16.8.0.33445-piko.1",
+      "latest": "16.8.0.33445-piko.2",
       "versions": {
         "16.8.0.33445": "packages/sunlogin/package.json",
-        "16.8.0.33445-piko.1": "packages/sunlogin/package.json"
+        "16.8.0.33445-piko.1": "packages/sunlogin/package.json",
+        "16.8.0.33445-piko.2": "packages/sunlogin/package.json"
       }
     },
     "claude-code": {

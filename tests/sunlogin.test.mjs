@@ -17,6 +17,7 @@ const catalog = await loadCatalog(
 );
 const original = catalog.manifests.get("sunlogin@16.8.0.33445");
 const revision = catalog.manifests.get("sunlogin@16.8.0.33445-piko.1");
+const service = catalog.manifests.get("sunlogin@16.8.0.33445-piko.2");
 
 test("Sunlogin revision launches the extracted GUI, not the outer installer", () => {
   validateManifest(revision, "sunlogin", "16.8.0.33445-piko.1");
@@ -81,6 +82,52 @@ test("Sunlogin index retains the revision and latest keeps the corrected GUI ent
     "flutter/data/icudtl.dat",
     "flutter/data/app.so",
   ]);
+});
+
+test("Sunlogin piko.2 adds an owned backend service integration", () => {
+  validateManifest(service, "sunlogin", "16.8.0.33445-piko.2");
+  const after = service.platforms["windows-x64"];
+  const prior = revision.platforms["windows-x64"];
+  assert.deepEqual(after.bin, prior.bin);
+  assert.deepEqual(after.desktop, prior.desktop);
+  assert.deepEqual(after.downloads, prior.downloads);
+  assert.deepEqual(after.persist, [...prior.persist, ".piko-system"]);
+  const script = after.configFiles["piko-service.ps1"];
+  assert.match(script, /--cmd=install_silent/);
+  assert.match(script, /--serviceonly=1/);
+  assert.match(script, /AweSunService/);
+  assert.match(script, /Another Piko version owns/);
+  assert.deepEqual(after.admin, {
+    install: {
+      kind: "powershell",
+      path: "piko-service.ps1",
+      args: ["install", "{root}", "{persist}/.piko-system"],
+    },
+    remove: {
+      kind: "powershell",
+      path: "piko-service.ps1",
+      args: ["remove", "{root}", "{persist}/.piko-system"],
+    },
+  });
+});
+
+test("future Sunlogin updates inherit the service integration", () => {
+  const next = nextManifest(service, { version: "16.9.0.40000" }, {});
+  const p = next.platforms["windows-x64"];
+  assert.deepEqual(p.admin, service.platforms["windows-x64"].admin);
+  assert.ok(p.configFiles["piko-service.ps1"]);
+  assert.deepEqual(p.persist, service.platforms["windows-x64"].persist);
+});
+
+test("Sunlogin index keeps piko.2 as latest with the service integration", async () => {
+  const index = JSON.parse(
+    await readFile(new URL("../index.json", import.meta.url), "utf8"),
+  );
+  assert.equal(index.packages.sunlogin.latest, "16.8.0.33445-piko.2");
+  assert.equal(
+    index.packages.sunlogin.versions["16.8.0.33445-piko.2"],
+    "packages/sunlogin/package.json",
+  );
 });
 
 for (const missingEntry of [false, true]) {

@@ -107,6 +107,83 @@
           }
         }
       }
+    },
+    "rf395c23137ab36ed": {
+      "schemaVersion": 1,
+      "name": "sunlogin",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "bin": {
+            "sunlogin": "flutter/AweSun.exe",
+            "awesun": "flutter/AweSun.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "downloads": [
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_16.8.0.33445_x64.exe",
+              "sha256": "{sha256}",
+              "maxBytes": "{maxBytes}",
+              "format": "file",
+              "file": "AweSun.exe"
+            },
+            {
+              "url": "https://d-cdn.oray.com/sl/windows/AweSun_16.8.0.33445_x64.exe",
+              "sha256": "{sha2562}",
+              "maxBytes": "{maxBytes2}",
+              "format": "pe",
+              "nested": [
+                {
+                  "path": ".rsrc/2052/SUN_SKIN/111",
+                  "format": "zip"
+                }
+              ]
+            }
+          ],
+          "persist": [
+            "log",
+            "FileTransferFiles",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": ""
+            },
+            ".piko-system"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "向日葵",
+                "path": "flutter/AweSun.exe"
+              }
+            ]
+          },
+          "configFiles": {
+            "piko-service.ps1": "#requires -Version 5.1\nparam([ValidateSet('install','remove')][string]$Action,[Parameter(Mandatory=$true)][string]$Root,[Parameter(Mandatory=$true)][string]$Data)\n$ErrorActionPreference='Stop'\n# Sunlogin backend service integration. Installs through the vendor's silent\n# service-only installer anchored at this version directory and journals the\n# registered services; remove deletes exactly the recorded, root-anchored ones.\n$Root=[IO.Path]::GetFullPath($Root).TrimEnd('\\')\n$outer=Join-Path $Root 'AweSun.exe'\n$journal=Join-Path $Data 'piko-sunlogin-service.json'\nif(!(Test-Path -LiteralPath $outer -PathType Leaf)){throw 'Outer AweSun.exe missing from this version directory'}\nfunction Get-ImagePath([string]$PathName){\n $p=$PathName.Trim()\n if($p.StartsWith('\"')){\n  $end=$p.IndexOf('\"',1)\n  if($end -gt 1){$p=$p.Substring(1,$end-1)}else{$p=$p.Substring(1)}\n }\n $p\n}\nfunction Test-UnderRoot([string]$PathName){(Get-ImagePath $PathName).StartsWith($Root,[System.StringComparison]::OrdinalIgnoreCase)}\nfunction Get-RootServices{@(Get-CimInstance Win32_Service|Where-Object{$_.PathName -and (Test-UnderRoot $_.PathName)})}\n$record=$null\nif(Test-Path -LiteralPath $journal){\n $record=Get-Content -LiteralPath $journal -Raw|ConvertFrom-Json\n if($record.schemaVersion -ne 1){throw 'Unsupported service ownership receipt'}\n if($record.root -ine $Root){throw 'Another Piko version owns the Sunlogin service registration; remove that version first'}\n}\nif($Action -eq 'install'){\n if($record -and $record.state -eq 'installed' -and (Get-RootServices).Count){throw 'Service integration already installed for this version'}\n foreach($foreign in @(Get-CimInstance Win32_Service -Filter \"Name='AweSunService' OR Name='SunloginService'\")){\n  if($foreign.PathName -and !(Test-UnderRoot $foreign.PathName)){throw ('Existing external Sunlogin service '+$foreign.Name+' points outside this version ('+$foreign.PathName+'); remove it through its owner first')}\n }\n $null=[IO.Directory]::CreateDirectory($Data)\n @{schemaVersion=1;root=$Root;state='installing';started=(Get-Date).ToUniversalTime().ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath $journal -Encoding UTF8\n $proc=Start-Process -FilePath $outer -ArgumentList @('--mod=install','--admin=1','--cmd=install_silent','--serviceonly=1',('--path=\"'+$Root+'\"')) -PassThru\n $deadline=(Get-Date).AddSeconds(180)\n $ok=$false\n do{\n  Start-Sleep -Seconds 3\n  $service=Get-CimInstance Win32_Service -Filter \"Name='AweSunService'\"\n  if($service -and $service.State -eq 'Running' -and (Test-UnderRoot $service.PathName)){$ok=$true;break}\n  if($proc.HasExited -and $proc.ExitCode -ne 0){throw ('Vendor service installer failed with exit code '+$proc.ExitCode)}\n }while((Get-Date) -lt $deadline)\n if(!$ok){throw 'Vendor service installer did not reach a running AweSunService under this version directory'}\n if(!$proc.HasExited -and !$proc.WaitForExit(15000)){Stop-Process -Id $proc.Id -Force}\n $names=@(Get-RootServices|ForEach-Object{$_.Name})\n @{schemaVersion=1;root=$Root;state='installed';services=$names;outer=(Get-Item -LiteralPath $outer).VersionInfo.FileVersion.ToString();installed=(Get-Date).ToUniversalTime().ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath $journal -Encoding UTF8\n Write-Output ('Installed Sunlogin service registration: '+($names -join ', '))\n}else{\n if(!$record -or $record.state -ne 'installed'){throw 'No owned Sunlogin service registration for this version'}\n $names=@((Get-RootServices|ForEach-Object{$_.Name})+@($record.services|Where-Object{$_})|Where-Object{$_}|Select-Object -Unique)\n foreach($name in $names){\n  $svc=Get-CimInstance Win32_Service -Filter (\"Name='\"+$name+\"'\")\n  if(!$svc){continue}\n  if(!(Test-UnderRoot $svc.PathName)){Write-Output ('Skipped externally-owned service: '+$name);continue}\n  $null=sc.exe stop $name\n  if($svc.ProcessId){Stop-Process -Id $svc.ProcessId -Force -ErrorAction SilentlyContinue}\n  $null=sc.exe delete $name\n  if(Get-CimInstance Win32_Service -Filter (\"Name='\"+$name+\"'\")){throw ('Failed to delete service: '+$name)}\n }\n Remove-Item -LiteralPath $journal\n Write-Output 'Removed Sunlogin service registration for this version'\n}\n"
+          },
+          "admin": {
+            "install": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "install",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            },
+            "remove": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "remove",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "versions": {
@@ -119,6 +196,13 @@
     },
     "16.8.0.33445-piko.1": {
       "recipe": "r8af2b864ef7562f2",
+      "maxBytes": 106954752,
+      "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
+      "maxBytes2": 106954752,
+      "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
+    },
+    "16.8.0.33445-piko.2": {
+      "recipe": "rf395c23137ab36ed",
       "maxBytes": 106954752,
       "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
       "maxBytes2": 106954752,
