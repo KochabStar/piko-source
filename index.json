@@ -193,9 +193,10 @@
       }
     },
     "pi": {
-      "latest": "1.4.0",
+      "latest": "1.5.0",
       "versions": {
-        "1.4.0": "packages/pi/package.json"
+        "1.4.0": "packages/pi/package.json",
+        "1.5.0": "packages/pi/package.json"
       }
     },
     "oh-my-pi": {
