@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "name": "opencode",
+  "recipes": {
+    "rb83838444f1c20d6": {
+      "schemaVersion": 1,
+      "name": "opencode",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/anomalyco/opencode/releases/download/v{version}/opencode-windows-x64-baseline.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "opencode": "opencode.exe"
+          },
+          "env": {
+            "OPENCODE_DISABLE_AUTOUPDATE": "1"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.19.5": {
+      "recipe": "rb83838444f1c20d6",
+      "sha256": "e4dac5cd38a182a24e7b3e18853f01d08cdb137e50b3bd1397c1a89e54d28c63"
+    }
+  }
+}

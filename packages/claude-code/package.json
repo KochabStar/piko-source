@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "name": "claude-code",
+  "recipes": {
+    "rea4ad89776f92ca5": {
+      "schemaVersion": 1,
+      "name": "claude-code",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://downloads.claude.ai/claude-code-releases/{version}/win32-x64/claude.exe",
+          "sha256": "{sha256}",
+          "format": "file",
+          "file": "claude.exe",
+          "bin": {
+            "claude": "claude.exe"
+          },
+          "env": {
+            "DISABLE_UPDATES": "1"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.1.316": {
+      "recipe": "rea4ad89776f92ca5",
+      "maxBytes": 402653184,
+      "sha256": "e896a9d8da519353a49bf69ca4a695ba7e09067752687c675b3969041e632d52"
+    }
+  }
+}

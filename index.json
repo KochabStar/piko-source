@@ -306,6 +306,42 @@
         "16.8.0.33445": "packages/sunlogin/package.json",
         "16.8.0.33445-piko.1": "packages/sunlogin/package.json"
       }
+    },
+    "claude-code": {
+      "latest": "2.1.316",
+      "versions": {
+        "2.1.316": "packages/claude-code/package.json"
+      }
+    },
+    "opencode": {
+      "latest": "1.19.5",
+      "versions": {
+        "1.19.5": "packages/opencode/package.json"
+      }
+    },
+    "nushell": {
+      "latest": "0.116.1",
+      "versions": {
+        "0.116.1": "packages/nushell/package.json"
+      }
+    },
+    "lertaro": {
+      "latest": "5.12.2",
+      "versions": {
+        "5.12.2": "packages/lertaro/package.json"
+      }
+    },
+    "nvidia-app": {
+      "latest": "11.0.9.565",
+      "versions": {
+        "11.0.9.565": "packages/nvidia-app/package.json"
+      }
+    },
+    "qqnt": {
+      "latest": "9.9.33.52230",
+      "versions": {
+        "9.9.33.52230": "packages/qqnt/package.json"
+      }
     }
   }
 }

@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-31T09:17:36.218Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "claude-code",
+      "version": "2.1.316",
+      "source": "https://downloads.claude.ai/claude-code-releases/2.1.316/win32-x64/claude.exe",
+      "sha256": "e896a9d8da519353a49bf69ca4a695ba7e09067752687c675b3969041e632d52",
+      "archiveBytes": 335469216,
+      "publisherCheck": "Official Claude Code version manifest checksum",
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 335469216,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "opencode",
+      "version": "1.19.5",
+      "source": "https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-windows-x64-baseline.zip",
+      "sha256": "e4dac5cd38a182a24e7b3e18853f01d08cdb137e50b3bd1397c1a89e54d28c63",
+      "archiveBytes": 81738223,
+      "publisherCheck": "GitHub release asset SHA-256",
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 211564424,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "nushell",
+      "version": "0.116.1",
+      "source": "https://github.com/nushell/nushell/releases/download/0.116.1/nu-0.116.1-x86_64-pc-windows-msvc.zip",
+      "sha256": "6658c9e61fe42c88326c1caa99e8dc9ad99bec6c0bc353e6ecb7c5d3f79feed7",
+      "archiveBytes": 60864303,
+      "publisherCheck": "GitHub release asset SHA-256",
+      "layout": {
+        "files": 13,
+        "knownExpandedBytes": 196725719,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "lertaro",
+      "version": "5.12.2",
+      "source": "https://github.com/Lertaro/Lertaro/releases/download/v5.12.2/Lertaro-Portable.zip",
+      "sha256": "96e2eb11a2d1883348771d4c866e2796dcd293f206f1ac46d11686568edec606",
+      "archiveBytes": 7885946,
+      "publisherCheck": "GitHub release asset SHA-256",
+      "layout": {
+        "files": 74,
+        "knownExpandedBytes": 19959770,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "nvidia-app",
+      "version": "11.0.9.565",
+      "source": "https://us.download.nvidia.com/nvapp/client/11.0.9.565/NVIDIA_app_v11.0.9.565.exe",
+      "sha256": "d70cc78e9f4d89326dd106bdaeaa01c190b9354afa3136f6543c64743139576a",
+      "archiveBytes": 184718920,
+      "publisherCheck": "Official NVIDIA HTTPS download, independently computed SHA-256 and Authenticode verification",
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 184718920,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "qqnt",
+      "version": "9.9.33.52230",
+      "source": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x64_01.exe",
+      "sha256": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492",
+      "archiveBytes": 314581680,
+      "publisherCheck": "Official Tencent HTTPS download, independently computed SHA-256 and Authenticode verification",
+      "layout": {
+        "version": "9.9.33.52230",
+        "files": 1868,
+        "knownExpandedBytes": 1463553267,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    },
+    {
+      "name": "codex",
+      "version": "0.166.0",
+      "source": "https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-package-x86_64-pc-windows-msvc.tar.gz",
+      "sha256": "d559bb88e74d471265857b93b7f19bc250dae527673b9191b33534478093f6bc",
+      "archiveBytes": 202589789,
+      "publisherCheck": "GitHub release asset SHA-256",
+      "layout": {
+        "files": 46,
+        "knownExpandedBytes": 586895585,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      }
+    }
+  ],
+  "scope": "Official artifact downloads, SHA-256, metadata/signature and archive-layout checks, followed by isolated Piko installs. Only Claude Code, OpenCode, Nushell and Codex --version were executed; no GUI, installer, service, driver, login, model request or host integration was executed.",
+  "notVerified": [
+    "GUI workflows",
+    "Application authentication or model requests",
+    "Service/driver installation",
+    "Real user-data migration",
+    "Lertaro first-launch service behavior",
+    "NVIDIA App system installation"
+  ],
+  "qqntNewChannel": {
+    "version": "9.9.36.53644",
+    "sha256": "63255c70c7ff523e7eed7d52d9708ed7a77ea346ece6474c65dded406edb3155",
+    "archiveBytes": 330446512,
+    "source": "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.36/release/e8e54bbb/QQ_9.9.36_260924_x64_01.exe",
+    "signedDownloadVerified": true,
+    "published": false,
+    "reason": "Official signed URL supplied by user downloads successfully, while the unsigned URL returns HTTP 403. A time-bound bearer signature is deliberately not committed as a permanent package URL."
+  },
+  "isolatedInstall": {
+    "checkedAt": "2026-10-31T09:26:55.172Z",
+    "scope": "Independent temporary PIKO_HOME and isolated application config directories. Local HTTP served index/packages only; official payloads preseeded by SHA-256 and rechecked by Piko. Host defaults, PATH, profiles, accounts, services and drivers unchanged. GUI and installer entries were never launched.",
+    "packages": [
+      {
+        "name": "claude-code",
+        "version": "2.1.316",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "claude": true
+        },
+        "versionOutput": {
+          "direct": "2.1.316 (Claude Code)",
+          "shim": "2.1.316 (Claude Code)"
+        }
+      },
+      {
+        "name": "opencode",
+        "version": "1.19.5",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "opencode": true
+        },
+        "versionOutput": {
+          "direct": "1.19.5",
+          "shim": "1.19.5"
+        }
+      },
+      {
+        "name": "nushell",
+        "version": "0.116.1",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "nu": true
+        },
+        "versionOutput": {
+          "direct": "0.116.1",
+          "shim": "0.116.1"
+        }
+      },
+      {
+        "name": "lertaro",
+        "version": "5.12.2",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "lertaro": true,
+          "lff": true
+        },
+        "persistentData": {
+          "dataLinkInsideIsolatedRoot": true,
+          "uninstallReinstallMarkerPreserved": true,
+          "realGuiSaveNotTested": true
+        },
+        "guiNotExecuted": true
+      },
+      {
+        "name": "nvidia-app",
+        "version": "11.0.9.565",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "nvidia-app-setup": true
+        },
+        "installerNotExecuted": true
+      },
+      {
+        "name": "qqnt",
+        "version": "9.9.33.52230",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "qq": true,
+          "qqnt": true
+        },
+        "guiNotExecuted": true
+      },
+      {
+        "name": "codex",
+        "version": "0.166.0",
+        "checksumVerifiedInstall": true,
+        "installLeavesDefaultUnchanged": true,
+        "commandResolution": {
+          "codex": true
+        },
+        "versionOutput": {
+          "direct": "codex-cli 0.166.0",
+          "shim": "codex-cli 0.166.0"
+        }
+      }
+    ],
+    "doctorCompleted": true,
+    "doctorNotes": "Temporary root deliberately not added to host PATH; existing external commands may shadow isolated shims. Explicit shim paths were used for version checks."
+  },
+  "regression": {
+    "tests": 106,
+    "passed": 106,
+    "failed": 0,
+    "sourceCheck": true,
+    "publishedHistoryUnchanged": true,
+    "upstreamDiscovery": {
+      "current": [
+        "claude-code",
+        "opencode",
+        "nushell",
+        "lertaro",
+        "nvidia-app",
+        "codex"
+      ],
+      "manual": ["qqnt"],
+      "blocked": 0
+    },
+    "checkedAt": "2026-11-02T00:37:50.412Z",
+    "note": "Publication checks exclude separately preserved, uncommitted Sunlogin service work."
+  }
+}

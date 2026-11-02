@@ -487,6 +487,7 @@ export function validateRules(catalog, config) {
         "github-file",
         "node",
         "go",
+        "claude-code",
         "nuget",
         "regex",
         "json",

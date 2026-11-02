@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-02T00:35:42.945Z",
+  "package": "qqnt",
+  "configurationVersion": "9.9.36",
+  "configurationSource": "https://qq-web.cdn-go.cn/im.qq.com_new/latest/rainbow/pcConfig.json",
+  "artifactIdentity": "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.36/release/e8e54bbb/QQ_9.9.36_260924_x64_01.exe",
+  "signingEndpoint": "https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign",
+  "checks": {
+    "officialConfigFetch": true,
+    "officialSignHttpStatus": 200,
+    "officialSignRetcode": 0,
+    "requiresLogin": false,
+    "credentialsOrCookiesSent": false,
+    "unsignedArtifactHttpStatus": 403,
+    "newlySignedArtifactHttpStatus": 206,
+    "rangeRequested": "bytes=0-1",
+    "contentRange": "bytes 0-1/330446512",
+    "signedScheme": "https",
+    "signedHost": "qqdl.gtimg.cn",
+    "signedPathEqualsArtifactPath": true,
+    "signedParameterNames": ["sign", "t"],
+    "signedAuthorizationCommitted": false
+  },
+  "previousFullArtifactVerification": {
+    "record": "verification/software-additions-20261031.json",
+    "version": "9.9.36.53644",
+    "sha256": "63255c70c7ff523e7eed7d52d9708ed7a77ea346ece6474c65dded406edb3155",
+    "bytes": 330446512
+  },
+  "currentRunScope": "Metadata, public official GetSign request and two-byte Range probe only. No application, installer, account session, service or driver was executed. Signed URLs and their values are not retained in this record. The Range probe is not a fresh full-artifact SHA-256 verification.",
+  "findings": {
+    "recommended": "Piko client download-layer resolver: sign the immutable official resource identity immediately before download; validate the exact HTTPS CDN host/path; keep the expected SHA-256 and existing bounds/cache/redirect policy.",
+    "sourceOnlyAlternative": "A self-managed stable HTTPS GET/HEAD endpoint can request an official signature and issue a no-store 302 to the exact official artifact. No payload mirroring required, but hosting and an extra availability/privacy dependency are introduced.",
+    "notImplemented": [
+      "Client release or downloader changes",
+      "Cloud deployment",
+      "Third-party redirect adoption",
+      "Automatic QQNTV2 publication"
+    ],
+    "catalogAction": "Keep the verified durable 9.9.33.52230 package and manual policy until end-user downloads can resolve fresh signatures."
+  },
+  "reviewedReferences": [
+    "https://im.qq.com/index/#/windows",
+    "https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/qq/qq/update.sh",
+    "https://github.com/DeepslateQAQ/qq-download-worker/tree/797944f47722975827df7a93a33172a8a1304079"
+  ],
+  "publicationValidation": {
+    "checkedAt": "2026-11-02T00:38:22.531Z",
+    "packages": 53,
+    "versions": 69,
+    "tests": 106,
+    "passed": 106,
+    "failed": 0,
+    "remoteUpdatesPreserved": true,
+    "publishedHistoryUnchanged": true,
+    "unrelatedSunloginWorkExcluded": true
+  }
+}

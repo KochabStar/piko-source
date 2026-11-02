@@ -299,6 +299,63 @@
         "flutter/data/icudtl.dat",
         "flutter/data/app.so"
       ]
+    },
+    "claude-code": {
+      "provider": "claude-code",
+      "url": "https://downloads.claude.ai/claude-code-releases/latest"
+    },
+    "opencode": {
+      "provider": "github-release",
+      "repo": "anomalyco/opencode",
+      "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^opencode-windows-x64-baseline\\.zip$"
+    },
+    "nushell": {
+      "provider": "github-release",
+      "repo": "nushell/nushell",
+      "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^nu-[0-9]+(?:\\.[0-9]+)+-x86_64-pc-windows-msvc\\.zip$",
+      "required": [
+        "less.exe",
+        "nu_plugin_formats.exe",
+        "nu_plugin_polars.exe",
+        "nu_plugin_query.exe",
+        "LICENSE"
+      ]
+    },
+    "lertaro": {
+      "provider": "github-release",
+      "repo": "Lertaro/Lertaro",
+      "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^Lertaro-Portable\\.zip$",
+      "required": [
+        "Lertaro.App.dll",
+        "Lertaro.App.runtimeconfig.json",
+        "Lertaro.Core.dll",
+        "Lertaro.Service.exe",
+        "Lertaro.Service.dll",
+        "Lertaro.Service.runtimeconfig.json",
+        "lff.dll",
+        "Plugins/Lertaro.Plugins.CoreExtensions.dll"
+      ]
+    },
+    "nvidia-app": {
+      "provider": "regex",
+      "url": "https://www.nvidia.com/en-us/software/nvidia-app/",
+      "versionRegex": "https://us\\.download\\.nvidia\\.com/nvapp/client/(?<version>[0-9]+(?:\\.[0-9]+)+)/NVIDIA_app_v\\k<version>\\.exe",
+      "urlTemplate": "https://us.download.nvidia.com/nvapp/client/{version}/NVIDIA_app_v{version}.exe",
+      "signature": true
+    },
+    "qqnt": {
+      "provider": "manual",
+      "reason": "QQNTV2 requires a fresh short-lived signature from the public official GetSign POST API, verified working on 2026-11-02. Ship a client-side exact-resource signing resolver or a self-managed stable HTTPS redirect before promotion; never publish expiring sign/t URLs or silently adopt a third-party relay. Retain official 9.9.33.52230. See guides/qqnt.md.",
+      "signature": true,
+      "verifyPEVersion": true,
+      "required": [
+        "QQEX.exe",
+        "versions/9.9.33-52230/resources/app/package.json",
+        "versions/config.json"
+      ]
     }
   }
 }

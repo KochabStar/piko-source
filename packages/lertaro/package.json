@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "name": "lertaro",
+  "recipes": {
+    "r3c1008676076bfeb": {
+      "schemaVersion": 1,
+      "name": "lertaro",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/Lertaro/Lertaro/releases/download/v{version}/Lertaro-Portable.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "Lertaro",
+          "bin": {
+            "lertaro": "Lertaro.App.exe",
+            "lff": "lff.exe"
+          },
+          "persist": [
+            "Data"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Lertaro",
+                "path": "Lertaro.App.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "5.12.2": {
+      "recipe": "r3c1008676076bfeb",
+      "sha256": "96e2eb11a2d1883348771d4c866e2796dcd293f206f1ac46d11686568edec606"
+    }
+  }
+}

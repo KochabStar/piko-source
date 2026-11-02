@@ -56,12 +56,10 @@ export async function discover(rule, current, net) {
     if (!releases.some(stable))
       releases = await net.json(api + rule.repo + "/releases?per_page=30");
     requireThat(Array.isArray(releases), "Invalid GitHub release response");
-    const matched = releases
-      .filter(stable)
-      .map((r) => ({
-        r,
-        match: new RegExp(rule.versionRegex).exec(r.tag_name),
-      }));
+    const matched = releases.filter(stable).map((r) => ({
+      r,
+      match: new RegExp(rule.versionRegex).exec(r.tag_name),
+    }));
     requireThat(matched.length, "No matching stable GitHub release");
     matched.sort((a, b) =>
       compareVersions(
@@ -146,6 +144,29 @@ export async function discover(rule, current, net) {
       rule.path;
     extra.commitChanged = !current.platforms["windows-x64"].url.includes(c.sha);
     provenance = "https://github.com/" + rule.repo + "/commit/" + c.sha;
+  } else if (rule.provider === "claude-code") {
+    const base = "https://downloads.claude.ai/claude-code-releases";
+    version = (await net.text(base + "/latest")).trim();
+    requireThat(
+      /^\d+\.\d+\.\d+$/.test(version),
+      "Invalid Claude Code stable version",
+    );
+    const manifestURL = base + "/" + version + "/manifest.json";
+    const manifest = await net.json(manifestURL);
+    const platform = manifest.platforms?.["win32-x64"];
+    requireThat(
+      manifest.version === version &&
+        platform?.binary === "claude.exe" &&
+        /^[a-f0-9]{64}$/i.test(platform.checksum ?? "") &&
+        Number.isSafeInteger(platform.size) &&
+        platform.size > 0 &&
+        platform.size <= 2 * 1024 * 1024 * 1024,
+      "Invalid Claude Code Windows x64 manifest",
+    );
+    sha256 = platform.checksum;
+    url = base + "/" + version + "/win32-x64/claude.exe";
+    extra.assetBytes = platform.size;
+    provenance = manifestURL;
   } else if (rule.provider === "node") {
     const releases = await net.json("https://nodejs.org/dist/index.json");
     const r = releases
