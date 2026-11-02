@@ -199,11 +199,12 @@
       }
     },
     "oh-my-pi": {
-      "latest": "18.14.2",
+      "latest": "18.15.0",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
         "18.14.1": "packages/oh-my-pi/package.json",
-        "18.14.2": "packages/oh-my-pi/package.json"
+        "18.14.2": "packages/oh-my-pi/package.json",
+        "18.15.0": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -255,10 +256,11 @@
       }
     },
     "orca": {
-      "latest": "1.4.245",
+      "latest": "1.4.246",
       "versions": {
         "1.4.243": "packages/orca/package.json",
-        "1.4.245": "packages/orca/package.json"
+        "1.4.245": "packages/orca/package.json",
+        "1.4.246": "packages/orca/package.json"
       }
     },
     "listary": {
