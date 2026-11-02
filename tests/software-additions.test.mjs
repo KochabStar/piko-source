@@ -224,7 +224,10 @@ test("NVIDIA App is explicitly an installer-only entry, never a falsely portable
   assert.equal(candidate.version, version);
 });
 
-test("QQNT retains a durable official artifact and selects only its embedded application archive", async () => {
+test("QQNT preserves old versions while using official on-demand authorization for its current channel", async () => {
+  const old =
+    catalog.manifests.get("qqnt@9.9.33.52230").platforms["windows-x64"];
+  assert.match(old.url, /^https:\/\/qqdl\.gtimg\.cn\/qqfile\/QQNT\//);
   const p = platform("qqnt"),
     rule = rules.qqnt;
   assert.equal(p.format, "pe");
@@ -232,21 +235,25 @@ test("QQNT retains a durable official artifact and selects only its embedded app
     { path: ".rsrc/2052/MSI/101", format: "7z", stripPrefix: "Files" },
   ]);
   assert.deepEqual(p.bin, { qq: "QQ.exe", qqnt: "QQ.exe" });
-  assert.match(p.url, /^https:\/\/qqdl\.gtimg\.cn\/qqfile\/QQNT\//);
-  assert.equal(rule.provider, "manual");
-  assert.match(rule.reason, /short-lived signature/);
-  assert.equal(rule.verifyPEVersion, true);
+  assert.equal(new URL(p.url).search, "");
+  assert.equal(rule.provider, "qqnt");
+  assert.equal(rule.versionFromPE, true);
   assert.equal(rule.signature, true);
   assert.equal(p.persist, undefined);
-  assert.equal(p.configFiles, undefined);
-  assert.equal(
-    (
-      await discover(rule, manifest("qqnt"), {
-        json: () => assert.fail("manual discovery must not access the network"),
-      })
-    ).manual,
-    true,
-  );
+  const url =
+    "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.36/release/e8e54bbb/QQ_9.9.36_260924_x64_01.exe";
+  const candidate = await discover(rule, manifest("qqnt"), {
+    json: async (endpoint) => {
+      assert.equal(
+        endpoint,
+        "https://qq-web.cdn-go.cn/im.qq.com_new/latest/rainbow/pcConfig.json",
+      );
+      return { Windows: { version: "9.9.36", ntDownloadX64Url: url } };
+    },
+  });
+  assert.equal(candidate.url, url);
+  assert.equal(candidate.version, "9.9.36");
+  assert.equal(candidate.versionFromPE, true);
 });
 
 test("Codex appends the complete native package without changing the previously published version", () => {

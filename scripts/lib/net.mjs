@@ -5,6 +5,11 @@ import { createHash } from "node:crypto";
 import { Readable, Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { httpsURL, requireThat, GiB } from "./catalog.mjs";
+import {
+  isQQDownload,
+  QQDownloadSession,
+  validateQQDownload,
+} from "./qq-download.mjs";
 export async function fileDigest(file, algorithm = "sha256") {
   const h = createHash(algorithm);
   for await (const chunk of createReadStream(file)) h.update(chunk);
@@ -21,6 +26,12 @@ export async function request(
     maxRedirects = 8,
   } = {},
 ) {
+  const initial = httpsURL(url);
+  const qq =
+    isQQDownload(initial) && ["GET", "HEAD"].includes(method)
+      ? new QQDownloadSession(initial, fetcher)
+      : undefined;
+  if (qq) url = (await qq.resolve()).href;
   for (let redirects = 0; redirects <= maxRedirects; redirects++) {
     const u = httpsURL(url),
       h = { "User-Agent": "piko-source-updater/1", ...headers };
@@ -45,8 +56,18 @@ export async function request(
         "Refusing to redirect a write request",
       );
       requireThat(location, "Redirect has no location");
-      url = new URL(location, u).href;
+      const next = new URL(location, u);
+      if (qq) validateQQDownload(qq.identity, next);
+      url = next.href;
       continue;
+    }
+    if (qq && [401, 403].includes(response.status)) {
+      await response.body?.cancel();
+      const refreshed = await qq.refresh(u);
+      if (refreshed) {
+        url = refreshed.href;
+        continue;
+      }
     }
     if (!response.ok) {
       await response.body?.cancel();

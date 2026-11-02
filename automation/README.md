@@ -7,7 +7,7 @@
 `.github/workflows/update-source.yml` 每天 **03:17 UTC** 检查上游，也可通过 Actions → **Update upstream packages** 手动运行。`packages` 输入可填写以英文逗号分隔的包名；空值检查全部包。更新工作流只在默认分支运行。
 
 1. 校验当前索引、清单与更新规则，并运行测试。
-2. 从官方发布仓库、官网下载页或官方 API 发现正式版本。当前 53 包中，50 包配置自动发现，3 包保留人工维护策略。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。
+2. 从官方发布仓库、官网下载页或官方 API 发现正式版本。当前 53 包中，51 包配置自动发现，2 包保留人工维护策略。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。
 3. 下载候选载荷，计算 SHA-256；GitHub、Node、Go、rustup 提供官方摘要时必须比对，PowerShell Gallery 比对 SHA-512，向日葵另比对官方 MD5。部分桌面分发同时要求 Windows 签名状态为 `Valid`。
 4. 使用单独固定版本、固定摘要的 7-Zip、innounp、lessmsi 读取或解包元数据。检查命令、快捷方式、字体及执行配方引用的文件，检查显式文件映射、嵌套载荷、文件类型、大小、链接和路径冲突。MSI 同时核对数据库中的文件标识和 CAB 内容；不会运行 MSI 安装动作。
 5. 在 `packages/<name>/package.json` 中追加已验证版本的 SHA-256／配方引用，再更新 `index.json`；原 schema 1 源仍按版本文件追加。旧版本展开后的内容和安装哈希不可改变，模板包只允许增加版本或确有需要的新配方。源在验证期间被手动修改时拒绝覆盖。
@@ -33,6 +33,10 @@ omp --version
 
 已跟踪 `latest` 的现有安装可改用 `piko update main/oh-my-pi`；若原默认请求为精确版本，`update` 会保留固定版本约束，不会自动变成 `latest`。
 
+## QQNTV2 实时签名
+
+`qqnt` 从官方 `pcConfig.json` 的 x64 地址发现版本，在下载前调用固定免登录 GetSign 接口，解包并读取 PE 完整版本，核对 Authenticode 与完整程序资源布局。**用户必须先升级 Piko 至 0.4.1**；旧版客户端无法下载新渠道。源只保存无签名固定地址与 SHA-256，不记录临时参数，不重新分发载荷。失败时保留旧版，签名失效最多重试一次。详见 [实现和边界](../guides/qqnt.md)。
+
 ## 保持的边界
 
 - 不执行下载的应用、安装器、自更新器、Shell 初始化、bootstrap 或管理员配方，不启动 GUI、服务、驱动，不迁移用户数据或凭据。
@@ -50,7 +54,6 @@ omp --version
 | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `innounp`  | 来自已审计的固定上游提交，属于解包工具信任边界；升级必须重新核对程序及摘要。                                             |
 | `dingtalk` | 当前清单是国内完整 updater ZIP；公开国际版安装器与国内完整载荷没有可靠的共同版本入口，不能静默切换地区或改成下载引导器。 |
-| `qqnt` | 官网 QQNTV2 新渠道需在下载前通过免登录 `GetSign` 获取短期签名。接口已实测可用；待客户端按需签名或自管稳定 HTTPS 302 端点就绪前，固定官方 9.9.33.52230，不提交临时 `sign`／`t`。详见 [长期下载方案](../guides/qqnt.md)。 |
 
 人工策略带有明确原因并显示在每次摘要中。增加新包时必须同时配置自动规则或说明人工维护原因，不能悄悄跳过未覆盖的软件。
 
@@ -81,7 +84,7 @@ GitHub Actions 本身全部固定到提交 SHA。仓库变更和 PR 另由 `.git
 
 ## 模板与历史版本
 
-目前每包一个 `packages/<name>/package.json`，共 53 个包文件、69 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
+目前每包一个 `packages/<name>/package.json`，共 53 个包文件、70 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
 
 `npm run compact:check` 可预览 schema 1 清单合并；`npm run compact` 执行。迁移允许索引路径改为共享包文件，但必须逐版本保证解析后的完整 JSON 序列化及 manifestHash 不变；原 schema 1 路径未迁移时仍要求文件字节不变。迁移后的客户端必须支持模板格式；先部署新版 Piko，再发布此源。Git 历史仍保留旧清单，模板只控制工作目录和后续重复配置增长，不压缩已有 Git 历史。
 

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-02T00:56:15.642Z",
+  "package": "qqnt",
+  "version": "9.9.36.53644",
+  "pikoVersion": "0.4.1",
+  "pikoExecutableSha256": "bd54ba97f9f6919d9f4329e13ed7c17dea6d9081b7a95958d0c21ad0d38d9cb6",
+  "artifactSha256": "63255c70c7ff523e7eed7d52d9708ed7a77ea346ece6474c65dded406edb3155",
+  "artifactBytes": 330446512,
+  "checks": {
+    "emptyCacheInstall": true,
+    "officialOnDemandSignature": true,
+    "fullChecksumVerified": true,
+    "completeNativeLayout": true,
+    "installLeavesDefaultUnchanged": true,
+    "commandSelection": true,
+    "commandResolution": ["qq", "qqnt"],
+    "noSignatureInPersistentState": true,
+    "doctor": true,
+    "guiNotExecuted": true,
+    "hostProfilesPathAccountsServicesUntouched": true
+  },
+  "scope": "Independent PIKO_HOME, user configuration and Start Menu. Full native install used the fixed unsigned official artifact identity with runtime GetSign authorization; no preseeded artifact cache. QQ GUI, services, extension registration and account login were never executed."
+}

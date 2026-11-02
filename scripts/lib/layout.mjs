@@ -509,6 +509,30 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
       outputs.has(file.toLowerCase()) || generated.has(file.toLowerCase()),
       "Required application entry missing: " + file,
     );
+  if (rule.layout === "qqnt") {
+    // The fixed payload must contain a single complete native Electron app.
+    const packages = [...outputs.values()].filter((e) =>
+      /^versions\/\d+\.\d+\.\d+-\d+\/resources\/app\/package\.json$/.test(
+        e.target,
+      ),
+    );
+    requireThat(
+      packages.length === 1,
+      "QQ application package layout is ambiguous or missing",
+    );
+    const prefix = packages[0].target.split("/resources/")[0];
+    for (const file of [
+      "resources/app/package.json",
+      "QQNT.dll",
+      "chrome_100_qq.pak",
+      "resources.pak",
+      "icudtl.dat",
+    ])
+      requireThat(
+        outputs.has((prefix + "/" + file).toLowerCase()),
+        "QQ application resource missing: " + file,
+      );
+  }
   let version;
   if (rule.versionFromPE || rule.verifyPEVersion) {
     const bin = Object.values(p.bin)

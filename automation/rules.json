@@ -347,15 +347,11 @@
       "signature": true
     },
     "qqnt": {
-      "provider": "manual",
-      "reason": "QQNTV2 requires a fresh short-lived signature from the public official GetSign POST API, verified working on 2026-11-02. Ship a client-side exact-resource signing resolver or a self-managed stable HTTPS redirect before promotion; never publish expiring sign/t URLs or silently adopt a third-party relay. Retain official 9.9.33.52230. See guides/qqnt.md.",
+      "provider": "qqnt",
       "signature": true,
-      "verifyPEVersion": true,
-      "required": [
-        "QQEX.exe",
-        "versions/9.9.33-52230/resources/app/package.json",
-        "versions/config.json"
-      ]
+      "versionFromPE": true,
+      "layout": "qqnt",
+      "required": ["QQEX.exe", "versions/config.json"]
     }
   }
 }

@@ -117,7 +117,7 @@ test("current source: every indexed package has a validated update policy", asyn
   const r = await checkSource(source);
   assert.ok(r.packages >= 46);
   assert.equal(r.automatic + r.manual.length, r.packages);
-  assert.deepEqual(r.manual, ["innounp", "dingtalk", "qqnt"]);
+  assert.deepEqual(r.manual, ["innounp", "dingtalk"]);
 });
 test("safe paths reject traversal, streams, absolute paths, device names and unsafe versions", () => {
   for (const p of [

@@ -34,6 +34,39 @@
           }
         }
       }
+    },
+    "r90463cffd8c87a67": {
+      "schemaVersion": 1,
+      "name": "qqnt",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.36/release/e8e54bbb/QQ_9.9.36_260924_x64_01.exe",
+          "sha256": "{sha256}",
+          "format": "pe",
+          "nested": [
+            {
+              "path": ".rsrc/2052/MSI/101",
+              "format": "7z",
+              "stripPrefix": "Files"
+            }
+          ],
+          "bin": {
+            "qq": "QQ.exe",
+            "qqnt": "QQ.exe"
+          },
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 4294967296,
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "QQ",
+                "path": "QQ.exe"
+              }
+            ]
+          }
+        }
+      }
     }
   },
   "versions": {
@@ -41,6 +74,11 @@
       "recipe": "r458c57c00541b6ce",
       "maxBytes": 402653184,
       "sha256": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492"
+    },
+    "9.9.36.53644": {
+      "recipe": "r90463cffd8c87a67",
+      "maxBytes": 402653184,
+      "sha256": "63255c70c7ff523e7eed7d52d9708ed7a77ea346ece6474c65dded406edb3155"
     }
   }
 }

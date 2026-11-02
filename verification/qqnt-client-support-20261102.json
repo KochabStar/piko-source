@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "clientVersion": "0.4.1",
+  "clientCommit": "05454089c294cb59dbc95165a19033b12abdc86f",
+  "clientTag": "v0.4.1",
+  "sourcePackage": "qqnt",
+  "sourceVersion": "9.9.36.53644",
+  "artifactUrl": "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.36/release/e8e54bbb/QQ_9.9.36_260924_x64_01.exe",
+  "artifactSha256": "63255c70c7ff523e7eed7d52d9708ed7a77ea346ece6474c65dded406edb3155",
+  "artifactBytes": 330446512,
+  "clientRegression": {
+    "tests": 285,
+    "passed": 285,
+    "failed": 0,
+    "assertions": 2719,
+    "typecheck": true,
+    "formatting": true,
+    "sandboxPackagingAndSafetyScripts": true,
+    "sandboxLaunched": false,
+    "releaseArchiveAndIsolatedBootstrap": true
+  },
+  "sourceRegression": {
+    "tests": 111,
+    "passed": 111,
+    "failed": 0,
+    "packages": 53,
+    "versions": 70,
+    "automaticPolicies": 51,
+    "manualPolicies": ["innounp", "dingtalk"],
+    "historicalPublishedManifestsUnchanged": true
+  },
+  "downloadSecurity": {
+    "fixedOfficialSigningEndpoint": true,
+    "credentialsOmitted": true,
+    "signatureMetadataLimitBytes": 65536,
+    "signatureTimeoutMilliseconds": 15000,
+    "signatureRefreshesMaximum": 1,
+    "exactHttpsHostAndArtifactPathRequired": true,
+    "nonSignatureQueryPreserved": true,
+    "crossHostSignedRedirectRejected": true,
+    "signaturesMemoryOnly": true,
+    "cachedArtifactSkipsSigning": true,
+    "builtinAndAria2ShareResolver": true,
+    "finalSha256AndPayloadBoundsPreserved": true,
+    "thirdPartyRelay": false
+  },
+  "layoutVerification": {
+    "applicationPeVersion": "9.9.36.53644",
+    "files": 1960,
+    "knownExpandedBytes": 1559137922,
+    "unknownSizeFiles": 0,
+    "officialDistributionAuthenticodeValid": true,
+    "singleCompleteNativeResourceTree": true
+  },
+  "liveInstallRecord": "verification/qqnt-native-install-20261102.json",
+  "notPerformed": [
+    "QQ GUI launch or account login",
+    "QQ system service or shell-extension registration",
+    "Host user Piko installation replacement",
+    "Host PATH, profile or existing account-data migration"
+  ],
+  "unrelatedWork": "Uncommitted Shell approval and Sunlogin service changes were preserved separately and are not part of either QQNT publication.",
+  "publication": {
+    "tag": "v0.4.1",
+    "workflow": 41371724166,
+    "ci": "success",
+    "publishedBinarySha256": "3450316919b4df5229ebce3a8833240b53b0e0a96b7a92d44a30a1d76c0814c6",
+    "verifiedAt": "2026-11-02T01:27:06.529Z"
+  }
+}

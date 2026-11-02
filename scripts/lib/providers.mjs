@@ -260,6 +260,30 @@ export async function discover(rule, current, net) {
     version = best(matches.map(fromMatch));
     const chosen = matches.find((m) => fromMatch(m) === version);
     url = render(rule.urlTemplate, { ...chosen.groups, version });
+  } else if (rule.provider === "qqnt") {
+    const configURL =
+      "https://qq-web.cdn-go.cn/im.qq.com_new/latest/rainbow/pcConfig.json";
+    const data = await net.json(configURL);
+    const windows = data.Windows;
+    requireThat(
+      typeof windows?.ntDownloadX64Url === "string",
+      "QQ Windows x64 download missing",
+    );
+    const official = httpsURL(windows.ntDownloadX64Url);
+    const match =
+      /^\/qqfile\/QQNTV2\/(?<version>\d+\.\d+\.\d+)\/release\/[a-f0-9]+\/QQ_\k<version>_\d{6}_x64_\d+\.exe$/.exec(
+        official.pathname,
+      );
+    requireThat(
+      official.origin === "https://qqdl.gtimg.cn" &&
+        !official.search &&
+        !!match &&
+        windows.version === match.groups.version,
+      "QQ download escaped the official version-bound Windows x64 channel",
+    );
+    version = windows.version;
+    url = official.href;
+    provenance = configURL;
   } else if (rule.provider === "json") {
     const data = await net.json(rule.url);
     const raw = at(data, rule.versionPath);

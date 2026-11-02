@@ -488,6 +488,7 @@ export function validateRules(catalog, config) {
         "node",
         "go",
         "claude-code",
+        "qqnt",
         "nuget",
         "regex",
         "json",

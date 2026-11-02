@@ -338,9 +338,10 @@
       }
     },
     "qqnt": {
-      "latest": "9.9.33.52230",
+      "latest": "9.9.36.53644",
       "versions": {
-        "9.9.33.52230": "packages/qqnt/package.json"
+        "9.9.33.52230": "packages/qqnt/package.json",
+        "9.9.36.53644": "packages/qqnt/package.json"
       }
     }
   }
