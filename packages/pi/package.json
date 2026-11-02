@@ -23,6 +23,11 @@
     "1.4.0": {
       "recipe": "r41c1a1fdb00720cf",
       "sha256": "0f7256ea8bdac3af20012b94fdc1252a31cc6dc0d2f9b9eb539555d22e3e321b"
+    },
+    "1.5.0": {
+      "recipe": "r41c1a1fdb00720cf",
+      "maxBytes": 536870912,
+      "sha256": "12d58a70e80b16ba9f764950b7a42bdeb07959495c0db68396cf2988c0b71af3"
     }
   }
 }
