@@ -17,12 +17,33 @@
           "maxBytes": "{maxBytes}"
         }
       }
+    },
+    "rcb2251af50e2cf08": {
+      "schemaVersion": 1,
+      "name": "innounp",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/bin/innounp-2.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "innounp": "innounp.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
     }
   },
   "versions": {
     "2.71.2": {
       "recipe": "r78062e536723f2b8",
       "sha256": "10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd"
+    },
+    "2.71.3": {
+      "recipe": "rcb2251af50e2cf08",
+      "maxBytes": 536870912,
+      "sha256": "f8e45c9676bebc7d7570108ab572673b541fcf7a7d3d24a04319ac6b5315b4e8"
     }
   }
 }
