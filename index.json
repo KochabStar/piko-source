@@ -165,15 +165,17 @@
       }
     },
     "inno-setup": {
-      "latest": "7.1.0",
+      "latest": "7.1.1",
       "versions": {
-        "7.1.0": "packages/inno-setup/package.json"
+        "7.1.0": "packages/inno-setup/package.json",
+        "7.1.1": "packages/inno-setup/package.json"
       }
     },
     "innounp": {
-      "latest": "2.71.2",
+      "latest": "2.71.3",
       "versions": {
-        "2.71.2": "packages/innounp/package.json"
+        "2.71.2": "packages/innounp/package.json",
+        "2.71.3": "packages/innounp/package.json"
       }
     },
     "lazygit": {
@@ -240,10 +242,11 @@
       }
     },
     "uv": {
-      "latest": "0.13.6",
+      "latest": "0.13.7",
       "versions": {
         "0.13.5": "packages/uv/package.json",
-        "0.13.6": "packages/uv/package.json"
+        "0.13.6": "packages/uv/package.json",
+        "0.13.7": "packages/uv/package.json"
       }
     },
     "pixi": {
@@ -260,11 +263,12 @@
       }
     },
     "orca": {
-      "latest": "1.4.246",
+      "latest": "1.4.247",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
-        "1.4.246": "packages/orca/package.json"
+        "1.4.246": "packages/orca/package.json",
+        "1.4.247": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -315,9 +319,10 @@
       }
     },
     "claude-code": {
-      "latest": "2.1.316",
+      "latest": "2.1.317",
       "versions": {
-        "2.1.316": "packages/claude-code/package.json"
+        "2.1.316": "packages/claude-code/package.json",
+        "2.1.317": "packages/claude-code/package.json"
       }
     },
     "opencode": {
