@@ -47,6 +47,11 @@
     "1.14.5": {
       "recipe": "r78b0a78c83fe9594",
       "sha256": "4b95aa855062fb253439c392a32b536c3f9f22ac7fad04f1a6cbf176ecbcfa2a"
+    },
+    "1.15.0": {
+      "recipe": "r78b0a78c83fe9594",
+      "maxBytes": 536870912,
+      "sha256": "b0f60c75a12f96d54cb16b9fc32919966f2ebf029d9af75d67a19ba6555e1da0"
     }
   }
 }
