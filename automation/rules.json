@@ -157,8 +157,10 @@
       "assetRegex": "^innosetup-[0-9]+(?:\\.[0-9]+)+-x64\\.exe$"
     },
     "innounp": {
-      "provider": "manual",
-      "reason": "Audited executable comes from a fixed upstream commit. Review the helper release and executable digest before changing this pin; never auto-run a new unpacker."
+      "provider": "regex",
+      "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/docs/innounp.htm",
+      "versionRegex": "Version\\s+(?<version>\\d+\\.\\d+\\.\\d+)",
+      "urlTemplate": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/bin/innounp-2.zip"
     },
     "lazygit": {
       "provider": "github-release",
@@ -276,8 +278,10 @@
       "signature": true
     },
     "dingtalk": {
-      "provider": "manual",
-      "reason": "The CN full updater ZIP and the public international installer do not share a reliable version feed. Do not silently change region/channel or publish a web bootstrap instead of the full application."
+      "provider": "regex",
+      "url": "https://www.mydown.com/soft/452/725797952.shtml",
+      "versionRegex": "\"data\"\\s*:\\s*\\{\\s*\"category\"\\s*:\\s*\"[^\"]+\"\\s*,\\s*\"version\"\\s*:\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"",
+      "urlTemplate": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_updater/Release/DingTalkUpdate_v{version}.zip"
     },
     "wechat": {
       "provider": "regex",

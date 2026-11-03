@@ -14,11 +14,11 @@
     }
   },
   "inno": {
-    "version": "2.71.2",
-    "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip",
-    "sha256": "10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd",
+    "version": "2.71.3",
+    "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/75ded58da3a81c029db4f73ab803b9b4154400e9/innounp-2/bin/innounp-2.zip",
+    "sha256": "f8e45c9676bebc7d7570108ab572673b541fcf7a7d3d24a04319ac6b5315b4e8",
     "files": {
-      "innounp.exe": "aecc0d7b1a2669711cd86d50061bb68911faa832ca3c69d4b1d2deb735cb1fcd"
+      "innounp.exe": "ab58400460cfda503ec88702dd3d82f6ee207b28e0548c9f8861ef008f85b644"
     }
   },
   "lessmsi": {
