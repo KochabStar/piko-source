@@ -361,6 +361,18 @@
       "versions": {
         "26.8.2": "packages/libreoffice/package.json"
       }
+    },
+    "x64dbg": {
+      "latest": "2026.05.27",
+      "versions": {
+        "2026.05.27": "packages/x64dbg/package.json"
+      }
+    },
+    "baidu-netdisk": {
+      "latest": "8.9.7.101",
+      "versions": {
+        "8.9.7.101": "packages/baidu-netdisk/package.json"
+      }
     }
   }
 }

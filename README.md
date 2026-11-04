@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 53 个包、70 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 56 个包、85 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31) 与 [新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -145,9 +145,21 @@ pi --version
 - Lertaro 需要外部 **x64 .NET 10 Desktop Runtime**，本包不自动安装运行库，也不运行随包安装脚本。`Data` 在首次启动前由 Piko 持久化创建，避免便携程序自动沿用既有系统安装的数据。**上游 GUI 首次启动可能请求 UAC、注册或重装 `Lertaro.Service`；便携不等于无系统副作用。** 此源不自动注册服务，不启动 GUI、不接管现有服务；使用前应审核上游服务行为。真实 GUI 保存、跨版本数据迁移和服务兼容性未验收。
 - Nushell 不改默认登录 Shell、不注入 Profile、不自动注册插件；配置仍使用上游原生用户位置。新版客户端可能在安装时自动登记 QQ／Lertaro 的 Start Menu 入口；旧版客户端或额外桌面集成须按 `integrate --desktop` 预览确认。安装不自动选择默认 CLI 命令。
 
+## 新增逆向与云盘工具（2026-11-04）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `x64dbg` | 2026.05.27 | `x64dbg`、`x32dbg`，官方 GitHub 快照 ZIP，保留 release 完整布局与 pluginsdk |
+| `baidu-netdisk` | 8.9.7.101 | `baidunetdisk`，官方 issuepcdn 完整 NSIS 安装器只解包 |
+
+- x64dbg 的 SHA-256 与 GitHub 发布资源官方 digest 一致；ZIP 全量解出，不执行任何安装动作。配置为各调试器 exe 同目录的 `release/x64/x64dbg.ini`／`release/x32/x32dbg.ini`（上游确认便携模型），以硬链接持久化；快捷方式等桌面集成仍需单独 `integrate --desktop` 预览确认。
+- 百度网盘安装器校验 Windows Authenticode 为 `Valid`（PE FileVersion 8.9.7.101），SHA-256 与独立 Scoop bucket 发布值逐字节一致。按 NSIS 显式 `files` 映射解出 972 个程序文件（含 UTF-8 中文资源名），仅排除 `$PLUGINSDIR` 与 `uninst.exe`；不执行安装器，不注册 `BaiduNetdiskService`／壳扩展／Appx 组件，安装目录 `users` 目录硬链接持久化，其余配置沿用原生用户目录，不迁移既有账户或下载数据。
+- 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
+- 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为全部 **53 包**登记自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
+- 已为登记的全部包（当前 56 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

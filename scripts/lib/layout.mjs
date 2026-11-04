@@ -469,14 +469,17 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
       }
     } else {
       entries = await listing(tools, file, type);
-      if (rule.layout === "wecom")
+      if (rule.layout === "wecom" || rule.layout === "baidu")
         effective.files = d.files = Object.fromEntries(
           entries
             .filter(
               (e) =>
                 !e.directory &&
                 !e.path.startsWith("$") &&
-                !/^uninstall\.exe$/i.test(e.path),
+                !(rule.layout === "wecom"
+                  ? /^uninstall\.exe$/i
+                  : /^uninst\.exe$/i
+                ).test(e.path),
             )
             .map((e) => [e.path, e.path]),
         );

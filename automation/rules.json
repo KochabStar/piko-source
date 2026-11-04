@@ -371,6 +371,20 @@
       "versionRegex": "href=\"(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/\"",
       "urlTemplate": "https://download.documentfoundation.org/libreoffice/stable/{version}/win/x86_64/LibreOffice_{version}_Win_x86-64.msi",
       "signature": true
+    },
+    "x64dbg": {
+      "provider": "github-release",
+      "repo": "x64dbg/x64dbg",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^snapshot_[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}\\.zip$"
+    },
+    "baidu-netdisk": {
+      "provider": "regex",
+      "url": "https://pan.baidu.com/disk/cmsdata?do=client",
+      "versionRegex": "BaiduNetdisk_(?<version>[0-9]+(?:\\.[0-9]+){3})\\.exe",
+      "urlTemplate": "https://issuepcdn.baidupcs.com/issue/netdisk/yunguanjia/BaiduNetdisk_{version}.exe",
+      "signature": true,
+      "layout": "baidu"
     }
   }
 }
