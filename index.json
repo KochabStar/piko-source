@@ -88,10 +88,11 @@
       }
     },
     "llvm": {
-      "latest": "23.1.4-piko.1",
+      "latest": "23.1.5",
       "versions": {
         "23.1.4": "packages/llvm/package.json",
-        "23.1.4-piko.1": "packages/llvm/package.json"
+        "23.1.4-piko.1": "packages/llvm/package.json",
+        "23.1.5": "packages/llvm/package.json"
       }
     },
     "firacode-nf": {
@@ -107,15 +108,17 @@
       }
     },
     "rustup": {
-      "latest": "1.29.2",
+      "latest": "1.29.3",
       "versions": {
-        "1.29.2": "packages/rustup/package.json"
+        "1.29.2": "packages/rustup/package.json",
+        "1.29.3": "packages/rustup/package.json"
       }
     },
     "flclash": {
-      "latest": "0.9.2",
+      "latest": "0.9.3",
       "versions": {
-        "0.9.2": "packages/flclash/package.json"
+        "0.9.2": "packages/flclash/package.json",
+        "0.9.3": "packages/flclash/package.json"
       }
     },
     "tortoise-svn": {
@@ -250,9 +253,10 @@
       }
     },
     "pixi": {
-      "latest": "0.83.0",
+      "latest": "0.84.0",
       "versions": {
-        "0.83.0": "packages/pixi/package.json"
+        "0.83.0": "packages/pixi/package.json",
+        "0.84.0": "packages/pixi/package.json"
       }
     },
     "codex": {
@@ -263,12 +267,13 @@
       }
     },
     "orca": {
-      "latest": "1.4.247",
+      "latest": "1.4.248",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
         "1.4.246": "packages/orca/package.json",
-        "1.4.247": "packages/orca/package.json"
+        "1.4.247": "packages/orca/package.json",
+        "1.4.248": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -284,9 +289,10 @@
       }
     },
     "tabbit": {
-      "latest": "1.19.25.0",
+      "latest": "1.20.21.0",
       "versions": {
-        "1.19.25.0": "packages/tabbit/package.json"
+        "1.19.25.0": "packages/tabbit/package.json",
+        "1.20.21.0": "packages/tabbit/package.json"
       }
     },
     "todesk": {
@@ -319,10 +325,11 @@
       }
     },
     "claude-code": {
-      "latest": "2.1.317",
+      "latest": "2.1.318",
       "versions": {
         "2.1.316": "packages/claude-code/package.json",
-        "2.1.317": "packages/claude-code/package.json"
+        "2.1.317": "packages/claude-code/package.json",
+        "2.1.318": "packages/claude-code/package.json"
       }
     },
     "opencode": {

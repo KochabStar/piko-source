@@ -29,6 +29,11 @@
     "0.83.0": {
       "recipe": "ra474fa2ff30dc524",
       "sha256": "77bed9f9d2795c94f9ab5744353892eb82bd3b1eaa09ecbbe7573e22ef70a2f4"
+    },
+    "0.84.0": {
+      "recipe": "ra474fa2ff30dc524",
+      "maxBytes": 536870912,
+      "sha256": "763c93b7907e13898334ed77c840d491dc69ca71e0dd863cd33a0ed3b57cbc3c"
     }
   }
 }
