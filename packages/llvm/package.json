@@ -72,6 +72,42 @@
           }
         }
       }
+    },
+    "rbeb327025bcb7e4f": {
+      "schemaVersion": 1,
+      "name": "llvm",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.msi",
+          "sha256": "{sha256}",
+          "format": "msi",
+          "stripPrefix": "LLVM",
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 4294967296,
+          "bin": {
+            "clang": "bin/clang.exe",
+            "clang++": "bin/clang++.exe",
+            "clangd": "bin/clangd.exe",
+            "lld": "bin/lld.exe",
+            "llvm-ar": "bin/llvm-ar.exe",
+            "lld-link": "bin/lld-link.exe"
+          },
+          "env": {
+            "LIBCLANG_PATH": "{root}/bin",
+            "LLVM_LIB_DIR": "{root}/lib"
+          },
+          "desktop": {
+            "environment": {
+              "LIBCLANG_PATH": "{root}/bin",
+              "LLVM_LIB_DIR": "{root}/lib"
+            },
+            "path": [
+              "bin"
+            ]
+          }
+        }
+      }
     }
   },
   "versions": {
@@ -84,6 +120,11 @@
       "recipe": "re55b4915556d8f45",
       "maxBytes": 1073741824,
       "sha256": "15e49aca3540991a6f28a0e57babab67da82155c4f73f79dd5e8666a851f9127"
+    },
+    "23.1.5": {
+      "recipe": "rbeb327025bcb7e4f",
+      "maxBytes": 1073741824,
+      "sha256": "288ab326377157a9e02e6fb9724914cc2b55963882d493a405f31dc66e837c12"
     }
   }
 }
