@@ -20,7 +20,9 @@
     "z.lua": {
       "provider": "github-tags",
       "repo": "skywind3000/z.lua",
-      "required": ["z.lua"],
+      "required": [
+        "z.lua"
+      ],
       "versionRegex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$"
     },
     "starship": {
@@ -37,7 +39,10 @@
     },
     "psfzf": {
       "provider": "nuget",
-      "required": ["PSFzf.psd1", "PSFzf.psm1"],
+      "required": [
+        "PSFzf.psd1",
+        "PSFzf.psm1"
+      ],
       "url": "https://www.powershellgallery.com/api/v2/FindPackagesById()?id='PSFzf'",
       "urlTemplate": "https://cdn.powershellgallery.com/packages/psfzf.{version}.nupkg"
     },
@@ -355,7 +360,17 @@
       "signature": true,
       "versionFromPE": true,
       "layout": "qqnt",
-      "required": ["QQEX.exe", "versions/config.json"]
+      "required": [
+        "QQEX.exe",
+        "versions/config.json"
+      ]
+    },
+    "libreoffice": {
+      "provider": "regex",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/",
+      "versionRegex": "href=\"(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/\"",
+      "urlTemplate": "https://download.documentfoundation.org/libreoffice/stable/{version}/win/x86_64/LibreOffice_{version}_Win_x86-64.msi",
+      "signature": true
     }
   }
 }

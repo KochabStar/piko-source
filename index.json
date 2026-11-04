@@ -355,6 +355,12 @@
         "9.9.33.52230": "packages/qqnt/package.json",
         "9.9.36.53644": "packages/qqnt/package.json"
       }
+    },
+    "libreoffice": {
+      "latest": "26.8.2",
+      "versions": {
+        "26.8.2": "packages/libreoffice/package.json"
+      }
     }
   }
 }

@@ -95,7 +95,7 @@ export function innoEntries(text) {
   requireThat(opened && closed && entries.length, "No Inno file metadata");
   return entries;
 }
-async function listing(tools, file, type) {
+async function listing(tools, file, type, names) {
   return parseListing(
     await capture(await tools.get("sevenzip"), [
       "l",
@@ -106,6 +106,7 @@ async function listing(tools, file, type) {
       "-pPIKO_NO_PASSWORD",
       "--",
       file,
+      ...(names ?? []),
     ]),
     type,
   );
@@ -419,12 +420,15 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
         effective,
         { msi: true },
       );
-      const streams = await listing(tools, file, "Compound");
+      // List each embedded cabinet stream by name: MSI storages such as
+      // embedded transforms expose no size and cannot be parsed as files.
       let cabinetBytes = 0;
       for (const cabinet of plan.cabinets) {
         const wanted = entries.filter((e) => e.cabinet === cabinet.name);
         if (!wanted.length) continue;
-        const stream = streams.find((e) => e.path === cabinet.name);
+        const stream = (
+          await listing(tools, file, "Compound", [cabinet.name])
+        ).find((e) => e.path === cabinet.name);
         requireThat(
           stream && !stream.directory && stream.size !== undefined,
           "Embedded MSI cabinet stream missing",
