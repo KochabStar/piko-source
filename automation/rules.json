@@ -398,6 +398,12 @@
         "shawl.exe",
         "CloudDrive.ico"
       ]
+    },
+    "bun": {
+      "provider": "github-release",
+      "repo": "oven-sh/bun",
+      "versionRegex": "^bun-v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^bun-windows-x64\\.zip$"
     }
   }
 }

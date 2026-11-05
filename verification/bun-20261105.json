@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-05T09:05:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "bun",
+      "version": "1.4.4",
+      "source": "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-windows-x64.zip",
+      "discovery": "github-release oven-sh/bun, tag bun-v{version}, asset bun-windows-x64.zip",
+      "sha256": "cd2c0fccc78f3ede1f50ca827a15f063eda13d4d150a3d0674f4f6e323d864a5",
+      "archiveBytes": 54731706,
+      "publisherCheck": "GitHub release asset digest sha256:cd2c0f... (byte-identical)",
+      "format": "zip",
+      "stripPrefix": "bun-windows-x64",
+      "authenticode": {
+        "status": "Valid",
+        "subject": "CN=Codeblog CORP, O=Codeblog CORP, L=San Francisco, S=California, C=US",
+        "fileVersion": "1.4.4.0",
+        "productVersion": "1.4.4.0"
+      },
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 115281496,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": { "bun": "bun.exe" },
+        "noBunxReason": "bun dispatches bunx via argv[0]; piko shims launch the target path so argv[0] stays bun.exe. bun.exe <unknown-pkg> fails with 'Script not found' (tested). A bunx.exe copy works but manifests cannot duplicate files. Use `bun x <pkg>`.",
+        "baselineVariant": "bun-windows-x64-baseline.zip exists for pre-AVX2 CPUs and is intentionally not registered"
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "env": "none declared",
+        "reason": "The Piko client protects BUN_* environment variables (the manager runs on Bun), so BUN_INSTALL/BUN_INSTALL_CACHE_DIR cannot be redirected into the persist root",
+        "nativeData": "%USERPROFILE%\\.bun (global installs and package cache); not owned, not migrated",
+        "existingDotBunUnchanged": "138-entry fingerprint identical before/after isolated runs"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.6",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "files": 2,
+        "defaultCommandSelected": false,
+        "shimDispatch": [
+          "__shim bun --version -> 1.4.4",
+          "__shim bun -e \"console.log('piko-shim-bun', 40+2)\" -> piko-shim-bun 42",
+          "__shim bun x --version -> 1.4.4"
+        ],
+        "globalInstallProbe": "BUN_INSTALL-redirected `bun add -g is-odd` in a scratch directory wrote bin/, install/ and cache/ under that root only (env model rejected for manifests; probe only)",
+        "uninstallReinstallCycle": "passed"
+      },
+      "checks": {
+        "sourceCheck": "58 packages / 94 versions",
+        "compactCheck": "stable (only the pre-existing sunlogin drift remains)",
+        "updateCheck": "with GITHUB_TOKEN: status current; anonymous API rate limiting marks the package blocked without false success",
+        "tests": "125 passing (5 new bun tests)"
+      }
+    }
+  ],
+  "notVerified": [
+    "Real project build/test workloads",
+    "Long-term coexistence of `bun add -g` with a pre-existing ~/.bun",
+    "bun upgrade self-update behavior under Piko management",
+    "The baseline (non-AVX2) Windows variant"
+  ]
+}

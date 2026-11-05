@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 57 个包、93 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04) 与 [CloudDrive2](#clouddrive22026-11-05)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 58 个包、94 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05) 与 [Bun](#bun2026-11-05)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -16,7 +16,7 @@
 
 ## 模板包清单
 
-现有 **93 份版本清单存于 57 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+现有 **94 份版本清单存于 58 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
 
 - 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
@@ -170,9 +170,21 @@ pi --version
 - **未验收**：`piko system` 的真实提权服务登记、WinFsp 驱动与盘符挂载、GUI/WebUI 业务（登录、挂载、播放）、桌面快捷方式 `integrate --desktop` 与既有 CloudDrive 账户/数据迁移。证据见 [CloudDrive2 验证记录](verification/clouddrive2-20261105.json)。
 - 自动更新以官网 `download.html` 的 `CloudDrive2Setup-X64-<version>.exe` 为版本来源，重建固定 GitHub release 直链并重新校验 SHA-256、Authenticode 与 `required` 布局；`wwwroot` 资源增删时显式 `files` 映射会校验失败并只保留旧版，需要人工确认后更新配方。
 
+## Bun（2026-11-05）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `bun` | 1.4.4 | `bun`，官方 `oven-sh/bun` 的 `bun-windows-x64.zip` 单文件发行包 |
+
+- 载荷为 `bun-v1.4.4` 的 `bun-windows-x64.zip`，SHA-256 与 GitHub 发布资源官方 digest 逐字节一致；解出单个 `bun.exe`（115,281,496 字节，Authenticode `Valid`，PE `FileVersion 1.4.4.0`），`stripPrefix bun-windows-x64`，不执行任何安装脚本。另有 `-baseline` 变体（无 AVX2 CPU 用）未登记，需要时另建独立配方。
+- **只提供 `bun` 命令，不提供 `bunx`**：bun 依赖 argv[0] 分发 bunx，而 Piko shim 以目标路径启动 `bun.exe`（argv[0] 是 bun.exe），实测首参未知包报 `Script not found`；临时 `bunx.exe` 副本可正常工作，但清单无法复制文件。需要执行器语义时使用 `bun x <pkg>`。
+- 状态模型：客户端把 `BUN_` 前缀环境变量列入保护名单（管理器自身基于 Bun 运行），清单无法像 uv 那样把 `BUN_INSTALL`／`BUN_INSTALL_CACHE_DIR` 重定向到 persist。全局安装与包缓存沿用原生 `~/.bun`，Piko 不拥有该目录、不迁移既有数据；隔离验证前后本机既有 `~/.bun`（138 项条目）指纹未变。清单不声明 `persist`／`env`。
+- 隔离验证：`checkLayout` 通过（1 个文件、115,281,496 字节、0 个未知大小）；隔离 `PIKO_HOME` 安装后经 `__shim` 原生分发实测 `bun --version`、`bun -e`、`bun x --version` 均为 1.4.4；卸载／重装循环通过，不选默认命令。`update.mjs --check --packages bun` 在带 `GITHUB_TOKEN` 时返回 `current`（匿名 GitHub API 限流只会把该包标为 blocked，不会误报成功；发布资产 digest 仍强制核对）。
+- **未验收**：真实项目构建／测试负载、`bun add -g` 与既有 `~/.bun` 的长期共存、`bun upgrade` 自更新行为。证据见 [Bun 验证记录](verification/bun-20261105.json)。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 57 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
+- 已为登记的全部包（当前 58 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。
