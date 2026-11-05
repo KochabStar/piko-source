@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 56 个包、85 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31) 与 [新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 57 个包、93 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04) 与 [CloudDrive2](#clouddrive22026-11-05)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -16,7 +16,7 @@
 
 ## 模板包清单
 
-现有 **70 份版本清单存于 53 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+现有 **93 份版本清单存于 57 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
 
 - 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
@@ -157,9 +157,22 @@ pi --version
 - 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
 - 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
 
+## CloudDrive2（2026-11-05）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `clouddrive2` | 1.1.3 | `clouddrive`，官网签名的 Inno Setup「核心服务」安装包只解包 |
+
+- 版本与载荷取自 `clouddrive2.com/download.html` 的 **核心服务安装包**（`CloudDrive2Setup-X64-1.1.3.exe`），不是同一发布页上另一套版本号的「应用直接下载版」（`app-v1.1.3-24` 的 `CloudDrive2-1.1.3-3-windows-x64.exe`，其 PE 版本为 bundle 1.1.3.3，不含服务端与 `wwwroot`）。SHA-256 从官方 GitHub release 资源独立下载重算，Authenticode 为 `Valid`（`CN=维臻云（北京）科技有限公司`，GlobalSign 代码签名），PE `ProductVersion` 仍为安装器模板值 `1.0`，因此以官网页面与内嵌 `{app}\clouddrive.exe` 的 `clouddrive version 1.1.3` 为准。
+- 按 Inno 显式 `files` 映射解出 **67 个 `{app}` 文件**（`clouddrive.exe`、`shawl.exe`、`arm64/shawl.exe`、`CloudDrive.ico`、`wwwroot/**` 与 `snippets`），不执行安装器。**排除** `{tmp}\winfsp-2.2.26112.msi`（安装器会 `msiexec` 静默安装的 WinFsp 挂载驱动）、`install_script.iss` 以及安装器的 `sc.exe create`／`taskkill`／浏览器打开动作。
+- `checkLayout` 用同版本官方载荷隔离校验：67 个文件、42,110,681 字节展开量、0 个未知大小；`npm run check`（57 包／93 版本）、`npm run compact:check` 与 **120 项测试**通过，`node scripts/update.mjs --check --packages clouddrive2` 返回 `current`。隔离 Piko（`PIKO_HOME` 指向临时目录、本地 HTTP 源）安装后为 69 个文件、不选默认命令，`clouddrive --version` 与 `GET http://127.0.0.1:19798/` 返回 200；实际状态写入 `%USERPROFILE%\Waytech\CloudDrive2`（`config.toml`、`clouddrive_data.sqlite`、`log`、`copy_tasks`、`webhooks`），`./wwwroot` 由可执行文件所在目录解析，因此清单**不声明** `persist`／`configTemplates`，也不接管这份外部数据。
+- 服务注册与 WinFsp 驱动分开处理：`piko-service.ps1` 在 `piko system` 的独立管理员确认后按向日葵同款模型登记 `CloudDrive2`（`shawl.exe run --no-log -- clouddrive.exe`，与上游 `[Run]` 一致），写入归属记录并只删除指向本版目录的服务，遇到外部同名服务即拒绝；**不安装 WinFsp 驱动、不写 `Program Files`、不 kill 其他进程**。非管理员安装/卸载不会产生任何系统副作用。
+- **未验收**：`piko system` 的真实提权服务登记、WinFsp 驱动与盘符挂载、GUI/WebUI 业务（登录、挂载、播放）、桌面快捷方式 `integrate --desktop` 与既有 CloudDrive 账户/数据迁移。证据见 [CloudDrive2 验证记录](verification/clouddrive2-20261105.json)。
+- 自动更新以官网 `download.html` 的 `CloudDrive2Setup-X64-<version>.exe` 为版本来源，重建固定 GitHub release 直链并重新校验 SHA-256、Authenticode 与 `required` 布局；`wwwroot` 资源增删时显式 `files` 映射会校验失败并只保留旧版，需要人工确认后更新配方。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 56 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
+- 已为登记的全部包（当前 57 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

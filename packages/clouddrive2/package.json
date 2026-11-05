@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 2,
+  "name": "clouddrive2",
+  "recipes": {
+    "r651eeea6dd30420d": {
+      "schemaVersion": 1,
+      "name": "clouddrive2",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v{version}/CloudDrive2Setup-X64-{version}.exe",
+          "sha256": "{sha256}",
+          "maxBytes": "{maxBytes}",
+          "format": "inno",
+          "bin": {
+            "clouddrive": "clouddrive.exe"
+          },
+          "files": {
+            "clouddrive.exe": "clouddrive.exe",
+            "wwwroot/app.css": "wwwroot/app.css",
+            "wwwroot/clouddrive_web.js": "wwwroot/clouddrive_web.js",
+            "wwwroot/clouddrive_web_bg.wasm": "wwwroot/clouddrive_web_bg.wasm",
+            "wwwroot/index.html": "wwwroot/index.html",
+            "wwwroot/public/favicon.png": "wwwroot/public/favicon.png",
+            "wwwroot/public/icon-maskable-192.png": "wwwroot/public/icon-maskable-192.png",
+            "wwwroot/public/icon-maskable-512.png": "wwwroot/public/icon-maskable-512.png",
+            "wwwroot/public/manifest.json": "wwwroot/public/manifest.json",
+            "wwwroot/public/service-worker.js": "wwwroot/public/service-worker.js",
+            "wwwroot/public/img/115open.png": "wwwroot/public/img/115open.png",
+            "wwwroot/public/img/123pan.png": "wwwroot/public/img/123pan.png",
+            "wwwroot/public/img/alipan-open.png": "wwwroot/public/img/alipan-open.png",
+            "wwwroot/public/img/alipay-58x168.png": "wwwroot/public/img/alipay-58x168.png",
+            "wwwroot/public/img/baidupan.png": "wwwroot/public/img/baidupan.png",
+            "wwwroot/public/img/cloud189.png": "wwwroot/public/img/cloud189.png",
+            "wwwroot/public/img/clouddrive-h.png": "wwwroot/public/img/clouddrive-h.png",
+            "wwwroot/public/img/clouddrive.png": "wwwroot/public/img/clouddrive.png",
+            "wwwroot/public/img/default-cloud.png": "wwwroot/public/img/default-cloud.png",
+            "wwwroot/public/img/default-cloud.svg": "wwwroot/public/img/default-cloud.svg",
+            "wwwroot/public/img/FTP.svg": "wwwroot/public/img/FTP.svg",
+            "wwwroot/public/img/GoogleDrive.png": "wwwroot/public/img/GoogleDrive.png",
+            "wwwroot/public/img/guangyapan.png": "wwwroot/public/img/guangyapan.png",
+            "wwwroot/public/img/iina.png": "wwwroot/public/img/iina.png",
+            "wwwroot/public/img/infuse.png": "wwwroot/public/img/infuse.png",
+            "wwwroot/public/img/LocalFolder.svg": "wwwroot/public/img/LocalFolder.svg",
+            "wwwroot/public/img/LocalFsAPI.png": "wwwroot/public/img/LocalFsAPI.png",
+            "wwwroot/public/img/mpvplay.png": "wwwroot/public/img/mpvplay.png",
+            "wwwroot/public/img/nplayer.png": "wwwroot/public/img/nplayer.png",
+            "wwwroot/public/img/OneDrive.png": "wwwroot/public/img/OneDrive.png",
+            "wwwroot/public/img/potplayer.png": "wwwroot/public/img/potplayer.png",
+            "wwwroot/public/img/s3.png": "wwwroot/public/img/s3.png",
+            "wwwroot/public/img/SFTP.svg": "wwwroot/public/img/SFTP.svg",
+            "wwwroot/public/img/SMB.svg": "wwwroot/public/img/SMB.svg",
+            "wwwroot/public/img/vidhub.png": "wwwroot/public/img/vidhub.png",
+            "wwwroot/public/img/vlc.png": "wwwroot/public/img/vlc.png",
+            "wwwroot/public/img/WebDAV.png": "wwwroot/public/img/WebDAV.png",
+            "wwwroot/public/img/WebDAV.svg": "wwwroot/public/img/WebDAV.svg",
+            "wwwroot/public/img/xunlei.svg": "wwwroot/public/img/xunlei.svg",
+            "wwwroot/public/img/xunleiyunpan.png": "wwwroot/public/img/xunleiyunpan.png",
+            "wwwroot/public/js/qr-code-helpers.js": "wwwroot/public/js/qr-code-helpers.js",
+            "wwwroot/public/js/qrcode-generator.js": "wwwroot/public/js/qrcode-generator.js",
+            "wwwroot/public/js/remote-upload-helpers.js": "wwwroot/public/js/remote-upload-helpers.js",
+            "wwwroot/public/lib/fontawesome/css/all.min.css": "wwwroot/public/lib/fontawesome/css/all.min.css",
+            "wwwroot/public/lib/fontawesome/css/webfonts/fa-brands-400.woff2": "wwwroot/public/lib/fontawesome/css/webfonts/fa-brands-400.woff2",
+            "wwwroot/public/lib/fontawesome/css/webfonts/fa-regular-400.woff2": "wwwroot/public/lib/fontawesome/css/webfonts/fa-regular-400.woff2",
+            "wwwroot/public/lib/fontawesome/css/webfonts/fa-solid-900.woff2": "wwwroot/public/lib/fontawesome/css/webfonts/fa-solid-900.woff2",
+            "wwwroot/public/reader/book-reader.js": "wwwroot/public/reader/book-reader.js",
+            "wwwroot/public/reader/foliate/comic-book.js": "wwwroot/public/reader/foliate/comic-book.js",
+            "wwwroot/public/reader/foliate/epub.js": "wwwroot/public/reader/foliate/epub.js",
+            "wwwroot/public/reader/foliate/epubcfi.js": "wwwroot/public/reader/foliate/epubcfi.js",
+            "wwwroot/public/reader/foliate/fixed-layout.js": "wwwroot/public/reader/foliate/fixed-layout.js",
+            "wwwroot/public/reader/foliate/LICENSE": "wwwroot/public/reader/foliate/LICENSE",
+            "wwwroot/public/reader/foliate/mobi.js": "wwwroot/public/reader/foliate/mobi.js",
+            "wwwroot/public/reader/foliate/overlayer.js": "wwwroot/public/reader/foliate/overlayer.js",
+            "wwwroot/public/reader/foliate/paginator.js": "wwwroot/public/reader/foliate/paginator.js",
+            "wwwroot/public/reader/foliate/progress.js": "wwwroot/public/reader/foliate/progress.js",
+            "wwwroot/public/reader/foliate/README.md": "wwwroot/public/reader/foliate/README.md",
+            "wwwroot/public/reader/foliate/text-walker.js": "wwwroot/public/reader/foliate/text-walker.js",
+            "wwwroot/public/reader/foliate/view.js": "wwwroot/public/reader/foliate/view.js",
+            "wwwroot/public/reader/foliate/vendor/fflate.js": "wwwroot/public/reader/foliate/vendor/fflate.js",
+            "wwwroot/public/reader/foliate/vendor/zip.js": "wwwroot/public/reader/foliate/vendor/zip.js",
+            "wwwroot/snippets/clouddrive_web-9488d10f30fb42c0/inline0.js": "wwwroot/snippets/clouddrive_web-9488d10f30fb42c0/inline0.js",
+            "wwwroot/snippets/clouddrive_web-9488d10f30fb42c0/inline1.js": "wwwroot/snippets/clouddrive_web-9488d10f30fb42c0/inline1.js",
+            "shawl.exe": "shawl.exe",
+            "arm64/shawl.exe": "arm64/shawl.exe",
+            "CloudDrive.ico": "CloudDrive.ico"
+          },
+          "configFiles": {
+            "piko-service.ps1": "param([string]$Action,[Parameter(Mandatory=$true)][string]$Root,[Parameter(Mandatory=$true)][string]$Data)\n$ErrorActionPreference='Stop'\n# CloudDrive2 host integration. The vendor installer (Inno Setup) writes to the\n# machine-wide install directory, installs the WinFsp driver, registers the\n# CloudDrive2 service and terminates running processes. This recipe only\n# anchors the service registration at the Piko version directory; it installs\n# no driver and copies nothing outside the managed root.\n$Root=[IO.Path]::GetFullPath($Root).TrimEnd('\\')\n$service=Join-Path $Root 'shawl.exe'\n$target=Join-Path $Root 'clouddrive.exe'\n$journal=Join-Path $Data 'piko-clouddrive2-service.json'\nforeach ($required in @($service,$target)) {\n if (!(Test-Path -LiteralPath $required -PathType Leaf)) {throw ('Managed payload missing: '+$required)}\n}\nfunction Get-ImagePath([string]$PathName){\n $p=$PathName.Trim()\n if ($p.StartsWith('\"')) {\n  $end=$p.IndexOf('\"',1)\n  if ($end -gt 1) {$p=$p.Substring(1,$end-1)} else {$p=$p.Substring(1)}\n }\n $p\n}\nfunction Test-UnderRoot([string]$PathName){(Get-ImagePath $PathName).StartsWith($Root,[System.StringComparison]::OrdinalIgnoreCase)}\nfunction Get-RootServices{@(Get-CimInstance Win32_Service -Filter \"Name='CloudDrive2'\" | Where-Object {$_.PathName -and (Test-UnderRoot $_.PathName)})}\n$record=$null\nif (Test-Path -LiteralPath $journal) {\n $record=Get-Content -LiteralPath $journal -Raw | ConvertFrom-Json\n if ($record.schemaVersion -ne 1) {throw 'Unsupported service ownership receipt'}\n if ($record.root -ine $Root) {throw 'Another Piko version owns the CloudDrive2 service registration; remove that version first'}\n}\nif ($Action -eq 'install') {\n if ($record -and $record.state -eq 'installed' -and (Get-RootServices).Count) {throw 'Service integration already installed for this version'}\n foreach ($foreign in @(Get-CimInstance Win32_Service -Filter \"Name='CloudDrive2'\")) {\n  if (!$foreign.PathName -or !(Test-UnderRoot $foreign.PathName)) {throw ('Existing external CloudDrive2 service points outside this version ('+$foreign.PathName+'); remove it through its owner first')}\n }\n $null=[IO.Directory]::CreateDirectory($Data)\n @{schemaVersion=1;root=$Root;state='installing';started=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json | Set-Content -LiteralPath $journal -Encoding UTF8\n # Same command line the vendor installer registers.\n $binpath='\"'+$service+'\" run --no-log -- \"'+$target+'\"'\n $null=& sc.exe create CloudDrive2 binpath= $binpath DisplayName= 'CloudDrive2 Service' start= auto\n if ($LASTEXITCODE -ne 0) {throw ('Service creation failed: '+$LASTEXITCODE)}\n $null=& sc.exe start CloudDrive2\n $deadline=(Get-Date).AddSeconds(120)\n $started=$false\n do {\n  $running=Get-RootServices\n  if ($running.Count -and $running[0].State -eq 'Running') {$started=$true;break}\n  Start-Sleep -Seconds 2\n } while ((Get-Date) -lt $deadline)\n if (!$started) {\n  $null=& sc.exe stop CloudDrive2\n  $null=& sc.exe delete CloudDrive2\n  throw 'Service did not reach the Running state under this version directory; registration was withdrawn'\n }\n @{schemaVersion=1;root=$Root;state='installed';service='CloudDrive2';binpath=$binpath;installed=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json | Set-Content -LiteralPath $journal -Encoding UTF8\n Write-Output 'Installed CloudDrive2 service registration for this version'\n} else {\n if (!$record -or $record.state -ne 'installed') {throw 'No owned CloudDrive2 service registration for this version'}\n $serviceEntry=Get-CimInstance Win32_Service -Filter \"Name='CloudDrive2'\"\n if ($serviceEntry) {\n  if (!(Test-UnderRoot $serviceEntry.PathName)) {throw ('Refusing to delete externally owned service '+$serviceEntry.PathName)}\n  $null=& sc.exe stop CloudDrive2\n  if ($serviceEntry.ProcessId) {Stop-Process -Id $serviceEntry.ProcessId -Force -ErrorAction SilentlyContinue}\n  $null=& sc.exe delete CloudDrive2\n  if (Get-CimInstance Win32_Service -Filter \"Name='CloudDrive2'\") {throw 'Failed to delete CloudDrive2 service'}\n }\n Remove-Item -LiteralPath $journal\n Write-Output 'Removed CloudDrive2 service registration for this version'\n}\n"
+          },
+          "admin": {
+            "install": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "install",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            },
+            "remove": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "remove",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            }
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "CloudDrive2",
+                "path": "clouddrive.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.1.3": {
+      "recipe": "r651eeea6dd30420d",
+      "maxBytes": 33554432,
+      "sha256": "f4b12582d31bc8fdf00f2a2a715f74d1ae3ced65f5d19effcec590ed24dfce13"
+    }
+  }
+}

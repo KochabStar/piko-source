@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-05T08:20:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "clouddrive2",
+      "version": "1.1.3",
+      "source": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v1.1.3/CloudDrive2Setup-X64-1.1.3.exe",
+      "discovery": "https://www.clouddrive2.com/download.html (core-service installer link)",
+      "sha256": "f4b12582d31bc8fdf00f2a2a715f74d1ae3ced65f5d19effcec590ed24dfce13",
+      "archiveBytes": 14617640,
+      "format": "inno",
+      "innoVersion": "6.4.0 (Unicode)",
+      "authenticode": {
+        "status": "Valid",
+        "subject": "CN=维臻云（北京）科技有限公司",
+        "issuer": "CN=GlobalSign GCC R45 CodeSigning CA 2020"
+      },
+      "peProductVersion": "1.0 (installer template value; not an application version)",
+      "applicationVersion": "clouddrive version 1.1.3 build 26-10-17 17:13:11 cloudapi version 1.1.3 build 26-10-17 17:13:00",
+      "layout": {
+        "files": 67,
+        "knownExpandedBytes": 42110681,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": true,
+        "excludedPayload": [
+          "{tmp}/winfsp-2.2.26112.msi",
+          "install_script.iss"
+        ]
+      },
+      "excludedInstallerActions": [
+        "msiexec /i {tmp}\\winfsp-2.2.26112.msi /quiet",
+        "sc.exe create CloudDrive2 (replaced by the owned, reversible piko-service.ps1 recipe)",
+        "taskkill /f /t /im clouddrive.exe",
+        "http://localhost:19798 postinstall browser launch"
+      ],
+      "isolatedInstall": {
+        "client": "piko 0.4.6",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "files": 69,
+        "defaultCommandSelected": false,
+        "versionOutput": "clouddrive version 1.1.3 build 26-10-17 17:13:11 cloudapi version 1.1.3 build 26-10-17 17:13:00 features:[\"mount\",\"tls-rustls\",]",
+        "webUi": "GET http://127.0.0.1:19798/ -> 200 (13325 bytes)",
+        "persist": "none declared; state written to %USERPROFILE%\\Waytech\\CloudDrive2 and removed after the run"
+      },
+      "checks": {
+        "sourceCheck": "57 packages / 93 versions",
+        "compactCheck": "stable (only the pre-existing sunlogin drift remains)",
+        "updateCheck": "node scripts/update.mjs --check --packages clouddrive2 -> status current",
+        "tests": "120 passing (4 new clouddrive2 tests)"
+      }
+    }
+  ],
+  "notVerified": [
+    "piko system elevation and the real CloudDrive2 service registration",
+    "WinFsp 2.2.26112 driver installation and drive mounting",
+    "GUI/WebUI sign-in, cloud mounting, streaming playback",
+    "integrate --desktop shortcut creation",
+    "Migration of an existing CloudDrive installation or account data",
+    "The separate app-v1.1.3-24 client installer (not packaged)"
+  ],
+  "notes": [
+    "The installer runs PE 32-bit; the application payload is 64-bit clouddrive.exe.",
+    "The vendor installer registers shawl.exe run --no-log -- clouddrive.exe. The manifest keeps that command line and adds no --cwd/--env injection.",
+    "clouddrive.exe resolves ./wwwroot from its executable directory, so the extracted layout must keep wwwroot next to the executable."
+  ]
+}

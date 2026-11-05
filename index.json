@@ -380,6 +380,12 @@
       "versions": {
         "8.9.7.101": "packages/baidu-netdisk/package.json"
       }
+    },
+    "clouddrive2": {
+      "latest": "1.1.3",
+      "versions": {
+        "1.1.3": "packages/clouddrive2/package.json"
+      }
     }
   }
 }

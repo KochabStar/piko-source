@@ -385,6 +385,19 @@
       "urlTemplate": "https://issuepcdn.baidupcs.com/issue/netdisk/yunguanjia/BaiduNetdisk_{version}.exe",
       "signature": true,
       "layout": "baidu"
+    },
+    "clouddrive2": {
+      "provider": "regex",
+      "url": "https://www.clouddrive2.com/download.html",
+      "versionRegex": "CloudDrive2Setup-X64-(?<version>[0-9]+(?:\\.[0-9]+)+)\\.exe",
+      "urlTemplate": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v{version}/CloudDrive2Setup-X64-{version}.exe",
+      "signature": true,
+      "required": [
+        "wwwroot/index.html",
+        "wwwroot/clouddrive_web_bg.wasm",
+        "shawl.exe",
+        "CloudDrive.ico"
+      ]
     }
   }
 }
