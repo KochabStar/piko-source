@@ -253,10 +253,11 @@
       }
     },
     "pixi": {
-      "latest": "0.84.0",
+      "latest": "0.84.1",
       "versions": {
         "0.83.0": "packages/pixi/package.json",
-        "0.84.0": "packages/pixi/package.json"
+        "0.84.0": "packages/pixi/package.json",
+        "0.84.1": "packages/pixi/package.json"
       }
     },
     "codex": {
@@ -267,13 +268,14 @@
       }
     },
     "orca": {
-      "latest": "1.4.248",
+      "latest": "1.4.250",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
         "1.4.246": "packages/orca/package.json",
         "1.4.247": "packages/orca/package.json",
-        "1.4.248": "packages/orca/package.json"
+        "1.4.248": "packages/orca/package.json",
+        "1.4.250": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -310,10 +312,11 @@
       }
     },
     "wechat": {
-      "latest": "4.2.0.12",
+      "latest": "4.2.0.13",
       "versions": {
         "4.2.0.9": "packages/wechat/package.json",
-        "4.2.0.12": "packages/wechat/package.json"
+        "4.2.0.12": "packages/wechat/package.json",
+        "4.2.0.13": "packages/wechat/package.json"
       }
     },
     "sunlogin": {
