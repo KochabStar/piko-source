@@ -44,6 +44,11 @@
       "recipe": "r607104fb13f7aa5b",
       "maxBytes": 536870912,
       "sha256": "c249a9ed0a57c748fb1247d8ee9e2d0fe1b13229266ce74d8810a76a591e21fc"
+    },
+    "18.17.0": {
+      "recipe": "r607104fb13f7aa5b",
+      "maxBytes": 536870912,
+      "sha256": "7cc6960d173dcb021843b3b073c2443f6544672ca98803f96f2682bebcc5acef"
     }
   }
 }
