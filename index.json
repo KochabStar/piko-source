@@ -207,13 +207,14 @@
       }
     },
     "oh-my-pi": {
-      "latest": "18.16.0",
+      "latest": "18.17.0",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
         "18.14.1": "packages/oh-my-pi/package.json",
         "18.14.2": "packages/oh-my-pi/package.json",
         "18.15.0": "packages/oh-my-pi/package.json",
-        "18.16.0": "packages/oh-my-pi/package.json"
+        "18.16.0": "packages/oh-my-pi/package.json",
+        "18.17.0": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -261,21 +262,23 @@
       }
     },
     "codex": {
-      "latest": "0.166.0",
+      "latest": "0.167.0",
       "versions": {
         "0.164.0": "packages/codex/package.json",
-        "0.166.0": "packages/codex/package.json"
+        "0.166.0": "packages/codex/package.json",
+        "0.167.0": "packages/codex/package.json"
       }
     },
     "orca": {
-      "latest": "1.4.250",
+      "latest": "1.4.251",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
         "1.4.246": "packages/orca/package.json",
         "1.4.247": "packages/orca/package.json",
         "1.4.248": "packages/orca/package.json",
-        "1.4.250": "packages/orca/package.json"
+        "1.4.250": "packages/orca/package.json",
+        "1.4.251": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -348,9 +351,10 @@
       }
     },
     "lertaro": {
-      "latest": "5.12.2",
+      "latest": "5.12.7",
       "versions": {
-        "5.12.2": "packages/lertaro/package.json"
+        "5.12.2": "packages/lertaro/package.json",
+        "5.12.7": "packages/lertaro/package.json"
       }
     },
     "nvidia-app": {
