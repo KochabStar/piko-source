@@ -34,6 +34,49 @@ function best(values) {
   values.forEach(component);
   return values.sort((a, b) => compareVersions(b, a))[0];
 }
+function steamKV(text) {
+  // Minimal Valve KV reader: top-level "key" "value" pairs and "key" { … }
+  // blocks, no escapes or comments in the bootstrap manifest channel.
+  let pos = 0;
+  const skip = () => {
+    while (pos < text.length && /\s/.test(text[pos])) pos++;
+  };
+  const string = () => {
+    requireThat(text[pos] === '"', "Steam manifest string expected");
+    const end = text.indexOf('"', pos + 1);
+    requireThat(end > pos, "Steam manifest string is truncated");
+    const value = text.slice(pos + 1, end);
+    pos = end + 1;
+    return value;
+  };
+  const body = (top) => {
+    const values = new Map(),
+      blocks = new Map();
+    for (;;) {
+      skip();
+      if (pos >= text.length) {
+        requireThat(top, "Steam manifest KV is truncated");
+        return { values, blocks };
+      }
+      if (text[pos] === "}") {
+        requireThat(!top, "Steam manifest KV has stray closing braces");
+        pos++;
+        return { values, blocks };
+      }
+      const key = string();
+      skip();
+      requireThat(
+        !values.has(key) && !blocks.has(key),
+        "Duplicate Steam manifest key: " + key,
+      );
+      if (text[pos] === "{") {
+        pos++;
+        blocks.set(key, body(false));
+      } else values.set(key, string());
+    }
+  };
+  return body(true);
+}
 export async function discover(rule, current, net) {
   if (rule.provider === "manual") return { manual: true, reason: rule.reason };
   const api = "https://api.github.com/repos/";
@@ -317,6 +360,38 @@ export async function discover(rule, current, net) {
         .map((r) => r.version ?? r.short_version_string),
     );
     url = render(rule.urlTemplate, { version });
+  } else if (rule.provider === "steam") {
+    // The signed bootstrap manifest pins every client package by content
+    // hash; only the international "row" bootstrapper zip is packaged. The
+    // channel timestamp advances for any package, so a new version is only
+    // reported when the bootstrapper payload itself changes.
+    const channel = steamKV(await net.text(rule.url)).blocks.get("win32");
+    requireThat(channel, "Steam win32 bootstrap channel missing");
+    const stamp = channel.values.get("version");
+    requireThat(
+      /^\d+$/.test(stamp ?? "") &&
+        Number(stamp) > 1600000000 &&
+        Number(stamp) * 1000 < Date.now() + 86400000,
+      "Steam bootstrap channel version is not a current timestamp",
+    );
+    const bootstrapper = channel.blocks.get("steam_win32");
+    const file = bootstrapper?.values.get("file");
+    const row = bootstrapper?.blocks.get("steamrow");
+    sha256 = bootstrapper?.values.get("sha2");
+    requireThat(
+      /^steam_win32\.zip\.[0-9a-f]{40}$/.test(file ?? "") &&
+        /^[0-9a-f]{64}$/i.test(sha256 ?? "") &&
+        bootstrapper.values.get("IsBootstrapperPackage") === "1" &&
+        row?.values.get("IsBootstrapperPackage") === "1" &&
+        row?.values.get("file")?.split(".").at(-1) === file.split(".").at(-1) &&
+        row?.values.get("sha2")?.toLowerCase() === sha256.toLowerCase(),
+      "Steam bootstrapper is not the pinned international row payload",
+    );
+    url = new URL(file, rule.url).href;
+    const pinned = current?.platforms?.["windows-x64"]?.url;
+    version = pinned === url ? current?.version : stamp;
+    requireThat(version, "Steam channel version cannot be derived");
+    provenance = rule.url;
   } else throw Error("Unsupported provider");
   component(version);
   httpsURL(url);

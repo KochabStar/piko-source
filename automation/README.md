@@ -7,7 +7,7 @@
 `.github/workflows/update-source.yml` 每天 **03:17 UTC** 检查上游，也可通过 Actions → **Update upstream packages** 手动运行。`packages` 输入可填写以英文逗号分隔的包名；空值检查全部包。更新工作流只在默认分支运行。
 
 1. 校验当前索引、清单与更新规则，并运行测试。
-2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 53 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。
+2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 60 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。`steam` 解析官方 CDN 引导清单（Valve KV），固定国际版 `steamrow` 引导 ZIP 的内容寻址地址与 `sha2` 摘要，仅当载荷哈希变化时以新通道时间戳登记版本；`steamchina` 渠道不匹配。`epic-games-launcher` 跟随 Epic 官方稳定重定向端点发现构建号，载荷固定为同版本官方 MSI 直链并按 `layout: "epic"` 重建只含启动器本体的显式映射。
 3. 下载候选载荷，计算 SHA-256；GitHub、Node、Go、rustup 提供官方摘要时必须比对，PowerShell Gallery 比对 SHA-512，向日葵另比对官方 MD5。部分桌面分发同时要求 Windows 签名状态为 `Valid`。
 4. 使用单独固定版本、固定摘要的 7-Zip、innounp、lessmsi 读取或解包元数据。检查命令、快捷方式、字体及执行配方引用的文件，检查显式文件映射、嵌套载荷、文件类型、大小、链接和路径冲突。MSI 同时核对数据库中的文件标识和 CAB 内容；不会运行 MSI 安装动作。
 5. 在 `packages/<name>/package.json` 中追加已验证版本的 SHA-256／配方引用，再更新 `index.json`；原 schema 1 源仍按版本文件追加。旧版本展开后的内容和安装哈希不可改变，模板包只允许增加版本或确有需要的新配方。源在验证期间被手动修改时拒绝覆盖。
@@ -48,6 +48,8 @@ omp --version
 - 布局和签名通过不等于新版本的 GUI、服务、驱动、Shell API 或真实数据迁移已验收。自动合并只更新软件源元数据，不执行本机安装或迁移。
 - `innounp` 主包从上游版本说明自动发现并仅接收其官方归档；用于自动化验证的解包器仍在 `automation/tools.json` 单独固定版本与摘要，避免候选包替换当前运行中的验证工具。
 - `dingtalk` 仅将社区目录的四段数字版本作为发现提示；载荷地址固定生成国内 `dtapp-pub.dingtalk.com/.../win_updater/Release/DingTalkUpdate_v<version>.zip` 完整包。国际版 `-Release` 格式不匹配，不读取社区下载地址；候选仍须通过摘要、PE 版本和布局验证。
+- `steam` 只接受官方引导清单中与国际版 `steamrow` 变体哈希后缀、摘要一致的引导 ZIP，且要求 `IsBootstrapperPackage` 标记；载荷哈希不变时通道时间戳前进不产生新版本。其分发容器是未签名 ZIP，签名规则以载荷路径形式校验解包后的 `steam.exe` 本体，容器完整性由清单 `sha2` 摘要在下载时强制核对。
+- `epic-games-launcher` 只跟随 Epic 官方稳定重定向端点，并要求重定向目标带三段数字构建号的 `EpicInstaller-<version>` 载荷；载荷固定重建成同版本 `.msi` 直链。显式映射仅保留 `Epic Games/Launcher/**` 启动器本体，运行时安装器、系统目录 DLL 与 ProgramData 配置不会进入安装；未来版本载荷增删由映射校验拦下并保留旧版。
 
 ## 在 GitHub 启用
 
@@ -76,7 +78,7 @@ GitHub Actions 本身全部固定到提交 SHA。仓库变更和 PR 另由 `.git
 
 ## 模板与历史版本
 
-目前每包一个 `packages/<name>/package.json`，共 53 个包文件、70 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
+目前每包一个 `packages/<name>/package.json`，共 60 个包文件、96 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
 
 `npm run compact:check` 可预览 schema 1 清单合并；`npm run compact` 执行。迁移允许索引路径改为共享包文件，但必须逐版本保证解析后的完整 JSON 序列化及 manifestHash 不变；原 schema 1 路径未迁移时仍要求文件字节不变。迁移后的客户端必须支持模板格式；先部署新版 Piko，再发布此源。Git 历史仍保留旧清单，模板只控制工作目录和后续重复配置增长，不压缩已有 Git 历史。
 

@@ -495,6 +495,7 @@ export function validateRules(catalog, config) {
         "redirect",
         "tabbit",
         "rustup",
+        "steam",
         "manual",
       ].includes(rule.provider),
       "Unknown update provider",
@@ -509,6 +510,13 @@ export function validateRules(catalog, config) {
     for (const key of ["versionRegex", "assetRegex", "urlRegex"])
       if (rule[key]) new RegExp(rule[key]);
     if (rule.url) httpsURL(rule.url);
+    requireThat(
+      rule.signature === undefined ||
+        rule.signature === true ||
+        typeof rule.signature === "string",
+      "Signature rules must be true or a payload path",
+    );
+    if (typeof rule.signature === "string") pathName(rule.signature);
   }
   return config;
 }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-07T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "steam",
+      "version": "1769731672",
+      "versionModel": "official win32 bootstrap channel timestamp (1769731672 = 2026-01-30T00:07:52Z); advances for any package, so new versions register only when the international bootstrapper ZIP content hash changes",
+      "source": "https://cdn.cloudflare.steamstatic.com/client/steam_win32.zip.3e96965d109fc2d4cc14206b2fc4ec960a746ed3",
+      "discovery": "steam provider on https://cdn.cloudflare.steamstatic.com/client/steam_client_win32 (Valve KV manifest)",
+      "sha256": "1369615c795b60de822876b4dc4042186cf58d0dc8f63ea1371167f667e16925",
+      "archiveBytes": 2307664,
+      "publisherCheck": "signed bootstrap manifest steam_win32 sha2 is byte-identical to the computed SHA-256 and to the steamrow variant digest; identical manifest bytes (sha256 4b8aa78d95dd7a1475c7849c3e783b136452d34be67342b53728799d697c4823) served by cdn.cloudflare.steamstatic.com, cdn.akamai.steamstatic.com and media.st.dl.eccdnx.com; client-download.steampowered.com failed TLS from this host and is not used",
+      "installerReference": "SteamSetup.exe (NSIS, sha256 7d3654531c32d941b8cae81c4137fc542172bfa9635f169cb392f245a0a12bcb, unchanged since 2024-05) embeds an older Steam.exe plus SteamService.exe and bootstrapper text files; the CDN bootstrapper zip is the same first-run payload Valve distributes, newer, and ships without the service binary",
+      "format": "zip",
+      "stripPrefix": "none (single root entry steam.exe)",
+      "authenticode": {
+        "status": "Valid",
+        "subject": "CN=Valve Corp., O=Valve Corp., L=Bellevue, S=Washington, C=US",
+        "fileVersion": "10.41.26.25",
+        "fileVersionNote": "PE resource also reports FileVersion 1.0.0.2, so peFileVersion rejects it as ambiguous; PE version is not used as the package version source",
+        "productVersion": "01.00.00.02",
+        "fileDescription": "Steam"
+      },
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 4718744,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "signatureRule": "\"signature\": \"steam.exe\" — new rule form checking the signed payload inside the unsigned zip container instead of the artifact itself"
+      },
+      "commandModel": {
+        "bin": { "steam": "steam.exe" },
+        "desktop": "Steam shortcut declared; requires separate integrate --desktop preview/confirmation",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": ["config", "steamapps", "userdata"],
+        "persistCreated": "directories pre-created by Piko before first launch (lertaro model)",
+        "notOwned": "ssfn* Steam Guard tokens at the install root, HKCU\\Software\\Valve\\Steam registry, native Steam service (SteamService.exe not shipped); Steam bootstraps and self-updates the full client inside its install directory, so later Piko operations will detect divergence and refuse destructive actions until resolved"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.8",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "installed": "main/steam@1769731672",
+        "steamExeSha256": "1d2fbcc0402dc5a1f64b2e1d924e6e38e1dd76197c0246ddf89094fb86fda915 (byte-identical to the CDN zip entry)",
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/steam/1769731672/steam.exe",
+        "uninstallReinstallCycle": "persist markers under steamapps/ and config/ retained through uninstall and restored on reinstall"
+      },
+      "checks": {
+        "sourceCheck": "59 packages / 95 versions",
+        "updateCheck": "node scripts/update.mjs --check --packages steam -> status current (payload digest verified during download)",
+        "tests": "131 total, 130 pass, 1 pre-existing failure: tests/tortoise-recipe.test.mjs invokes a real .ps1 and is blocked by this host's Restricted execution policy; fails identically with this change stashed",
+        "compactCheck": "changedPackages 1 = pre-existing sunlogin schema-1 drift (steam is already a template document)"
+      }
+    }
+  ],
+  "notVerified": [
+    "First-run GUI bootstrap (steam.exe would download the ~200MB full client), login and Steam Guard enrollment",
+    "Game downloads, library migration from an existing Steam installation",
+    "Long-term coexistence of Steam self-updates with Piko-managed versions (fork detection and resolution)",
+    "The steamchina (Steam China) channel and the SteamService.exe service model, neither of which is shipped"
+  ]
+}

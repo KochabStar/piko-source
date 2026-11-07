@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "name": "steam",
+  "recipes": {
+    "rcef5cab9e4c63c99": {
+      "schemaVersion": 1,
+      "name": "steam",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://cdn.cloudflare.steamstatic.com/client/steam_win32.zip.3e96965d109fc2d4cc14206b2fc4ec960a746ed3",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "steam": "steam.exe"
+          },
+          "maxBytes": "{maxBytes}",
+          "persist": [
+            "config",
+            "steamapps",
+            "userdata"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Steam",
+                "path": "steam.exe"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "versions": {
+    "1769731672": {
+      "recipe": "rcef5cab9e4c63c99",
+      "maxBytes": 67108864,
+      "sha256": "1369615c795b60de822876b4dc4042186cf58d0dc8f63ea1371167f667e16925"
+    }
+  }
+}

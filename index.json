@@ -399,6 +399,18 @@
       "versions": {
         "1.4.4": "packages/bun/package.json"
       }
+    },
+    "steam": {
+      "latest": "1769731672",
+      "versions": {
+        "1769731672": "packages/steam/package.json"
+      }
+    },
+    "epic-games-launcher": {
+      "latest": "20.3.3",
+      "versions": {
+        "20.3.3": "packages/epic-games-launcher/package.json"
+      }
     }
   }
 }

@@ -415,6 +415,20 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
         file,
         !!d.files,
       );
+      if (rule.layout === "epic")
+        // Keep the launcher application only: DirectX/GameInput
+        // redistributable installers, system-directory VC++ runtimes and
+        // ProgramData-targeted EMS configuration are not application files.
+        effective.files = d.files = Object.fromEntries(
+          plan.files
+            .filter(
+              (f) =>
+                !/^(?:Epic Games\/(?:DirectXRedist|GameInputRedist)\/|Epic\/EpicGamesLauncher\/|Win\/System(?:64)?\/|System(?:64)?\/)/.test(
+                  f.path,
+                ),
+            )
+            .map((f) => [f.path, f.path]),
+        );
       entries = mapped(
         plan.files.map((f) => ({ ...f, directory: false })),
         effective,
@@ -562,7 +576,14 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
   }
   if (rule.signature) {
     // Check the official signed distribution itself, never run its entrypoint.
-    const image = artifacts[0].file;
+    // Container distributions anchor their bytes with a publisher digest;
+    // a string declaration names the signed payload extracted from it.
+    let image = artifacts[0].file;
+    if (typeof rule.signature === "string") {
+      const entry = outputs.get(rule.signature.toLowerCase());
+      requireThat(entry?.peek, "Declared signature payload is missing");
+      image = await entry.peek();
+    }
     const script =
       "$ErrorActionPreference='Stop'; Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Security/Microsoft.PowerShell.Security.psd1') -ErrorAction Stop; if((Get-AuthenticodeSignature -LiteralPath $env:PIKO_SOURCE_SIGNATURE_FILE).Status -ne 'Valid'){throw 'Distribution signature is not Valid'}";
     await capture(

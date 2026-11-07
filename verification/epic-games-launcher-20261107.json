@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-07T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "epic-games-launcher",
+      "version": "20.3.3",
+      "versionModel": "official CDN build number from Epic's stable redirect endpoint; the MSI itself reports ProductVersion 1.3.210.0 and EpicGamesLauncher.exe reports FileVersion 20.3.3-0+UE5",
+      "source": "https://epicgames-download1.akamaized.net/Builds/UnrealEngineLauncher/Installers/Windows/EpicInstaller-20.3.3.msi",
+      "discovery": "redirect provider on https://launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncherInstaller.exe (303 -> EpicInstaller-<version>.exe)",
+      "sha256": "d55d79710edfeaa107a62f2ea007bec1eeeac8b715a43c2ba3858eec7bc60337",
+      "archiveBytes": 264237056,
+      "publisherCheck": "MSI SHA-256 byte-identical to the published winget InstallerSha256; the same stable endpoint's .exe bootstrapper (264,283,136 bytes) matches the egl_installer_sha512 published in Epic's own linux-manifest-Prod-20.3.3.txt",
+      "format": "msi",
+      "authenticode": {
+        "msi": "Valid, CN=Epic Games Inc., O=Epic Games Inc., L=Cary, S=North Carolina, C=US",
+        "exe": "Valid, same signer",
+        "fileVersion": "20.3.3-0+UE5",
+        "fileDescription": "EpicGamesLauncher"
+      },
+      "layout": {
+        "files": 4450,
+        "knownExpandedBytes": 572175748,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "cabinets": "1 embedded (EpicGamesLauncher.cab), cab member sizes verified against the File table",
+        "excluded": [
+          "Epic Games/DirectXRedist/** (21 files, DXSETUP runtime installer)",
+          "Epic Games/GameInputRedist/GameInputRedist.msi",
+          "Win/System/** and Win/System64/** (VC++ 2010/2012 runtimes targeted at system dirs)",
+          "System/** and System64/** (VC++ 2013 runtimes targeted at system dirs)",
+          "Epic/EpicGamesLauncher/** (5 EMS files targeted at ProgramData)"
+        ]
+      },
+      "commandModel": {
+        "bin": { "epic": "Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe" },
+        "desktop": "Epic Games Launcher shortcut declared; requires separate integrate --desktop preview/confirmation",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "nativeData": "%LocalAppData%\\EpicGamesLauncher (config/webcache), %ProgramData%\\Epic (game manifests), user-chosen game library directories; not owned, not migrated",
+        "runtimeDependencies": "VC++ 2010/2012/2013 runtimes excluded from the payload; EGL may request EOS/DirectX installation on first run (portable does not imply no system side effects)"
+      },
+      "clientFixRequired": "Piko 0.4.8 and earlier fail with 'Missing container entry size' when listing any MSI whose compound document contains sizeless storages (embedded language transforms 1025/1026). Fixed in ../piko: listContainer now admits sizeless Compound storages as directory entries that can never be selected for extraction (Cab/NSIS/PE strictness unchanged); regression test added to tests/container-validation.test.ts.",
+      "isolatedInstall": {
+        "client": "patched client source run via bun (containers.ts fix); unpatched piko 0.4.8 reproduces the failure",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "installed": "main/epic-games-launcher@20.3.3",
+        "files": 4450,
+        "exclusionsConfirmedAbsent": true,
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/epic-games-launcher/20.3.3/Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe"
+      },
+      "checks": {
+        "sourceCheck": "60 packages / 96 versions",
+        "updateCheck": "node scripts/update.mjs --check --packages epic-games-launcher -> status current",
+        "tests": "136 total, 135 pass, 1 pre-existing failure (tortoise-recipe real .ps1 blocked by this host's Restricted execution policy, unrelated to this change)",
+        "clientTypecheck": "tsc --noEmit clean with the containers.ts fix",
+        "clientTests": "bun test with the fix: 293 pass / 14 fail; failure set is name-identical to a baseline run with the two fix files stashed (all pre-existing host PowerShell/execution-policy failures); tests/container-validation.test.ts passes with the new Compound-storage assertions"
+      }
+    }
+  ],
+  "notVerified": [
+    "First-run GUI bootstrap, login, and EOS/DirectX installation prompts",
+    "Game downloads and migration from an existing Epic Games Launcher installation",
+    "Long-term coexistence of EGL self-updates with Piko-managed versions (fork detection and resolution)",
+    "Installation with the released fixed client binary (verification used the patched client source)"
+  ]
+}

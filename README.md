@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 58 个包、94 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05) 与 [Bun](#bun2026-11-05)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 60 个包、96 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07) 与 [Epic 商城](#epic-商城2026-11-07)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -182,9 +182,33 @@ pi --version
 - 隔离验证：`checkLayout` 通过（1 个文件、115,281,496 字节、0 个未知大小）；隔离 `PIKO_HOME` 安装后经 `__shim` 原生分发实测 `bun --version`、`bun -e`、`bun x --version` 均为 1.4.4；卸载／重装循环通过，不选默认命令。`update.mjs --check --packages bun` 在带 `GITHUB_TOKEN` 时返回 `current`（匿名 GitHub API 限流只会把该包标为 blocked，不会误报成功；发布资产 digest 仍强制核对）。
 - **未验收**：真实项目构建／测试负载、`bun add -g` 与既有 `~/.bun` 的长期共存、`bun upgrade` 自更新行为。证据见 [Bun 验证记录](verification/bun-20261105.json)。
 
+## Steam（2026-11-07）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `steam` | 1769731672 | `steam`，官方 CDN 国际版引导包 `steam_win32.zip`（单文件 `steam.exe`） |
+
+- 版本号取官方引导清单 `steam_client_win32` 的 `win32` 通道时间戳（1769731672 = 2026-01-30T00:07:52Z）。该清单经 cloudflare／akamai／eccdnx 三个官方 CDN 主机核对逐字节一致，为 `steam_win32` 固定内容寻址文件名与 `sha2` 摘要，且与国际版 `steamrow` 变体的哈希后缀、摘要一致；本包固定该 ZIP（2,307,664 字节，SHA-256 `1369615c…`）与清单摘要逐字节一致，不执行官方 `SteamSetup.exe`。安装器（NSIS）内置 2024-05 的旧 `Steam.exe`、`SteamService.exe` 与引导文案，仅作参照：CDN 引导 ZIP 即安装器首启下载的同一引导载荷，且更新。
+- 解出单个 `steam.exe`（4,718,744 字节，Authenticode `Valid`，`CN=Valve Corp.`）。其 PE 资源同时含 `10.41.26.25` 与 `1.0.0.2` 两个 FileVersion，故不用 PE 版本做版本源。`checkLayout` 通过（1 个文件、4,718,744 字节展开、0 个未知大小）；签名规则新增载荷路径形式（`"signature": "steam.exe"`），对未签名容器内声明的已签名主程序校验，而不是容器本身。
+- 首次运行由 `steam.exe` 自举下载完整客户端（与官方安装器首启行为一致，约 200 MB），本包不预置也不运行该流程（与 rustup 只引导管理器同模型）。`steamapps`／`config`／`userdata` 三个用户数据目录在首次启动前由 Piko 持久化创建，卸载／重装已验证保留测试数据；安装根目录的 `ssfn*` Steam Guard 令牌、`HKCU\Software\Valve\Steam` 注册表与 Steam 服务（`SteamService.exe`，本包不含）不由本包接管。Steam 会在安装目录内自更新，Piko 检测分叉时拒绝破坏性操作，需按客户端流程处理。
+- 自动更新解析官方引导清单：仅当国际版引导 ZIP 的内容哈希变化时，才以新通道时间戳登记新版本（通道时间戳随任意包更新前进，不据此制造同载荷的新版本）；`steamrow` 与顶层载荷哈希／摘要不一致、`IsBootstrapperPackage` 缺失或时间戳异常时保留旧版；`steamchina` 渠道不打包。
+- 隔离验证：本地 HTTP 源副本 + 独立 `PIKO_HOME`（piko 0.4.8）安装 1769731672，`steam.exe` 与官方载荷逐字节一致，未选默认命令，`piko use` 后 `which steam` 解析到受管理入口，卸载／重装持久化标记保留。`npm run check`（59 包／95 版本）通过；131 项测试 130 项通过，1 项失败为既有的 tortoise-recipe 真实 `.ps1` 用例受本机执行策略限制，与本包无关（暂存本改动前后失败一致）。未启动 GUI、未触发引导下载、未登录或迁移账户数据。证据见 [Steam 验证记录](verification/steam-20261107.json)。
+
+## Epic 商城（2026-11-07）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `epic-games-launcher` | 20.3.3 | `epic`，官方 WiX MSI 按显式 `files` 映射只解包 |
+
+- 载荷取自 Epic 官方稳定端点 `launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncherInstaller.exe` 的 303 重定向目标（2026-09-24 发布的 `EpicInstaller-20.3.3.msi`，264,237,056 字节）。MSI 的 SHA-256 与 winget 发布值逐字节一致；同端点的 `.exe` 引导载荷另行核对了 Epic 官方 Linux 引导清单（`linux-manifest-Prod-20.3.3.txt`）发布的 `egl_installer_sha512`。MSI 与解出的 `EpicGamesLauncher.exe`（43,809,208 字节）Authenticode 均为 `Valid`（`CN=Epic Games Inc.`），exe `FileVersion 20.3.3-0+UE5`（MSI ProductVersion 为 1.3.210.0，版本以官方分发的 CDN 构建号 20.3.3 为准）。
+- 按 MSI 显式 `files` 映射解出 **4,450 个** `Epic Games/Launcher/**` 程序文件（572,175,748 字节展开，1 GiB 展开配额）；**排除** `DirectXRedist`（DXSETUP 运行时安装器）、`GameInputRedist.msi`、目标为系统目录的 VC++ 2010/2012/2013 运行库 DLL（`Win/System*`、`System*`）与目标为 ProgramData 的 EMS 配置。不调用 msiexec、不执行安装器、不写系统目录或注册表；系统运行库缺失时由用户自行安装，便携不等于无系统副作用（EGL 首次运行可能自行请求安装 Epic Online Services 或 DirectX 组件）。
+- 配置与数据沿用 EGL 原生位置（`%LocalAppData%\EpicGamesLauncher`、`%ProgramData%\Epic`、用户自选的游戏库目录），本源不声明 `persist`、不迁移既有账户、游戏或凭据；EGL 会在安装目录内自更新，Piko 检测分叉时拒绝破坏性操作。
+- 自动更新以官方稳定重定向端点发现版本（重定向至 `EpicInstaller-<version>.exe`），载荷固定为同版本官方 `.msi` 直链；无 MSI 的未来构建只会验证失败并保留旧版。`layout: "epic"` 按同款过滤重建显式映射，载荷增删时映射校验失败仅保留旧版，需人工确认后更新配方。
+- **先升级客户端至包含 MSI 复合文档修复的版本**：0.4.8 及更早客户端在列举 MSI 复合文档时拒绝无尺寸存储（语言转换 `1025`／`1026`），导致任何含内嵌转换的 MSI（含本包）安装报 `Missing container entry size`。客户端 `../piko` 已修复（无尺寸存储按目录条目列出、不可提取），本包隔离安装用修复后客户端完成：4,450 个文件、排除项确认缺失、不选默认命令、`piko use` 后 `which epic` 解析到受管理入口。证据见 [Epic 验证记录](verification/epic-games-launcher-20261107.json)。未启动 GUI、未登录、未安装 EOS／DirectX 或迁移游戏库。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 58 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。
+- 已为登记的全部包（当前 59 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。
