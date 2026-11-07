@@ -207,14 +207,15 @@
       }
     },
     "oh-my-pi": {
-      "latest": "18.17.0",
+      "latest": "18.18.0",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
         "18.14.1": "packages/oh-my-pi/package.json",
         "18.14.2": "packages/oh-my-pi/package.json",
         "18.15.0": "packages/oh-my-pi/package.json",
         "18.16.0": "packages/oh-my-pi/package.json",
-        "18.17.0": "packages/oh-my-pi/package.json"
+        "18.17.0": "packages/oh-my-pi/package.json",
+        "18.18.0": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -270,7 +271,7 @@
       }
     },
     "orca": {
-      "latest": "1.4.251",
+      "latest": "1.4.252",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
@@ -278,7 +279,8 @@
         "1.4.247": "packages/orca/package.json",
         "1.4.248": "packages/orca/package.json",
         "1.4.250": "packages/orca/package.json",
-        "1.4.251": "packages/orca/package.json"
+        "1.4.251": "packages/orca/package.json",
+        "1.4.252": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -331,11 +333,12 @@
       }
     },
     "claude-code": {
-      "latest": "2.1.318",
+      "latest": "2.1.319",
       "versions": {
         "2.1.316": "packages/claude-code/package.json",
         "2.1.317": "packages/claude-code/package.json",
-        "2.1.318": "packages/claude-code/package.json"
+        "2.1.318": "packages/claude-code/package.json",
+        "2.1.319": "packages/claude-code/package.json"
       }
     },
     "opencode": {
