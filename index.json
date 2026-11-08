@@ -38,9 +38,10 @@
       }
     },
     "fzf": {
-      "latest": "0.74.5",
+      "latest": "0.75.0",
       "versions": {
-        "0.74.5": "packages/fzf/package.json"
+        "0.74.5": "packages/fzf/package.json",
+        "0.75.0": "packages/fzf/package.json"
       }
     },
     "psfzf": {
@@ -62,9 +63,10 @@
       }
     },
     "7zip": {
-      "latest": "26.05",
+      "latest": "26.06",
       "versions": {
-        "26.05": "packages/7zip/package.json"
+        "26.05": "packages/7zip/package.json",
+        "26.06": "packages/7zip/package.json"
       }
     },
     "beyondcompare-zh-cn": {
@@ -182,9 +184,10 @@
       }
     },
     "lazygit": {
-      "latest": "0.66.2",
+      "latest": "0.66.3",
       "versions": {
-        "0.66.2": "packages/lazygit/package.json"
+        "0.66.2": "packages/lazygit/package.json",
+        "0.66.3": "packages/lazygit/package.json"
       }
     },
     "localsend": {
@@ -207,7 +210,7 @@
       }
     },
     "oh-my-pi": {
-      "latest": "18.18.0",
+      "latest": "18.18.1",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
         "18.14.1": "packages/oh-my-pi/package.json",
@@ -215,7 +218,8 @@
         "18.15.0": "packages/oh-my-pi/package.json",
         "18.16.0": "packages/oh-my-pi/package.json",
         "18.17.0": "packages/oh-my-pi/package.json",
-        "18.18.0": "packages/oh-my-pi/package.json"
+        "18.18.0": "packages/oh-my-pi/package.json",
+        "18.18.1": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -271,7 +275,7 @@
       }
     },
     "orca": {
-      "latest": "1.4.252",
+      "latest": "1.4.253",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
@@ -280,7 +284,8 @@
         "1.4.248": "packages/orca/package.json",
         "1.4.250": "packages/orca/package.json",
         "1.4.251": "packages/orca/package.json",
-        "1.4.252": "packages/orca/package.json"
+        "1.4.252": "packages/orca/package.json",
+        "1.4.253": "packages/orca/package.json"
       }
     },
     "listary": {
