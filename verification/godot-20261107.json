@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-07T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "godot",
+      "version": "4.7.2",
+      "versionModel": "upstream stable tag 4.7.2-stable (published 2026-08-18); assetRegex matches only Godot_v{version}-stable_win64.exe.zip",
+      "source": "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip",
+      "discovery": "github-release godotengine/godot, tag {version}-stable; the separate _console.exe.zip asset variants of older releases no longer exist, the console wrapper ships inside the same archive",
+      "sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953",
+      "archiveBytes": 86013866,
+      "publisherCheck": "GitHub release asset digest sha256:731980f9... is byte-identical to both an independent curl download and the updater's net.download during checkLayout",
+      "format": "zip",
+      "stripPrefix": "none (both executables at archive root)",
+      "authenticode": {
+        "status": "Valid for both executables",
+        "subject": "CN=Prehensile Tales B.V., O=Prehensile Tales B.V., L=Uitgeest, S=Noord Holland, C=NL",
+        "fileVersion": "4.7.2",
+        "productVersion": "4.7.2.stable.official",
+        "peRule": "verifyPEVersion: FileVersion 4.7.2 equals the manifest version and is enforced on every future update"
+      },
+      "layout": {
+        "files": 2,
+        "knownExpandedBytes": 181057040,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "godot": "Godot_v{version}-stable_win64.exe",
+          "godot-console": "Godot_v{version}-stable_win64_console.exe"
+        },
+        "consoleWrapper": "since 4.3 the Windows distribution embeds a small _console.exe forwarder next to the editor; both binaries print 4.7.2.stable.official.ed1daf0bf for --version natively and through a Piko shim",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "env": "none declared",
+        "notOwned": "editor settings and app_userdata live in %APPDATA%\\Godot\\; projects and their .godot directories stay wherever the user opens them",
+        "exportTemplates": "Godot_v4.7.2-stable_export_templates.tpz (~1.2 GB) is a separate official asset and is intentionally not bundled"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.9",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "installed": "main/godot@4.7.2",
+        "files": "2 payload files + install record; installed bytes identical to the archive entries (sha256 ab1824f8... / c8f0a6bc...)",
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/godot/4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "shimDispatch": [
+          "__shim godot --version -> 4.7.2.stable.official.ed1daf0bf",
+          "__shim godot-console --version -> 4.7.2.stable.official.ed1daf0bf"
+        ],
+        "uninstallReinstallCycle": "payload fully removed (only an empty apps/godot directory remains); reinstall + use + shim pass"
+      },
+      "checks": {
+        "sourceCheck": "62 packages / 108 versions",
+        "updateCheck": "anonymous GitHub API rate limiting (HTTP 403) marks the package blocked without false success, matching the documented bun behavior; discovery semantics were verified against the live releases/latest response (tag 4.7.2-stable, single matching asset, digest byte-identical)",
+        "tests": "146 total, 146 pass (5 new godot tests)",
+        "compactCheck": "changedPackages 1 = pre-existing sunlogin drift (godot is already a byte-stable template document)",
+        "hostEnvironmentNote": "19 update/auto-merge tests fail if `git` resolves to the host's piko shim without a default provider; with the managed git 2.56.0.4 directory prepended to PATH the full suite passes 146/146"
+      }
+    }
+  ],
+  "notVerified": [
+    "Editor GUI workflows, project import and script debugging",
+    "Export template installation and cross-platform export",
+    "The 32-bit win32, arm64 and mono (_dotnet) distribution variants",
+    "Coexistence with an existing Godot installation sharing %APPDATA%\\Godot\\"
+  ]
+}

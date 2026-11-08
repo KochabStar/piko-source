@@ -415,6 +415,18 @@
       "versions": {
         "20.3.3": "packages/epic-games-launcher/package.json"
       }
+    },
+    "godot": {
+      "latest": "4.7.2",
+      "versions": {
+        "4.7.2": "packages/godot/package.json"
+      }
+    },
+    "blender": {
+      "latest": "5.2.3",
+      "versions": {
+        "5.2.3": "packages/blender/package.json"
+      }
     }
   }
 }

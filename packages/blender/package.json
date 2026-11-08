@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "name": "blender",
+  "recipes": {
+    "r610ef9e4e1483485": {
+      "schemaVersion": 1,
+      "name": "blender",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://download.blender.org/release/Blender5.2/blender-{version}-windows-x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "blender-{version}-windows-x64",
+          "bin": {
+            "blender": "blender.exe"
+          },
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 2147483648
+        }
+      }
+    }
+  },
+  "versions": {
+    "5.2.3": {
+      "recipe": "r610ef9e4e1483485",
+      "maxBytes": 414396416,
+      "sha256": "723f08a4401502561eb763cdeacf8745b31e5f3f154d287d3830d97cf75dc2fb"
+    }
+  }
+}

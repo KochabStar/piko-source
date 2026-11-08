@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-07T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "blender",
+      "version": "5.2.3",
+      "versionModel": "newest blender-*-windows-x64.zip entry in the official https://download.blender.org/release/Blender5.2/ listing (5.2.3 LTS, published 2026-10-22); PE FileVersion only stamps major.minor (5.2), so verifyPEVersion is not used and the version is anchored to the listing plus its published .sha256 file",
+      "source": "https://download.blender.org/release/Blender5.2/blender-5.2.3-windows-x64.zip",
+      "discovery": "regex provider on the official release directory listing; urlTemplate renders Blender{major}.{minor}/blender-{version}-windows-x64.zip from the discovered version",
+      "sha256": "723f08a4401502561eb763cdeacf8745b31e5f3f154d287d3830d97cf75dc2fb",
+      "archiveBytes": 405839452,
+      "publisherCheck": "official blender-5.2.3.sha256 lists 723f08a4... for blender-5.2.3-windows-x64.zip; an independent curl download recomputes the same digest; the .msi/.msix/.tar.xz entries are excluded by the asset pattern",
+      "format": "zip",
+      "stripPrefix": "blender-{version}-windows-x64 (single versioned root folder)",
+      "authenticode": {
+        "status": "Valid for blender.exe and blender-launcher.exe",
+        "subject": "CN=Blender Foundation, O=Blender Foundation, L=Amsterdam, S=Noord-Holland, C=NL",
+        "fileVersion": "5.2",
+        "productVersion": "5.2",
+        "signatureRule": "\"signature\": \"blender.exe\" — the signed main binary inside the unsigned zip container, checked during every checkLayout run (steam.exe rule form)"
+      },
+      "layout": {
+        "files": 6524,
+        "knownExpandedBytes": 945021611,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "required": "blender-launcher.exe and 5.2/python/bin/python.exe asserted present (launcher and bundled CPython are part of the portable model); full tree kept: versioned 5.2/ datafiles+scripts+python, blender.shared/ codec and render DLLs, blender.crt/ VC runtime"
+      },
+      "commandModel": {
+        "bin": { "blender": "blender.exe" },
+        "consoleSubsystem": "blender.exe is a CONSOLE-subsystem binary and prints 'Blender 5.2.3 LTS' + build hash for --version natively and through a Piko shim, no wrapper needed",
+        "payloadOnlyEntries": "blender-launcher.exe (update-aware launcher, semantics not verified) and the blender_debug_*.cmd / blender_system_info.cmd helpers are kept as files but deliberately not exposed as commands",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "env": "none declared",
+        "notOwned": "user preferences, startup files and installed addons live in %APPDATA%\\Blender Foundation\\Blender\\, written by the application; Piko does not own or migrate that tree"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.9",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "installed": "main/blender@5.2.3",
+        "files": "6524 payload files (29 root entries incl. blender.exe, blender-launcher.exe and the .cmd helpers) + install record",
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/blender/5.2.3/blender.exe",
+        "shimDispatch": "__shim blender --version -> 'Blender 5.2.3 LTS', build hash e13b728c6880, branch blender-v5.2-release",
+        "uninstallReinstallCycle": "payload fully removed (only an empty apps/blender directory remains); reinstall + use + shim pass"
+      },
+      "checks": {
+        "sourceCheck": "62 packages / 108 versions",
+        "updateCheck": "node scripts/update.mjs --check --packages blender -> status current (live listing fetch)",
+        "tests": "146 total, 146 pass (5 new blender tests)",
+        "compactCheck": "changedPackages 1 = pre-existing sunlogin drift (blender is already a byte-stable template document)",
+        "netNote": "a first net.download attempt of the 405 MB archive hit the updater's HTTP timeout; checkLayout was completed against the locally cached, digest-verified copy, and the isolated install re-downloaded the archive successfully through the client"
+      }
+    }
+  ],
+  "notVerified": [
+    "Editor GUI workflows, rendering (Cycles/OptiX/HipRT/oneAPI) and add-on installation",
+    "blender-launcher.exe update/launch semantics and in-editor auto-update offers",
+    "The .msi installer, .msix store package and windows-arm64 portable ZIP variants",
+    "A future Blender 6.0 release directory: the discovery rule pins the Blender5.2/ listing URL and must be bumped for a new major/minor directory (a wrong directory finds no match and blocks safely without false success)",
+    "Migration of an existing Blender installation's user data"
+  ]
+}

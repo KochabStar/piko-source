@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 60 个包、96 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07) 与 [Epic 商城](#epic-商城2026-11-07)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 62 个包、108 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07) 与 [Blender](#blender2026-11-07)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -16,7 +16,7 @@
 
 ## 模板包清单
 
-现有 **94 份版本清单存于 58 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+现有 **108 份版本清单存于 62 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
 
 - 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
@@ -206,9 +206,35 @@ pi --version
 - 自动更新以官方稳定重定向端点发现版本（重定向至 `EpicInstaller-<version>.exe`），载荷固定为同版本官方 `.msi` 直链；无 MSI 的未来构建只会验证失败并保留旧版。`layout: "epic"` 按同款过滤重建显式映射，载荷增删时映射校验失败仅保留旧版，需人工确认后更新配方。
 - **先升级客户端至包含 MSI 复合文档修复的版本**：0.4.8 及更早客户端在列举 MSI 复合文档时拒绝无尺寸存储（语言转换 `1025`／`1026`），导致任何含内嵌转换的 MSI（含本包）安装报 `Missing container entry size`。客户端 `../piko` 已修复（无尺寸存储按目录条目列出、不可提取），本包隔离安装用修复后客户端完成：4,450 个文件、排除项确认缺失、不选默认命令、`piko use` 后 `which epic` 解析到受管理入口。证据见 [Epic 验证记录](verification/epic-games-launcher-20261107.json)。未启动 GUI、未登录、未安装 EOS／DirectX 或迁移游戏库。
 
+## Godot（2026-11-07）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `godot` | 4.7.2 | `godot`、`godot-console`，官方 `godotengine/godot` 的 `Godot_v4.7.2-stable_win64.exe.zip` |
+
+- 载荷为稳定 tag `4.7.2-stable`（2026-08-18 发布）的 `Godot_v4.7.2-stable_win64.exe.zip`（86,013,866 字节），SHA-256 与 GitHub 发布资产官方 digest 逐字节一致（独立下载与更新器下载两次核对）。ZIP 内两个可执行文件均在归档根部，无需 `stripPrefix`；主程序与 `_console.exe` 均为 Authenticode `Valid`（`CN=Prehensile Tales B.V.`），PE `FileVersion 4.7.2` 与清单版本一致，并纳入 `verifyPEVersion` 在每次更新时强制核对。
+- 命令模型：`godot` 指向主程序，`godot-console` 指向上游随包的 `_console.exe` 转发器（4.3 起上游不再单独发布 `_console.exe.zip`，控制台包装并入同一归档）；两个命令在原生与 Piko shim 下 `--version` 均输出 `4.7.2.stable.official.ed1daf0bf`。约 1.2 GB 的 export templates `.tpz` 为独立官方资产，不打包。
+- 状态模型：不声明 `persist`／`env`；编辑器设置与 `app_userdata` 沿用 `%APPDATA%\Godot\` 原生位置，项目及其 `.godot` 目录由用户自定，Piko 不拥有、不迁移。
+- 隔离验证：`checkLayout` 通过（2 个文件、181,057,040 字节、0 个未知大小）；隔离 `PIKO_HOME`（piko 0.4.9）安装后载荷与归档条目逐字节一致、不选默认命令、`use` 后 `which` 解析受管理入口、卸载清空载荷、重装循环通过。匿名 GitHub API 限流仅把 `update --check` 标为 blocked（bun 同款已知行为，不误报成功），发现语义已对照 live `releases/latest` 响应逐项核对。
+- **未验收**：编辑器 GUI 工作流、导出模板安装与跨平台导出、win32／arm64／mono 变体。证据见 [Godot 验证记录](verification/godot-20261107.json)。
+
+## Blender（2026-11-07）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `blender` | 5.2.3 | `blender`，官方 `download.blender.org` 便携 ZIP `blender-5.2.3-windows-x64.zip` |
+
+- 版本与载荷取自官方 `release/Blender5.2/` 目录清单（5.2.3 LTS，2026-10-22 发布）及其随附 `blender-5.2.3.sha256`，SHA-256 三方一致（官方清单值、独立下载重算、清单登记值）；405,839,452 字节 ZIP 使用显式 395 MiB 下载／2 GiB 展开配额，`stripPrefix blender-{version}-windows-x64`。
+- 布局：6,524 个文件、945,021,611 字节全量解出，完整保留版本化 `5.2/` 数据与脚本、`blender.shared/` 编解码与渲染 DLL、`blender.crt/` VC 运行库及捆绑 CPython（`required` 断言 `blender-launcher.exe` 与 `5.2/python/bin/python.exe` 存在）。`blender.exe` 与 `blender-launcher.exe` Authenticode `Valid`（`CN=Blender Foundation`），签名规则按 steam 同款形式对容器内已签名的 `blender.exe` 校验。
+- 命令模型：仅注册 `blender`；`blender.exe` 为 CONSOLE 子系统二进制，`blender --version` 原生与 shim 均输出 `Blender 5.2.3 LTS`（构建 `e13b728c6880`）。`blender-launcher.exe`（更新感知启动器，语义未验收）与 `blender_debug_*.cmd` 等调试脚本保留为载荷文件、不注册命令。PE `FileVersion` 仅含主次版本 `5.2`，故不使用 `verifyPEVersion`，版本锚定官方目录清单与 `.sha256` 文件。
+- 状态模型：不声明 `persist`／`env`；用户偏好、启动文件与已装插件沿用 `%APPDATA%\Blender Foundation\Blender\` 原生位置，Piko 不拥有、不迁移。
+- 自动更新：regex provider 解析官方目录清单并按发现版本渲染 `Blender{major}.{minor}/blender-{version}-windows-x64.zip` 直链，`update --check` 实测返回 `current`；**大版本／次版本目录升级（如 Blender6.0）需手动更新规则 URL**，目录不匹配时发现失败仅 blocked，不会误报。`.msi`／`.msix`／windows-arm64 变体不打包。
+- 隔离验证：`checkLayout` 通过（6,524 个文件、0 个未知大小；405 MB 载荷的首次重复下载超过更新器 HTTP 超时，改用已核对本地副本完成布局校验，隔离安装路径由客户端重新完整下载成功）；隔离 `PIKO_HOME`（piko 0.4.9）安装后 6,524 个载荷文件、不选默认命令、`use` 后 `which` 解析受管理入口、卸载清空载荷、重装＋shim 通过。
+- **未验收**：编辑器 GUI 与渲染后端（Cycles／OptiX 等）、插件安装、launcher 语义、既有 Blender 安装的数据迁移。证据见 [Blender 验证记录](verification/blender-20261107.json)。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 59 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本。
+- 已为登记的全部包（当前 62 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

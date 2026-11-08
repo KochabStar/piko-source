@@ -417,6 +417,21 @@
       "urlTemplate": "https://epicgames-download1.akamaized.net/Builds/UnrealEngineLauncher/Installers/Windows/EpicInstaller-{version}.msi",
       "signature": true,
       "layout": "epic"
+    },
+    "godot": {
+      "provider": "github-release",
+      "repo": "godotengine/godot",
+      "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+){1,2})-stable$",
+      "assetRegex": "^Godot_v[0-9.]+-stable_win64\\.exe\\.zip$",
+      "verifyPEVersion": true
+    },
+    "blender": {
+      "provider": "regex",
+      "url": "https://download.blender.org/release/Blender5.2/",
+      "versionRegex": "blender-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)-windows-x64\\.zip",
+      "urlTemplate": "https://download.blender.org/release/Blender{major}.{minor}/blender-{version}-windows-x64.zip",
+      "signature": "blender.exe",
+      "required": ["blender-launcher.exe", "5.2/python/bin/python.exe"]
     }
   }
 }
