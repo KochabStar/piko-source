@@ -93,6 +93,7 @@ export function validateManifest(m, name, version) {
     "files",
     "maxBytes",
     "cabinets",
+    "payload",
   ];
   keys(
     p,
@@ -159,6 +160,7 @@ export function validateManifest(m, name, version) {
         "tar.xz",
         "inno",
         "msi",
+        "burn",
         "nsis",
         "pe",
       ].includes(d.format),
@@ -182,7 +184,7 @@ export function validateManifest(m, name, version) {
       if (d[field] !== undefined) pathName(d[field]);
     if (d.files !== undefined) {
       requireThat(
-        ["inno", "msi", "nsis"].includes(d.format) &&
+        ["inno", "msi", "burn", "nsis"].includes(d.format) &&
           object(d.files) &&
           Object.keys(d.files).length > 0 &&
           Object.keys(d.files).length <= 100000,
@@ -218,6 +220,18 @@ export function validateManifest(m, name, version) {
     }
     if (d.format === "pe")
       requireThat(d.nested, "PE requires explicit resource selection");
+    if (d.payload !== undefined) {
+      // A Burn bundle chains several packages (WinFsp, the application MSI).
+      // Only one manifest-declared payload may be selected, and the explicit
+      // file map still applies to the MSI it resolves to.
+      requireThat(
+        d.format === "burn" &&
+          typeof d.payload === "string" &&
+          /^[A-Za-z0-9._+-]{1,128}$/.test(d.payload) &&
+          !d.nested,
+        "Invalid Burn payload selection",
+      );
+    } else requireThat(d.format !== "burn", "Burn requires an explicit payload");
     if (d.format === "nsis")
       requireThat(
         (d.nested || d.files) && !(d.files && d.stripPrefix),
@@ -509,6 +523,13 @@ export function validateRules(catalog, config) {
       requireThat(/^[\w.-]+\/[\w.-]+$/.test(rule.repo), "Invalid repository");
     for (const key of ["versionRegex", "assetRegex", "urlRegex"])
       if (rule[key]) new RegExp(rule[key]);
+    if (rule.versionTemplate !== undefined)
+      requireThat(
+        typeof rule.versionTemplate === "string" &&
+          /[{}]/.test(rule.versionTemplate) &&
+          !/[\/]/.test(rule.versionTemplate),
+        "Invalid version template",
+      );
     if (rule.url) httpsURL(rule.url);
     requireThat(
       rule.signature === undefined ||

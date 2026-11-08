@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 62 个包、108 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07) 与 [Blender](#blender2026-11-07)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 68 个包、118 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07) 与 [模拟器与编辑器](#模拟器与编辑器2026-11-08)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -11,12 +11,14 @@
 - 模板源需要新版客户端；原 schema 1 完整清单仍可由新版客户端读取。迁移说明见 [模板包清单](#模板包清单)。
 - [TortoiseSVN 升级与 DLL 占用处理](guides/tortoise-svn.md)：版本化 Shell 配方、旧版本延后清理，以及旧 Scoop 安装的一次性撤销边界。修订 `1.15.0.29830-piko.1` 保留原载荷，后续上游更新自动继承新配方；历史阶段说明中的旧配方行为不适用于此修订。
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
+- [CloudDrive2 快捷方式打开黑窗口](guides/clouddrive2-shortcut.md)：`1.1.3.3` 改打 WinUI 桌面版（GUI 子系统 `CloudDrive.exe`），只解包捆绑链里的应用 MSI；旧服务版 `1.1.3` 保留。
+- [Godot 装完没有快捷方式](guides/godot-shortcut.md)：`4.7.2-piko.1` 补上指向 GUI 主程序（非 `_console.exe`）的开始菜单入口，载荷与命令表不变；含已有安装的收据修复流程。
 
 原始两份清单复制自客户端的 `examples/source/`：Node 26.12.1、ripgrep 15.2.0。现已增加 Lua 5.5.0、z.lua 1.8.26、Starship 1.27.0、fzf 0.74.5、PSFzf 2.7.12、sudo 0.2020.01.26、Snipaste 2.11.3；已在第六阶段加入 GitHub Actions 上游更新配置；推送并启用仓库权限后运行，正式 HTTPS 托管仍未部署。后续清单在此维护，客户端示例不自动同步。
 
 ## 模板包清单
 
-现有 **108 份版本清单存于 62 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+现有 **116 份版本清单存于 68 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
 
 - 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
@@ -157,18 +159,18 @@ pi --version
 - 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
 - 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
 
-## CloudDrive2（2026-11-05）
+## CloudDrive2（2026-11-05，2026-11-08 修订）
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
-| `clouddrive2` | 1.1.3 | `clouddrive`，官网签名的 Inno Setup「核心服务」安装包只解包 |
+| `clouddrive2` | 1.1.3.3 | `clouddrive`，官网签名的 WinUI 桌面版 Burn 捆绑包只解包应用 MSI |
 
-- 版本与载荷取自 `clouddrive2.com/download.html` 的 **核心服务安装包**（`CloudDrive2Setup-X64-1.1.3.exe`），不是同一发布页上另一套版本号的「应用直接下载版」（`app-v1.1.3-24` 的 `CloudDrive2-1.1.3-3-windows-x64.exe`，其 PE 版本为 bundle 1.1.3.3，不含服务端与 `wwwroot`）。SHA-256 从官方 GitHub release 资源独立下载重算，Authenticode 为 `Valid`（`CN=维臻云（北京）科技有限公司`，GlobalSign 代码签名），PE `ProductVersion` 仍为安装器模板值 `1.0`，因此以官网页面与内嵌 `{app}\clouddrive.exe` 的 `clouddrive version 1.1.3` 为准。
-- 按 Inno 显式 `files` 映射解出 **67 个 `{app}` 文件**（`clouddrive.exe`、`shawl.exe`、`arm64/shawl.exe`、`CloudDrive.ico`、`wwwroot/**` 与 `snippets`），不执行安装器。**排除** `{tmp}\winfsp-2.2.26112.msi`（安装器会 `msiexec` 静默安装的 WinFsp 挂载驱动）、`install_script.iss` 以及安装器的 `sc.exe create`／`taskkill`／浏览器打开动作。
-- `checkLayout` 用同版本官方载荷隔离校验：67 个文件、42,110,681 字节展开量、0 个未知大小；`npm run check`（57 包／93 版本）、`npm run compact:check` 与 **120 项测试**通过，`node scripts/update.mjs --check --packages clouddrive2` 返回 `current`。隔离 Piko（`PIKO_HOME` 指向临时目录、本地 HTTP 源）安装后为 69 个文件、不选默认命令，`clouddrive --version` 与 `GET http://127.0.0.1:19798/` 返回 200；实际状态写入 `%USERPROFILE%\Waytech\CloudDrive2`（`config.toml`、`clouddrive_data.sqlite`、`log`、`copy_tasks`、`webhooks`），`./wwwroot` 由可执行文件所在目录解析，因此清单**不声明** `persist`／`configTemplates`，也不接管这份外部数据。
-- 服务注册与 WinFsp 驱动分开处理：`piko-service.ps1` 在 `piko system` 的独立管理员确认后按向日葵同款模型登记 `CloudDrive2`（`shawl.exe run --no-log -- clouddrive.exe`，与上游 `[Run]` 一致），写入归属记录并只删除指向本版目录的服务，遇到外部同名服务即拒绝；**不安装 WinFsp 驱动、不写 `Program Files`、不 kill 其他进程**。非管理员安装/卸载不会产生任何系统副作用。
-- **未验收**：`piko system` 的真实提权服务登记、WinFsp 驱动与盘符挂载、GUI/WebUI 业务（登录、挂载、播放）、桌面快捷方式 `integrate --desktop` 与既有 CloudDrive 账户/数据迁移。证据见 [CloudDrive2 验证记录](verification/clouddrive2-20261105.json)。
-- 自动更新以官网 `download.html` 的 `CloudDrive2Setup-X64-<version>.exe` 为版本来源，重建固定 GitHub release 直链并重新校验 SHA-256、Authenticode 与 `required` 布局；`wwwroot` 资源增删时显式 `files` 映射会校验失败并只保留旧版，需要人工确认后更新配方。
+- **1.1.3.3 起改为桌面版应用。** 原 `1.1.3` 打的是官网同一页面上的「核心服务」安装包 `CloudDrive2Setup-X64-1.1.3.exe`，它的 `clouddrive.exe` 是控制台程序（PE `Subsystem=3`），要靠终端启动、只提供 WebUI，快捷方式双击会开一个黑窗口，这就是报告的问题。现在打的 `app-v1.1.3-24` 频道里的 `CloudDrive2-1.1.3-3-windows-x64.exe` 是 WinUI 桌面客户端，`CloudDrive.exe` 为 GUI 子系统（`Subsystem=2`），双击即出窗口。
+- 载荷是 WiX Burn 捆绑包（180,618,616 字节，SHA-256 `5be3f546…a776db`，与 GitHub 官方 release digest 逐字节一致）。捆绑链里既有 WinFsp 驱动 MSI 又有应用 MSI；清单用 `payload: "CloudDriveApp"` 只选应用 MSI，再用 `stripPrefix: "PFiles64/CloudDrive"` 剥掉 MSI 的安装前缀，显式 `files` 映射出 **752 个文件**（`CloudDrive.exe`、`cloudapi.dll`、`wwwroot` 等，排除两个 `.pdb`）。**不安装 WinFsp 驱动、不写 `Program Files`、不注册服务**。
+- `desktop.shortcuts` 指向 `CloudDrive.exe`（GUI），`bin.clouddrive` 同样指向它；`1.1.3` 的 `piko-service.ps1` 管理员服务脚本、`shawl.exe` 与 WebUI 载荷随该产品一并退出新版本，旧版本行原样保留可精确安装。
+- 状态位置沿用官方原生路径：`%LOCALAPPDATA%\CloudDrive.WinUI`（sqlite、`config.toml`、日志）与 `%USERPROFILE%\Waytech\CloudDrive2`（服务端共享数据），清单**不声明** `persist`／`configTemplates`，Piko 不拥有、不迁移这份外部数据。
+- 自动更新的版本来源仍是官网 `download.html`，但改为匹配桌面版频道：一条正则同时抓 `app-v<app>-<build>` 的 tag 与 `CloudDrive2-<app>-<build>-windows-x64.exe` 的资产名，`versionTemplate: "{assetver}.{appbuild}"` 把两者合成 `1.1.3.3`——只用资产名会漏掉同一 `1.1.3-3` 资产的不同 bundle build。URL 模板同时重建 tag 与文件名，`required: ["CloudDrive.exe"]` 与签名校验仍把住入口。
+- 验证：`checkLayout` 用同版本官方载荷隔离校验（752 个文件、526,032,129 字节、0 个未知大小、Authenticode 为 `Valid`，PE `FileVersion 1.1.3.3`）；`node scripts/update.mjs --check --packages clouddrive2` 返回 `current`。隔离 Piko 安装后从生成的 `Piko Apps\CloudDrive2.lnk` 启动，进程路径为版本目录下的 `CloudDrive.exe`，窗口标题 `CloudDrive`、显示登录页，无控制台窗口。旧 `1.1.3` 服务的 WebUI 行为、WinFsp 挂载、登录与真实数据迁移**未验收**；证据见 [CloudDrive2 验证记录](verification/clouddrive2-20261108.json) 与 [快捷方式修订说明](guides/clouddrive2-shortcut.md)。
 
 ## Bun（2026-11-05）
 
@@ -210,13 +212,15 @@ pi --version
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
-| `godot` | 4.7.2 | `godot`、`godot-console`，官方 `godotengine/godot` 的 `Godot_v4.7.2-stable_win64.exe.zip` |
+| `godot` | 4.7.2-piko.1 | `godot`、`godot-console`，官方 `godotengine/godot` 的 `Godot_v4.7.2-stable_win64.exe.zip` |
 
 - 载荷为稳定 tag `4.7.2-stable`（2026-08-18 发布）的 `Godot_v4.7.2-stable_win64.exe.zip`（86,013,866 字节），SHA-256 与 GitHub 发布资产官方 digest 逐字节一致（独立下载与更新器下载两次核对）。ZIP 内两个可执行文件均在归档根部，无需 `stripPrefix`；主程序与 `_console.exe` 均为 Authenticode `Valid`（`CN=Prehensile Tales B.V.`），PE `FileVersion 4.7.2` 与清单版本一致，并纳入 `verifyPEVersion` 在每次更新时强制核对。
 - 命令模型：`godot` 指向主程序，`godot-console` 指向上游随包的 `_console.exe` 转发器（4.3 起上游不再单独发布 `_console.exe.zip`，控制台包装并入同一归档）；两个命令在原生与 Piko shim 下 `--version` 均输出 `4.7.2.stable.official.ed1daf0bf`。约 1.2 GB 的 export templates `.tpz` 为独立官方资产，不打包。
+- **`4.7.2-piko.1`：补上开始菜单入口。** 原 `4.7.2` 清单没有 `desktop` 声明，安装后既无桌面也无开始菜单快捷方式，GUI 编辑器只能靠 `godot` 命令拉起。修订仅新增 `shortcuts: [{name: "Godot", path: "Godot_v4.7.2-stable_win64.exe"}]`：目标必须是 GUI 子系统的主程序（PE `Subsystem=2`），不能选 `_console.exe`（`Subsystem=3`，会先弹出控制台窗口）；`name` 只是标签，不参与模板替换。载荷、URL、SHA-256、命令表与持久化声明全部不变，属于只改入口的修订。
+- 修订把上游版本写死在 URL、`bin` 和快捷方式路径里（`Godot_v4.7.2-stable_win64.exe`），因为上游不存在 `-piko.N` 资产。更新器为此增加一条规则：从 `-piko.N` 修订派生的候选先按基础上游版本替换，再按完整修订版本替换，避免下一个上游版本继承 `4.7.2` 的载荷名。
 - 状态模型：不声明 `persist`／`env`；编辑器设置与 `app_userdata` 沿用 `%APPDATA%\Godot\` 原生位置，项目及其 `.godot` 目录由用户自定，Piko 不拥有、不迁移。
-- 隔离验证：`checkLayout` 通过（2 个文件、181,057,040 字节、0 个未知大小）；隔离 `PIKO_HOME`（piko 0.4.9）安装后载荷与归档条目逐字节一致、不选默认命令、`use` 后 `which` 解析受管理入口、卸载清空载荷、重装循环通过。匿名 GitHub API 限流仅把 `update --check` 标为 blocked（bun 同款已知行为，不误报成功），发现语义已对照 live `releases/latest` 响应逐项核对。
-- **未验收**：编辑器 GUI 工作流、导出模板安装与跨平台导出、win32／arm64／mono 变体。证据见 [Godot 验证记录](verification/godot-20261107.json)。
+- 隔离验证：`checkLayout` 通过（2 个文件、181,057,040 字节、0 个未知大小）；隔离 `PIKO_HOME`（piko 0.4.9）安装后载荷与归档条目逐字节一致、不选默认命令、`use` 后 `which` 解析受管理入口、卸载清空载荷、重装循环通过。匿名 GitHub API 限流仅把 `update --check` 标为 blocked（bun 同款已知行为，不误报成功），发现语义已对照 live `releases/latest` 响应逐项核对。修订的快捷方式用 piko 0.4.11 在隔离 `PIKO_HOME` 中生成并实际启动 GUI 验证。
+- **未验收**：编辑器 GUI 工作流（仅验证到项目管理器窗口出现）、导出模板安装与跨平台导出、win32／arm64／mono 变体。证据见 [Godot 验证记录](verification/godot-20261107.json)、[快捷方式修订记录](guides/godot-shortcut.md)。
 
 ## Blender（2026-11-07）
 
@@ -232,9 +236,30 @@ pi --version
 - 隔离验证：`checkLayout` 通过（6,524 个文件、0 个未知大小；405 MB 载荷的首次重复下载超过更新器 HTTP 超时，改用已核对本地副本完成布局校验，隔离安装路径由客户端重新完整下载成功）；隔离 `PIKO_HOME`（piko 0.4.9）安装后 6,524 个载荷文件、不选默认命令、`use` 后 `which` 解析受管理入口、卸载清空载荷、重装＋shim 通过。
 - **未验收**：编辑器 GUI 与渲染后端（Cycles／OptiX 等）、插件安装、launcher 语义、既有 Blender 安装的数据迁移。证据见 [Blender 验证记录](verification/blender-20261107.json)。
 
+## 模拟器与编辑器（2026-11-08）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `retroarch` | 1.22.2 | `retroarch`，官方 buildbot 稳定版 `RetroArch.7z` |
+| `ares` | 148 | `ares`，官方 GitHub `ares-windows-x64.zip` |
+| `mgba` | 0.10.5 | `mgba`、`mgba-sdl`，官方 `mGBA-0.10.5-win64.7z` |
+| `medusa` | a2 | `medusa`，官方 `medusa-a2-win64.7z`（mGBA 作者的 NDS 预览版） |
+| `shadps4` | 0.21.0 | `shadps4`，官方 `shadps4-win64-sdl-0.21.0.zip` |
+| `vscode` | 1.145.2 | `code`、`code-gui`，官方 `win32-x64-archive` 便携 ZIP |
+
+- 六个载荷均从官方渠道下载并独立重算 SHA-256；`checkLayout` 全量解出核对：RetroArch 14,808 个文件／541,900,046 字节、ares 4,971／110,831,256、mGBA 67／50,791,622、medusa 32／36,211,211、shadPS4 1／60,364,288、VS Code 3,280／1,087,039,357，未知大小文件均为 0。
+- **RetroArch** 的 `saves`／`states`／`screenshots`／`system` 等目录由程序按 `:\saves` 这类相对应用程序目录的写法解析（`frontend/drivers/platform_win32.c`），因此这些目录必须是指向 `persist` 的联接，否则升级到新版本目录会丢存档、状态、BIOS 与已下载核心；同时用 `configTemplates` 生成 `retroarch.cfg`，把 `savefile_directory` 等七项指向 `persist`。`config_file_write()` 会先在同目录写 `.tmp` 再改名覆盖（`libretro-common/file/config_file_io.c`），所以该配置是普通文件而非硬链接，避免 Piko 检出链接漂移。随包分发的 `info/` 核心元数据**不纳入** `persist`，否则旧版本文件会遮蔽新版本自带的元数据。
+- **ares** 从可执行文件目录读取 `settings.bml`，写入方式为 `fopen("wb+")` 原地截断，因此使用 `hardlink`；`Systems/` 存放用户自行 dump 的固件，一并纳入 `persist`。
+- **mGBA** 分发包内含空的 `portable.ini`，配置因此落在程序目录。`config.ini` 由 `ConfigurationWrite()` 以 `O_TRUNC` 原地写，可用 `hardlink`；**`qt.ini` 是 QSettings 输出，经临时文件重命名落盘，硬链接会立刻失效，因此不纳入 `persist`**。`savestates`／`screenshots`／`cheats` 三个目录按目录联接持久化。
+- **medusa** 只有预发布标签（`medusa-a1`／`a2`，2017），官方稳定渠道不存在；`a2` 是最后一个 Windows x64 预览版，版本与载荷固定，自动发现改从 `mgba.io/downloads.html` 读取 `medusa-<tag>-win64.7z`。解包目录名内嵌构建日期（`medusa-medusa-2017-04-26-win64`），跨版本无法模板化，故 `stripPrefix` 为字面值。
+- **shadPS4** 只发布 SDL CLI 内核，无参数运行时仅弹提示框，因此快捷方式带 `-b` 进入 Big Picture；程序把可执行文件旁的 `user` 目录当作便携根，`persist: ["user"]` 一次性覆盖设置、密钥、补丁与逐游戏配置。官方 Qt 启动器是独立仓库的另一个包，本轮未登记。
+- **VS Code** 用便携 ZIP：`bin/` 内只有 `code.cmd`，而 Piko 原生命令只能指向 `.exe`／`.com`，所以 `code` 是转发到该批处理的 PowerShell 入口，`code-gui` 直接启动 `Code.exe`。便携模式由 `data` 目录触发，`persist: ["data"]` 覆盖设置、扩展与工作区状态；ZIP 版不支持自动更新，版本由 Piko 管理。
+- 全部六个包都不执行安装器、不注册服务／驱动、不写系统目录；快捷方式等桌面集成仍需单独 `integrate --desktop` 预览确认。
+- **未验收**：六个模拟器的 GUI 运行与手柄／BIOS／ROM 路径配置、RetroArch 在线下载核心与着色器、shadPS4 固件 `sys_modules` 与游戏启动、VS Code 扩展安装与真实工作区。证据见 [模拟器验证记录](verification/emulators-20261108.json)。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 62 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
+- 已为登记的全部包（当前 68 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

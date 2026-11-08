@@ -14,6 +14,9 @@ const rules = JSON.parse(
 const version = catalog.index.packages.godot.latest;
 const manifest = catalog.manifests.get("godot@" + version);
 const platform = manifest.platforms["windows-x64"];
+// piko.1 is a packaging revision: upstream never publishes a -piko.N artifact,
+// so the download URL and payload names keep the upstream version literally.
+const upstream = "4.7.2";
 
 test("godot publishes the official Windows x64 editor ZIP without install hooks", () => {
   validateManifest(manifest, "godot", version);
@@ -23,9 +26,9 @@ test("godot publishes the official Windows x64 editor ZIP without install hooks"
   assert.equal(
     platform.url,
     "https://github.com/godotengine/godot/releases/download/" +
-      version +
+      upstream +
       "-stable/Godot_v" +
-      version +
+      upstream +
       "-stable_win64.exe.zip",
   );
   assert.equal(new URL(platform.url).search, "");
@@ -33,13 +36,30 @@ test("godot publishes the official Windows x64 editor ZIP without install hooks"
   // console-attaching wrapper. Both are registered; nothing is filtered out
   // and no file is renamed.
   assert.deepEqual(platform.bin, {
-    godot: "Godot_v" + version + "-stable_win64.exe",
-    "godot-console": "Godot_v" + version + "-stable_win64_console.exe",
+    godot: "Godot_v" + upstream + "-stable_win64.exe",
+    "godot-console": "Godot_v" + upstream + "-stable_win64_console.exe",
   });
   assert.equal(platform.maxBytes, 95420416);
   assert.equal(platform.maxExpandedBytes, 268435456);
-  for (const key of ["shell", "bootstrap", "admin", "desktop", "depends"])
+  for (const key of ["shell", "bootstrap", "admin", "depends"])
     assert.equal(platform[key], undefined, key);
+});
+
+test("godot piko.1 adds only the Start Menu launcher for the GUI editor", () => {
+  // Without a desktop declaration the installed editor had no launcher at
+  // all, so a user could only reach it through the command shims. The GUI
+  // editor binary (PE subsystem 2) is the only correct target: the
+  // _console.exe wrapper would open a console window instead of the editor.
+  assert.deepEqual(platform.desktop, {
+    shortcuts: [{ name: "Godot", path: "Godot_v4.7.2-stable_win64.exe" }],
+  });
+  const published = catalog.manifests.get("godot@4.7.2");
+  const expected = structuredClone(published.platforms["windows-x64"]);
+  expected.desktop = platform.desktop;
+  assert.deepEqual(platform, expected);
+  assert.equal(published.desktop, undefined);
+  // Same verified payload: a packaging revision never re-identifies the bytes.
+  assert.equal(platform.sha256, published.platforms["windows-x64"].sha256);
 });
 
 test("godot keeps its native state model: no persist and no env redirection", () => {
@@ -131,6 +151,19 @@ test("godot version updates retarget both versioned executables", () => {
     godot: "Godot_v4.7.3-stable_win64.exe",
     "godot-console": "Godot_v4.7.3-stable_win64_console.exe",
   });
+  // The piko.1 revision stores the upstream version literally; the successor
+  // must not inherit "4.7.2" in the payload names or the launcher target.
+  // nextManifest does not rewrite `url`; the update pipeline assigns the
+  // discovered asset URL afterwards, so assert the two agree once applied.
+  assert.deepEqual(p.desktop, {
+    shortcuts: [{ name: "Godot", path: "Godot_v4.7.3-stable_win64.exe" }],
+  });
+  p.url = "https://github.com/godotengine/godot/releases/download/4.7.3-stable/Godot_v4.7.3-stable_win64.exe.zip";
+  assert.equal(
+    new URL(p.url).pathname.endsWith("/" + p.bin.godot + ".zip"),
+    true,
+    "download asset name and registered command must agree",
+  );
   assert.equal(p.persist, undefined);
   assert.equal(p.env, undefined);
   validateManifest(next, "godot", "4.7.3");

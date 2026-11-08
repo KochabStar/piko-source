@@ -19,11 +19,42 @@
           "maxExpandedBytes": 268435456
         }
       }
+    },
+    "r19372d727d30e682": {
+      "schemaVersion": 1,
+      "name": "godot",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "godot": "Godot_v4.7.2-stable_win64.exe",
+            "godot-console": "Godot_v4.7.2-stable_win64_console.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Godot",
+                "path": "Godot_v4.7.2-stable_win64.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 268435456
+        }
+      }
     }
   },
   "versions": {
     "4.7.2": {
       "recipe": "r338eb70dbf6e6c68",
+      "maxBytes": 95420416,
+      "sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953"
+    },
+    "4.7.2-piko.1": {
+      "recipe": "r19372d727d30e682",
       "maxBytes": 95420416,
       "sha256": "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953"
     }

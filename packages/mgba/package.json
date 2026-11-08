@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "name": "mgba",
+  "recipes": {
+    "rac266eafe5743428": {
+      "schemaVersion": 1,
+      "name": "mgba",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/mgba-emu/mgba/releases/download/{version}/mGBA-{version}-win64.7z",
+          "sha256": "{sha256}",
+          "format": "7z",
+          "stripPrefix": "mGBA-{version}-win64",
+          "bin": {
+            "mgba": "mGBA.exe",
+            "mgba-sdl": "mgba-sdl.exe"
+          },
+          "persist": [
+            "savestates",
+            "screenshots",
+            "cheats",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": ""
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "mGBA",
+                "path": "mGBA.exe"
+              }
+            ]
+          },
+          "maxExpandedBytes": 134217728,
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.10.5": {
+      "recipe": "rac266eafe5743428",
+      "maxBytes": 23068672,
+      "sha256": "b497a57c7d9093834dadc64f33a90f7c411439c21fdb8a0143255a45ea37563a"
+    }
+  }
+}

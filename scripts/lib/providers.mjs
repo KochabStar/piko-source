@@ -301,8 +301,14 @@ export async function discover(rule, current, net) {
       .replaceAll("\\/", "/");
     const matches = [...text.matchAll(new RegExp(rule.versionRegex, "g"))];
     version = best(matches.map(fromMatch));
-    const chosen = matches.find((m) => fromMatch(m) === version);
-    url = render(rule.urlTemplate, { ...chosen.groups, version });
+    const chosen = matches.find((m) => fromMatch(m) === version),
+      groups = { ...chosen.groups, version };
+    // A channel that numbers builds separately from the application version
+    // (app-v1.1.3-24 publishing 1.1.3-3-windows-x64.exe) needs both parts in
+    // the registered version, or a newer build of the same series would look
+    // already indexed.
+    if (rule.versionTemplate) version = render(rule.versionTemplate, groups);
+    url = render(rule.urlTemplate, { ...groups, version });
   } else if (rule.provider === "qqnt") {
     const configURL =
       "https://qq-web.cdn-go.cn/im.qq.com_new/latest/rainbow/pcConfig.json";

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "name": "ares",
+  "recipes": {
+    "ra41e18613073ef69": {
+      "schemaVersion": 1,
+      "name": "ares",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/ares-emulator/ares/releases/download/v{version}/ares-windows-x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "ares-v{version}",
+          "bin": {
+            "ares": "ares.exe"
+          },
+          "persist": [
+            "Systems",
+            {
+              "path": "settings.bml",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": ""
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "ares",
+                "path": "ares.exe"
+              }
+            ]
+          },
+          "maxExpandedBytes": 268435456,
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "148": {
+      "recipe": "ra41e18613073ef69",
+      "maxBytes": 73400320,
+      "sha256": "fa97958e1d359e3fe254353f87b6508f2762a959d7eb264c69965ad002037298"
+    }
+  }
+}

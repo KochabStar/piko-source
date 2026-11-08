@@ -31,9 +31,17 @@ export function nextManifest(current, candidate, rule) {
   const next = structuredClone(current),
     p = next.platforms["windows-x64"];
   next.version = candidate.version;
+  // A piko.N revision keeps the upstream version literally in its URLs and
+  // payload names, because upstream never publishes a "-piko.N" artifact.
+  // Retarget both spellings so the next upstream release does not inherit a
+  // manifest whose version and payload disagree.
+  const upstream = current.version.replace(/-piko\.[0-9]+$/, "");
   const updatePath = (s) =>
     typeof s === "string"
-      ? s.replaceAll(current.version, candidate.version)
+      ? (upstream === current.version
+          ? s
+          : s.replaceAll(upstream, candidate.version)
+        ).replaceAll(current.version, candidate.version)
       : s;
   for (const d of downloads(p)) {
     for (const key of ["file", "into", "stripPrefix"])

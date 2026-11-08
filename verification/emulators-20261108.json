@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-08T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "retroarch",
+      "version": "1.22.2",
+      "versionModel": "official buildbot stable directory listing; regex provider reads /stable/<version>/ and renders the Windows x86_64 archive URL",
+      "source": "https://buildbot.libretro.com/stable/1.22.2/windows/x86_64/RetroArch.7z",
+      "discovery": "regex over https://buildbot.libretro.com/stable/; `update.mjs --discover` reports current",
+      "sha256": "b2139b1d0f9d4526dc6b5ce23cbb3efdc766096fa6f2c3df016818b486ac6372",
+      "archiveBytes": 202509078,
+      "publisherCheck": "buildbot publishes no checksum file (RetroArch.7z.sha256 returns 404), so the digest is an independent download hash registered in the manifest; the updater re-downloads and re-hashes before publishing any later version",
+      "format": "7z",
+      "stripPrefix": "RetroArch-Win64",
+      "layout": {
+        "files": 14808,
+        "knownExpandedBytes": 541900046,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "retroarch": "retroarch.exe"
+        },
+        "verified": "retroarch.exe --version prints `RetroArch - Frontend for libretro` / `Version: 1.22.2 (Git 69a4f0e)` both natively and through `piko __shim retroarch`",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": [
+          "saves",
+          "states",
+          "screenshots",
+          "system",
+          "cores",
+          "playlists",
+          "thumbnails"
+        ],
+        "reason": "RetroArch resolves these defaults relative to the application directory (`:\\saves`, `:\\states`, `:\\screenshots`, `:\\system`, `:\\cores`, `:\\playlists`, `:\\thumbnails` in frontend/drivers/platform_win32.c). Without a link into persist, an upgrade to a new version directory would strand the user's saves, states, BIOS files and downloaded cores.",
+        "configTemplate": "retroarch.cfg is generated with savefile_directory, savestate_directory, screenshot_directory, system_directory, libretro_directory, playlist_directory and thumbnails_directory pointing at {{persist}}; the installer writes it as a regular file, not a hardlink, because config_file_write() stages a `.tmp` beside the target and renames over it (libretro-common/file/config_file_io.c), which would break a hardlink on the first in-place save.",
+        "notPersisted": "info/ is shipped in the payload (core metadata for the bundled version). Persisting it would shadow every later release's metadata with the previous release's files, so it stays version-local.",
+        "notOwned": "RetroArch's own config_save_on_exit rewrite of retroarch.cfg inside the install directory, and any user-chosen content or core download directories outside the package tree."
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.11",
+        "pikoHome": ".cache/verify-home with a local HTTP source copy",
+        "installed": "verify/retroarch@1.22.2",
+        "files": "14,808 payload files; every declared persist path materialised as a junction into persist/retroarch/<name>",
+        "generatedConfig": "retroarch.cfg present at the install root with all seven directory keys resolved to the persistent tree",
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/retroarch/1.22.2/retroarch.exe",
+        "shimDispatch": "__shim retroarch --version -> Version: 1.22.2 (Git 69a4f0e) Nov 20 2025"
+      }
+    },
+    {
+      "name": "ares",
+      "version": "148",
+      "versionModel": "official GitHub release tag v148; the nightly pre-release channel is excluded by the version and asset regexes",
+      "source": "https://github.com/ares-emulator/ares/releases/download/v148/ares-windows-x64.zip",
+      "discovery": "github-release ares-emulator/ares; `--discover` reports current",
+      "sha256": "fa97958e1d359e3fe254353f87b6508f2762a959d7eb264c69965ad002037298",
+      "archiveBytes": 64799819,
+      "publisherCheck": "GitHub release asset digest sha256:fa97958e... is byte-identical to the independent download",
+      "format": "zip",
+      "stripPrefix": "ares-v148",
+      "layout": {
+        "files": 4971,
+        "knownExpandedBytes": 110831256,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "ares": "ares.exe"
+        },
+        "verified": "ares.exe --version prints `v148` natively and through `piko __shim ares`",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": [
+          "Systems",
+          {
+            "path": "settings.bml",
+            "kind": "file",
+            "mode": "hardlink"
+          }
+        ],
+        "reason": "ares resolves settings.bml through locate(), which checks the application directory first (desktop-ui/desktop-ui.cpp) and writes it with nall file mode::write, i.e. fopen(\"wb+\") truncating in place (nall/nall/file-buffer.hpp). A hardlink therefore survives the rewrite. Systems/ holds user-dumped firmware and defaults to Path::user()/Emulation/Systems/ but is honoured from the application directory when present.",
+        "notOwned": "Any Systems path the user points at a different location, and per-system save files that default to the game path."
+      },
+      "isolatedInstall": {
+        "installed": "verify/ares@148",
+        "files": "4,971 payload files; Systems/ is a junction and settings.bml is a hardlink (verified identical inode in apps/ and persist/)",
+        "defaultCommandSelected": false,
+        "whichAfterUse": "apps/ares/148/ares.exe",
+        "shimDispatch": "__shim ares --version -> v148"
+      }
+    },
+    {
+      "name": "mgba",
+      "version": "0.10.5",
+      "versionModel": "official GitHub release tag 0.10.5; the asset regex matches only the win64 7z, so the installer EXEs and the medusa preview archives cannot be selected",
+      "source": "https://github.com/mgba-emu/mgba/releases/download/0.10.5/mGBA-0.10.5-win64.7z",
+      "discovery": "github-release mgba-emu/mgba; `--discover` reports current",
+      "sha256": "b497a57c7d9093834dadc64f33a90f7c411439c21fdb8a0143255a45ea37563a",
+      "archiveBytes": 14156919,
+      "publisherCheck": "the 0.10.5 release assets carry no GitHub digest; the manifest value is an independent download hash and the updater re-downloads and re-hashes before publishing",
+      "format": "7z",
+      "stripPrefix": "mGBA-0.10.5-win64",
+      "layout": {
+        "files": 67,
+        "knownExpandedBytes": 50791622,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "mgba": "mGBA.exe",
+          "mgba-sdl": "mgba-sdl.exe"
+        },
+        "verified": "mgba-sdl.exe --version prints `mgba-sdl.exe 0.10.5 (26b7884bc25a5933960f3cdcd98bac1ae14d42e2)` through `piko __shim mgba-sdl`",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": [
+          "savestates",
+          "screenshots",
+          "cheats",
+          {
+            "path": "config.ini",
+            "kind": "file",
+            "mode": "hardlink"
+          }
+        ],
+        "reason": "the archive ships an empty portable.ini, so mCoreConfigPortablePath() (src/core/config.c) resolves the config directory to the executable directory. ConfigurationWrite() opens with O_WRONLY|O_CREAT|O_TRUNC (src/util/configuration.c), which rewrites the existing inode, so config.ini can be a hardlink.",
+        "notPersisted": "qt.ini is QSettings output written through a temporary rename; a hardlink would be replaced on the first save and Piko would then refuse the drifted mapping, so it stays version-local.",
+        "notOwned": "ROM files, and any savestate/screenshot/patch directory the user repoints in the GUI."
+      },
+      "isolatedInstall": {
+        "installed": "verify/mgba@0.10.5",
+        "files": "67 payload files; config.ini shares an inode with persist/mgba/config.ini, savestates/screenshots/cheats are junctions",
+        "defaultCommandSelected": false,
+        "shimDispatch": "__shim mgba-sdl --version -> 0.10.5"
+      }
+    },
+    {
+      "name": "medusa",
+      "version": "a2",
+      "versionModel": "official prerelease tag medusa-a2 (published 2017-04-26); this is the final Windows x64 preview of mGBA's DS emulator",
+      "source": "https://github.com/mgba-emu/mgba/releases/download/medusa-a2/medusa-a2-win64.7z",
+      "discovery": "regex over https://mgba.io/downloads.html for `medusa-<tag>-win64.7z`; the generic `medusa-build-latest-win64.7z` development archive is not matched",
+      "sha256": "8afb9f8a7c9f6e0bfb65f350a13880c38526cdbb53e74660efda0e49d8035a5c",
+      "archiveBytes": 10371191,
+      "publisherCheck": "no publisher digest exists for this 2017 asset; the manifest value is an independent download hash",
+      "format": "7z",
+      "stripPrefix": "medusa-medusa-2017-04-26-win64",
+      "layout": {
+        "files": 32,
+        "knownExpandedBytes": 36211211,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "medusa": "medusa.exe"
+        },
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared; medusa predates any documented portable mode",
+        "note": "medusa.exe is a GUI application with no version flag: launching it opens a window, so the automated check stops at the payload digest and layout. The strip prefix embeds the build date and cannot be templated, which is why the recipe carries a literal prefix."
+      },
+      "isolatedInstall": {
+        "installed": "verify/medusa@a2",
+        "files": "32 payload files installed and verified by checksum",
+        "defaultCommandSelected": false
+      }
+    },
+    {
+      "name": "shadps4",
+      "version": "0.21.0",
+      "versionModel": "official GitHub release tag v.<version>; the Pre-release-shadPS4-<date>-<sha> nightly tags are excluded",
+      "source": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.21.0/shadps4-win64-sdl-0.21.0.zip",
+      "discovery": "github-release shadps4-emu/shadPS4; `--discover` reports current",
+      "sha256": "95295b8f109663f70c2dac685e6232aa97be1353f6ed0a5d5e0c5dd24a797d88",
+      "archiveBytes": 31725856,
+      "publisherCheck": "release assets carry no GitHub digest; the manifest value is an independent download hash",
+      "format": "zip",
+      "stripPrefix": "none (single executable at archive root)",
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 60364288,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "shadps4": "shadPS4.exe"
+        },
+        "verified": "`piko __shim shadps4 --help` prints the upstream `shadPS4 Emulator CLI` usage",
+        "shortcutArgs": [
+          "-b"
+        ],
+        "reason": "with no arguments the CLI only shows a message box pointing at the Qt launcher and prints help (src/main.cpp), so the desktop shortcut opens Big Picture mode",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": [
+          "user"
+        ],
+        "reason": "UserPaths is built from `current_path()/user` when that directory exists (src/common/path_util.cpp, PORTABLE_DIR = \"user\"), and every data subdirectory (log, screenshots, shader, game_data, sys_modules, patches, cheats, cache, home, trophy, custom_configs, ...) is created beneath it. Persisting that one root covers settings, keys, firmware modules, patches and per-game configs together.",
+        "notOwned": "Games and the firmware modules the user must dump from their own console.",
+        "notPackaged": "The official QtLauncher lives in a separate repository (shadps4-emu/shadps4-qtlauncher) and is not part of this package."
+      },
+      "isolatedInstall": {
+        "installed": "verify/shadps4@0.21.0",
+        "files": "single 60,364,288-byte shadPS4.exe; user/ materialised as a junction into persist/shadps4/user",
+        "defaultCommandSelected": false,
+        "shimDispatch": "__shim shadps4 --help -> upstream CLI help"
+      }
+    },
+    {
+      "name": "vscode",
+      "version": "1.145.2",
+      "versionModel": "official update API `productVersion`; the URL template pins the version-specific portable archive endpoint",
+      "source": "https://update.code.visualstudio.com/1.145.2/win32-x64-archive/stable",
+      "discovery": "json provider over https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest; `--discover` reports current",
+      "sha256": "33cf166a751090fe7d244bf0e594e3c69c832d5ae2af1769140ad82a35ea1e0b",
+      "archiveBytes": 369543882,
+      "publisherCheck": "the API's `sha256hash` field for the archive channel is byte-identical to the downloaded file",
+      "format": "zip",
+      "stripPrefix": "none (portable tree at archive root)",
+      "layout": {
+        "files": 3280,
+        "knownExpandedBytes": 1087039357,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": {
+          "code": {
+            "path": "piko-code.ps1",
+            "kind": "powershell"
+          },
+          "code-gui": "Code.exe"
+        },
+        "reason": "the ZIP ships only bin/code.cmd for the CLI and Piko native mappings must target .exe/.com, so `code` is a PowerShell entry point that forwards to the shipped wrapper; `code-gui` starts the editor directly",
+        "verified": "`bin\\code.cmd --version` prints 1.145.2 / c4453f8ea430795f941c1b2ff6c9321135a74a02 / x64, and the generated piko-code.ps1 wrapper produces the same output under -ExecutionPolicy Bypass",
+        "executionPolicyNote": "the host machine has script execution disabled, so an unrestricted PowerShell shim launch is refused by Windows itself; this is a host policy, not a package defect, and no policy was changed",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": [
+          "data"
+        ],
+        "reason": "portable mode on Windows is enabled by the presence of a `data` directory beside Code.exe (official Portable mode documentation); user-data, extensions and shared storage all land under it",
+        "notPersisted": "the archive's own appx/, policies/ and tools/ helpers stay version-local",
+        "notOwned": "a pre-existing %APPDATA%\\Code installation; this package does not migrate or take it over",
+        "autoUpdate": "the ZIP build has no auto update, so Piko owns the version"
+      },
+      "isolatedInstall": {
+        "installed": "verify/vscode@1.145.2",
+        "files": "3,280 payload files; data/ materialised as a junction into persist/vscode/data",
+        "portableModeConfirmed": "Code.exe created data/shared-data/sharedStorage/state.vscdb and data/user-data/User/globalStorage/state.vscdb inside the junction target, i.e. in persist",
+        "defaultCommandSelected": false
+      }
+    }
+  ],
+  "notVerified": [
+    "GUI sessions for all six packages: no ROM, game, firmware or project was loaded",
+    "RetroArch core download, shader pipeline and controller configuration",
+    "ares per-system firmware installation and save-file placement",
+    "mGBA cartridge save types, link cable and BIOS override",
+    "medusa has no version flag; its window behaviour and DS ROM support were not exercised",
+    "shadPS4 sys_modules firmware dump, game boot and Big Picture mode",
+    "VS Code extension installation, workspace state and the `code` shim under a host that allows script execution",
+    "Desktop shortcuts: integrate --desktop was not run for any of the six packages",
+    "Migration of an existing installation of any of these applications"
+  ]
+}

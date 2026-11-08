@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "name": "vscode",
+  "recipes": {
+    "r341f87d708f197ab": {
+      "schemaVersion": 1,
+      "name": "vscode",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://update.code.visualstudio.com/{version}/win32-x64-archive/stable",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "code": {
+              "path": "piko-code.ps1",
+              "kind": "powershell"
+            },
+            "code-gui": "Code.exe"
+          },
+          "configFiles": {
+            "piko-code.ps1": "& (Join-Path $PSScriptRoot 'bin\\code.cmd') @args\nexit $LASTEXITCODE\n"
+          },
+          "persist": [
+            "data"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Visual Studio Code",
+                "path": "Code.exe"
+              }
+            ]
+          },
+          "maxExpandedBytes": 2147483648,
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "1.145.2": {
+      "recipe": "r341f87d708f197ab",
+      "maxBytes": 378535936,
+      "sha256": "33cf166a751090fe7d244bf0e594e3c69c832d5ae2af1769140ad82a35ea1e0b"
+    }
+  }
+}

@@ -389,14 +389,12 @@
     "clouddrive2": {
       "provider": "regex",
       "url": "https://www.clouddrive2.com/download.html",
-      "versionRegex": "CloudDrive2Setup-X64-(?<version>[0-9]+(?:\\.[0-9]+)+)\\.exe",
-      "urlTemplate": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v{version}/CloudDrive2Setup-X64-{version}.exe",
+      "versionRegex": "releases/download/app-v(?<assetver>[0-9]+(?:\\.[0-9]+){1,3})-(?<tag>[0-9]+)/CloudDrive2-(?<assetver2>[0-9]+(?:\\.[0-9]+){1,3})-(?<appbuild>[0-9]+)-windows-x64\\.exe",
+      "versionTemplate": "{assetver}.{appbuild}",
+      "urlTemplate": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/app-v{assetver}-{tag}/CloudDrive2-{assetver}-{appbuild}-windows-x64.exe",
       "signature": true,
       "required": [
-        "wwwroot/index.html",
-        "wwwroot/clouddrive_web_bg.wasm",
-        "shawl.exe",
-        "CloudDrive.ico"
+        "CloudDrive.exe"
       ]
     },
     "bun": {
@@ -431,7 +429,46 @@
       "versionRegex": "blender-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)-windows-x64\\.zip",
       "urlTemplate": "https://download.blender.org/release/Blender{major}.{minor}/blender-{version}-windows-x64.zip",
       "signature": "blender.exe",
-      "required": ["blender-launcher.exe", "5.2/python/bin/python.exe"]
+      "required": [
+        "blender-launcher.exe",
+        "5.2/python/bin/python.exe"
+      ]
+    },
+    "retroarch": {
+      "provider": "regex",
+      "url": "https://buildbot.libretro.com/stable/",
+      "versionRegex": "/stable/(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/",
+      "urlTemplate": "https://buildbot.libretro.com/stable/{version}/windows/x86_64/RetroArch.7z"
+    },
+    "ares": {
+      "provider": "github-release",
+      "repo": "ares-emulator/ares",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)*)$",
+      "assetRegex": "^ares-windows-x64\\.zip$"
+    },
+    "mgba": {
+      "provider": "github-release",
+      "repo": "mgba-emu/mgba",
+      "versionRegex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+      "assetRegex": "^mGBA-[0-9]+(?:\\.[0-9]+)+-win64\\.7z$"
+    },
+    "medusa": {
+      "provider": "regex",
+      "url": "https://mgba.io/downloads.html",
+      "versionRegex": "medusa-(?<version>a[0-9]+)-win64\\.7z",
+      "urlTemplate": "https://github.com/mgba-emu/mgba/releases/download/medusa-{version}/medusa-{version}-win64.7z"
+    },
+    "shadps4": {
+      "provider": "github-release",
+      "repo": "shadps4-emu/shadPS4",
+      "versionRegex": "^v\\.(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+      "assetRegex": "^shadps4-win64-sdl-[0-9.]+\\.zip$"
+    },
+    "vscode": {
+      "provider": "json",
+      "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
+      "versionPath": "productVersion",
+      "urlTemplate": "https://update.code.visualstudio.com/{version}/win32-x64-archive/stable"
     }
   }
 }

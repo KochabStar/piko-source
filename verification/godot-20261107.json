@@ -60,7 +60,47 @@
         "tests": "146 total, 146 pass (5 new godot tests)",
         "compactCheck": "changedPackages 1 = pre-existing sunlogin drift (godot is already a byte-stable template document)",
         "hostEnvironmentNote": "19 update/auto-merge tests fail if `git` resolves to the host's piko shim without a default provider; with the managed git 2.56.0.4 directory prepended to PATH the full suite passes 146/146"
-      }
+      },
+      "publishedVersion": "4.7.2",
+      "revision": "4.7.2-piko.1",
+      "revisionReason": "The original 4.7.2 platform item declared no desktop block, so an install produced no Start Menu or desktop launcher at all; the GUI editor was reachable only through the godot command shim.",
+      "desktop": {
+        "shortcuts": [
+          {
+            "name": "Godot",
+            "path": "Godot_v4.7.2-stable_win64.exe"
+          }
+        ],
+        "targetSubsystem": "PE Subsystem=2 (Windows GUI)",
+        "rejectedTarget": "Godot_v4.7.2-stable_win64_console.exe is PE Subsystem=3 (console); a shortcut to it opens a console window first",
+        "unchanged": [
+          "url",
+          "sha256",
+          "bin",
+          "persist",
+          "env",
+          "maxBytes",
+          "maxExpandedBytes"
+        ],
+        "updaterRetargeting": "nextManifest now rewrites the stripped upstream version (4.7.2) as well as the revision spelling, so a later 4.7.3 candidate does not inherit the 4.7.2 payload names"
+      },
+      "shortcutVerification": {
+        "client": "piko 0.4.11",
+        "isolated": "temporary PIKO_HOME with a local HTTP source copy",
+        "installed": "verify/godot@4.7.2-piko.1",
+        "launcher": "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Piko Apps\\Godot.lnk",
+        "launcherTarget": "<PIKO_HOME>\\apps\\godot\\4.7.2-piko.1\\Godot_v4.7.2-stable_win64.exe",
+        "launcherWorkingDirectory": "<PIKO_HOME>\\apps\\godot\\4.7.2-piko.1",
+        "launched": "process path is the GUI editor; window title is the Godot project manager; no console window",
+        "uninstall": "the launcher is removed with its ownership receipt",
+        "hostRepair": "the already-installed 4.7.2 receipt and state install record were backed up, given the identical desktop declaration, and regenerated through piko reset godot (client-written .lnk plus ownership hash); launching the repaired shortcut also reaches the project manager"
+      },
+      "notVerified": [
+        "Editor GUI workflows beyond the project manager window appearing",
+        "Export template installation and cross-platform export",
+        "The 32-bit win32, arm64 and mono (_dotnet) distribution variants",
+        "Coexistence with an existing Godot installation sharing %APPDATA%\\Godot\\"
+      ]
     }
   ],
   "notVerified": [

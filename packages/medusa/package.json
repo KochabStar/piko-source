@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "name": "medusa",
+  "recipes": {
+    "r76a9f83240bd6ca5": {
+      "schemaVersion": 1,
+      "name": "medusa",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/mgba-emu/mgba/releases/download/medusa-{version}/medusa-{version}-win64.7z",
+          "sha256": "{sha256}",
+          "format": "7z",
+          "stripPrefix": "medusa-medusa-2017-04-26-win64",
+          "bin": {
+            "medusa": "medusa.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "medusa",
+                "path": "medusa.exe"
+              }
+            ]
+          },
+          "maxExpandedBytes": 67108864,
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "a2": {
+      "recipe": "r76a9f83240bd6ca5",
+      "maxBytes": 18874368,
+      "sha256": "8afb9f8a7c9f6e0bfb65f350a13880c38526cdbb53e74660efda0e49d8035a5c"
+    }
+  }
+}

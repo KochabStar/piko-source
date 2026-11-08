@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "name": "shadps4",
+  "recipes": {
+    "ra35e647536aae7e2": {
+      "schemaVersion": 1,
+      "name": "shadps4",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.{version}/shadps4-win64-sdl-{version}.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "shadps4": "shadPS4.exe"
+          },
+          "persist": [
+            "user"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "shadPS4",
+                "path": "shadPS4.exe",
+                "args": [
+                  "-b"
+                ]
+              }
+            ]
+          },
+          "maxExpandedBytes": 134217728,
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.21.0": {
+      "recipe": "ra35e647536aae7e2",
+      "maxBytes": 40894464,
+      "sha256": "95295b8f109663f70c2dac685e6232aa97be1353f6ed0a5d5e0c5dd24a797d88"
+    }
+  }
+}

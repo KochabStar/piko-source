@@ -1,4 +1,5 @@
-import { open, mkdir, stat, readdir } from "node:fs/promises";
+import { open, mkdir, readFile, stat, readdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { capture } from "./tools.mjs";
 import { readMsiPlan } from "./msi.mjs";
@@ -139,6 +140,235 @@ async function extractEntry(tools, file, type, entry, target, limit) {
     "Archive output size differs",
   );
   return target;
+}
+// WiX Burn bundles append their payload after the PE image as cabinets: the UX
+// container (BurnManifest.xml plus theme/licence assets) and the attached
+// container holding the chained packages as members a0, a1, ... Neither the
+// .wixburn section layout (it differs between Burn versions) nor cabinet
+// chaining (Burn pads between containers) locates them reliably, so containers
+// are found by their MSCF signature and then proven against the size and
+// SHA-512 digest the manifest records.
+const burnSignature = Buffer.from("MSCF", "ascii");
+function burnAttribute(xml, name) {
+  return new RegExp(`${name}="([^"]*)"`, "i").exec(xml)?.[1];
+}
+function peOverlayOffset(image, fileSize) {
+  requireThat(
+    image.length >= 0x40 && image.toString("ascii", 0, 2) === "MZ",
+    "Burn bundle is not a PE executable",
+  );
+  const peOffset = image.readUInt32LE(0x3c);
+  requireThat(
+    peOffset + 24 <= image.length &&
+      image.toString("ascii", peOffset, peOffset + 4) === "PE\0\0",
+    "Burn PE header is invalid",
+  );
+  requireThat(
+    image.readUInt16LE(peOffset + 4) === 0x8664,
+    "Burn bundle is not an x64 image",
+  );
+  const sections = image.readUInt16LE(peOffset + 6),
+    optionalSize = image.readUInt16LE(peOffset + 20),
+    optional = peOffset + 24,
+    sectionTable = optional + optionalSize;
+  requireThat(
+    image.readUInt16LE(optional) === 0x20b,
+    "Burn bundle is not a PE32+ image",
+  );
+  requireThat(
+    sections <= 96 && sectionTable + sections * 40 <= image.length,
+    "Burn PE section table is invalid",
+  );
+  let end = sectionTable + sections * 40;
+  for (let n = 0; n < sections; n++) {
+    const entry = sectionTable + n * 40,
+      rawSize = image.readUInt32LE(entry + 16),
+      rawOffset = image.readUInt32LE(entry + 20);
+    if (!rawSize) continue;
+    requireThat(
+      rawOffset + rawSize <= fileSize,
+      "Burn PE section escapes the image",
+    );
+    end = Math.max(end, rawOffset + rawSize);
+  }
+  return end;
+}
+async function scanBurnCabinets(file, start, fileSize) {
+  const chunk = 4 * MiB,
+    handle = await open(file, "r"),
+    buffer = Buffer.alloc(Math.min(chunk, Math.max(fileSize - start, 1))),
+    found = [];
+  try {
+    let position = start;
+    while (position + 36 <= fileSize) {
+      const length = Math.min(buffer.length, fileSize - position),
+        { bytesRead } = await handle.read(buffer, 0, length, position);
+      if (!bytesRead) break;
+      const window = buffer.subarray(0, bytesRead);
+      for (let index = window.indexOf(burnSignature); index >= 0; ) {
+        const offset = position + index,
+          size = index + 36 <= bytesRead ? window.readUInt32LE(index + 8) : 0;
+        if (size >= 36 && offset + size <= fileSize && found.length < 4096)
+          found.push({ offset, size });
+        index = window.indexOf(burnSignature, index + 4);
+      }
+      position += bytesRead - Math.min(3, bytesRead);
+    }
+  } finally {
+    await handle.close();
+  }
+  requireThat(found.length > 0, "Burn bundle contains no appended container");
+  return found;
+}
+async function burnRange(file, range, target) {
+  const handle = await open(file, "r");
+  try {
+    const buffer = Buffer.alloc(range.size),
+      { bytesRead } = await handle.read(buffer, 0, range.size, range.offset);
+    requireThat(bytesRead === range.size, "Burn cabinet is truncated");
+    const output = await open(target, "wx");
+    try {
+      await output.write(buffer);
+    } finally {
+      await output.close();
+    }
+  } finally {
+    await handle.close();
+  }
+}
+async function burnDigest(file) {
+  const handle = await open(file, "r"),
+    digest = createHash("sha512"),
+    buffer = Buffer.alloc(4 * MiB);
+  try {
+    for (;;) {
+      const { bytesRead } = await handle.read(buffer, 0, buffer.length, null);
+      if (!bytesRead) break;
+      digest.update(buffer.subarray(0, bytesRead));
+    }
+  } finally {
+    await handle.close();
+  }
+  return digest.digest("hex");
+}
+function parseBurnManifest(xml) {
+  requireThat(
+    /<BurnManifest\b[^>]*\bWin64="yes"/i.test(xml),
+    "Unsupported Burn manifest",
+  );
+  const containers = [],
+    named = new Set();
+  for (const match of xml.matchAll(/<Container\b([^>]*)\/?>/gi)) {
+    const body = match[1],
+      id = burnAttribute(body, "Id");
+    if (!id) continue;
+    const size = Number(burnAttribute(body, "FileSize") ?? ""),
+      sha512 = burnAttribute(body, "Hash") ?? "";
+    requireThat(
+      Number.isSafeInteger(size) && size > 0 && /^[0-9a-f]{128}$/i.test(sha512),
+      "Burn container size or digest is missing",
+    );
+    named.add(id);
+    containers.push({ size, sha512 });
+  }
+  const chain = [],
+    seen = new Set();
+  for (const match of xml.matchAll(/<Payload\b([^>]*)\/?>/gi)) {
+    const body = match[1],
+      id = burnAttribute(body, "Id"),
+      sourcePath = burnAttribute(body, "SourcePath"),
+      filePath = burnAttribute(body, "FilePath"),
+      container = burnAttribute(body, "Container");
+    if (!id || !sourcePath || !filePath || !container) continue;
+    requireThat(named.has(container), "Burn payload references no container");
+    requireThat(/^a\d+$/.test(sourcePath), "Unexpected Burn payload member");
+    requireThat(!seen.has(id.toLowerCase()), "Duplicate Burn payload");
+    seen.add(id.toLowerCase());
+    const size = Number(burnAttribute(body, "FileSize") ?? ""),
+      sha512 = burnAttribute(body, "Hash") ?? "";
+    requireThat(
+      Number.isSafeInteger(size) && size > 0 && /^[0-9a-f]{128}$/i.test(sha512),
+      "Burn payload size or digest is missing",
+    );
+    chain.push({ id, filePath, member: sourcePath, size, sha512 });
+  }
+  requireThat(chain.length > 0, "Burn bundle declares no chained payload");
+  chain.sort((a, b) => Number(a.member.slice(1)) - Number(b.member.slice(1)));
+  return { chain, containers };
+}
+// Extract one manifest-declared payload out of a Burn bundle as an MSI.
+async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
+  requireThat(
+    typeof payloadId === "string" && payloadId.length > 0,
+    "Burn payload selection is missing",
+  );
+  const info = await stat(file),
+    head = Buffer.alloc(Math.min(info.size, 64 * 1024)),
+    reader = await open(file, "r");
+  try {
+    const { bytesRead } = await reader.read(head, 0, head.length, 0);
+    requireThat(bytesRead === head.length, "Burn bundle is truncated");
+  } finally {
+    await reader.close();
+  }
+  const candidates = await scanBurnCabinets(
+      file,
+      peOverlayOffset(head, info.size),
+      info.size,
+    ),
+    uxPath = join(temp, "burn-ux-" + serial + ".cab");
+  await burnRange(file, candidates[0], uxPath);
+  let manifest;
+  for (const entry of await listing(tools, uxPath, "Cab")) {
+    if (entry.directory || !entry.size || entry.size > 4 * MiB) continue;
+    const member = join(temp, "burn-manifest-" + serial++);
+    await extractEntry(tools, uxPath, "Cab", entry, member, 4 * MiB);
+    const text = (await readFile(member, "utf8")).toString();
+    if (text.includes("<BurnManifest")) {
+      manifest = text;
+      break;
+    }
+  }
+  requireThat(manifest, "Burn UX container has no BurnManifest.xml");
+  const { chain, containers } = parseBurnManifest(manifest),
+    payload = chain.find((p) => p.id === payloadId);
+  requireThat(
+    payload,
+    `Burn bundle has no payload ${payloadId} (available: ${chain.map((p) => p.id).join(", ")})`,
+  );
+  let attached;
+  for (const candidate of candidates.slice(1)) {
+    if (!containers.some((c) => c.size === candidate.size)) continue;
+    const cab = join(temp, "burn-attached-" + serial++ + ".cab");
+    await burnRange(file, candidate, cab);
+    const digest = await burnDigest(cab);
+    if (
+      containers.some(
+        (c) => c.size === candidate.size && c.sha512.toLowerCase() === digest,
+      )
+    ) {
+      attached = cab;
+      break;
+    }
+  }
+  requireThat(
+    attached,
+    "Burn attached container declared by the manifest is missing",
+  );
+  const members = await listing(tools, attached, "Cab"),
+    member = members.find((m) => m.path === payload.member);
+  requireThat(member && !member.directory, "Burn attached member is missing");
+  requireThat(
+    member.size === payload.size,
+    "Burn attached container size disagrees with its manifest",
+  );
+  const target = join(temp, "burn-payload-" + serial++ + ".msi");
+  await extractEntry(tools, attached, "Cab", member, target, 2 * GiB);
+  requireThat(
+    (await burnDigest(target)) === payload.sha512.toLowerCase(),
+    "Burn attached payload does not match its declared digest",
+  );
+  return { file: target, serial };
 }
 function mapped(entries, d, { inno = false, msi = false } = {}) {
   const files = [],
@@ -291,6 +521,14 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
         },
       ]);
       continue;
+    }
+    if (type === "burn") {
+      // WiX Burn bundle: the selected chained MSI is the artifact under
+      // verification, exactly as the client extracts it.
+      const resolved = await resolveBurnPayload(tools, file, d.payload, temp, serial);
+      file = resolved.file;
+      serial = resolved.serial;
+      type = "msi";
     }
     if (d.nested) {
       for (const step of d.nested) {
