@@ -368,10 +368,11 @@
       }
     },
     "qqnt": {
-      "latest": "9.9.36.53644",
+      "latest": "9.9.37.54395",
       "versions": {
         "9.9.33.52230": "packages/qqnt/package.json",
-        "9.9.36.53644": "packages/qqnt/package.json"
+        "9.9.36.53644": "packages/qqnt/package.json",
+        "9.9.37.54395": "packages/qqnt/package.json"
       }
     },
     "libreoffice": {
