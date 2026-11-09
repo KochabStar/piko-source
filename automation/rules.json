@@ -351,8 +351,8 @@
     "nvidia-app": {
       "provider": "regex",
       "url": "https://www.nvidia.com/en-us/software/nvidia-app/",
-      "versionRegex": "https://us\\.download\\.nvidia\\.com/nvapp/client/(?<version>[0-9]+(?:\\.[0-9]+)+)/NVIDIA_app_v\\k<version>\\.exe",
-      "urlTemplate": "https://us.download.nvidia.com/nvapp/client/{version}/NVIDIA_app_v{version}.exe",
+      "versionRegex": "https://us\\.download\\.nvidia\\.com/nvapp/client/(?<version>[0-9]+(?:\\.[0-9]+)+)/x64/NVIDIA_app_v\\k<version>_x64\\.exe",
+      "urlTemplate": "https://us.download.nvidia.com/nvapp/client/{version}/x64/NVIDIA_app_v{version}_x64.exe",
       "signature": true
     },
     "qqnt": {
