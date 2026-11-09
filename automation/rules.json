@@ -469,6 +469,16 @@
       "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
       "versionPath": "productVersion",
       "urlTemplate": "https://update.code.visualstudio.com/{version}/win32-x64-archive/stable"
+    },
+    "winfsp": {
+      "provider": "regex",
+      "url": "https://winfsp.dev/rel/",
+      "versionRegex": "releases/download/v2\\.1/winfsp-(?<version>[0-9]+(?:\\.[0-9]+)+)\\.msi",
+      "urlTemplate": "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-{version}.msi",
+      "signature": true,
+      "required": [
+        "winfsp-setup.ps1"
+      ]
     }
   }
 }

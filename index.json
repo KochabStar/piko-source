@@ -471,6 +471,12 @@
       "versions": {
         "1.145.2": "packages/vscode/package.json"
       }
+    },
+    "winfsp": {
+      "latest": "2.1.25156",
+      "versions": {
+        "2.1.25156": "packages/winfsp/package.json"
+      }
     }
   }
 }

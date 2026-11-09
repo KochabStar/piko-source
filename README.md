@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 68 个包、123 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07) 与 [模拟器与编辑器](#模拟器与编辑器2026-11-08)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 69 个包、124 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -159,6 +159,20 @@ pi --version
 - 百度网盘安装器校验 Windows Authenticode 为 `Valid`（PE FileVersion 8.9.7.101），SHA-256 与独立 Scoop bucket 发布值逐字节一致。按 NSIS 显式 `files` 映射解出 972 个程序文件（含 UTF-8 中文资源名），仅排除 `$PLUGINSDIR` 与 `uninst.exe`；不执行安装器，不注册 `BaiduNetdiskService`／壳扩展／Appx 组件，安装目录 `users` 目录硬链接持久化，其余配置沿用原生用户目录，不迁移既有账户或下载数据。
 - 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
 - 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
+
+## WinFsp（2026-11-09）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `winfsp` | 2.1.25156 | `winfsp-setup`，只下载并保存官网签名的官方安装器 |
+
+- 版本与载荷取自 <https://winfsp.dev/rel/> 上的 **WinFsp Installer** 按钮（`winfsp-2.1.25156.msi`，2,191,360 字节）。SHA-256 `073a70e0…db9f7a` 与 GitHub release 官方资产 digest 逐字节一致；Authenticode 为 `Valid`（`CN=NAVIMATICS LLC`，DigiCert Global G3 Code Signing ECC）。MSI `ProductVersion` 就是 `2.1.25156`。
+- **不解包、不做便携安装。** WinFsp 是内核态文件系统驱动加 `WinFsp.Launcher` 服务，解出 MSI 里的文件并不会让驱动可用；所以清单用 `format: "file"` 原样保存 `winfsp.msi`，安装动作与系统改动全部留给官方安装器。
+- `winfsp-setup` 是一个 PowerShell 入口，作用等同双击 MSI：用 `msiexec /i` 打开交互式安装向导，UAC 由 Windows 自己弹，用户在向导里确认前不会写入任何东西。入口拒绝任何参数，避免被当成无人值守安装通道；没有 `admin` 配方，`piko system winfsp` 会直接报"未声明系统集成"。
+- 卸载 Piko 包只删除保存的安装器副本，不会卸载系统里已安装的 WinFsp 驱动或服务；撤销需走 Windows"应用和功能"或官方 MSI 卸载。
+- 自动更新从 `winfsp.dev/rel/` 的下载按钮匹配 `winfsp-<build>.msi`：tag 用的是系列号（`v2.1`），资产名与 MSI 版本用的是构建号（`2.1.25156`），两者必须分开重建，否则下一次构建会拼出错误的下载地址。页面上同时出现的 `nfs-win` 与 `sshfs-win` 是两个独立项目，不属于本包。
+- 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`；`node scripts/update.mjs --check --packages winfsp` 返回 `current`。隔离 Piko（`PIKO_HOME` + 本地 HTTP 源）安装后载荷为 `winfsp.msi` 与 `winfsp-setup.ps1`，`piko which winfsp-setup` 解析到该脚本，带参数调用被拒绝，卸载后版本目录清空。证据见 [WinFsp 验证记录](verification/winfsp-20261109.json)。
+- **未验收**：真实的内核驱动安装、服务注册、版本升级／降级与卸载；驱动能否加载、已挂载盘符是否正常，都需要在目标机上由用户手动完成安装后再单独确认。
 
 ## CloudDrive2（2026-11-05，2026-11-08 修订）
 

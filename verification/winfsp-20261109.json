@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-09T00:00:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "winfsp",
+      "version": "2.1.25156",
+      "versionModel": "the stable installer linked from https://winfsp.dev/rel/; the release tag names the series (v2.1) while the asset and the MSI ProductVersion name the build (2.1.25156)",
+      "source": "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-2.1.25156.msi",
+      "discovery": "regex over https://winfsp.dev/rel/ matching releases/download/v2.1/winfsp-(?<version>).msi; the page also links nfs-win and sshfs-win, which are separate projects and do not match",
+      "sha256": "073a70e00f77423e34bed98b86e600def93393ba5822204fac57a29324db9f7a",
+      "archiveBytes": 2191360,
+      "publisherCheck": "GitHub release asset digest sha256:073a70e0... is byte-identical to an independent download",
+      "format": "file",
+      "file": "winfsp.msi",
+      "authenticode": {
+        "status": "Valid",
+        "subject": "CN=NAVIMATICS LLC, O=NAVIMATICS LLC, L=KIRKLAND, S=Washington, C=US",
+        "issuer": "CN=DigiCert Global G3 Code Signing ECC SHA384 2021 CA1",
+        "productVersion": "2.1.25156",
+        "productName": "WinFsp 2025",
+        "productCode": "{C79D9B29-3AF0-45B3-9DB9-226F3C2D2204}",
+        "upgradeCode": "{5466A3D8-3AA1-4240-B6A0-3A051940A3EC}"
+      },
+      "layout": {
+        "files": 1,
+        "knownExpandedBytes": 2191360,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false
+      },
+      "commandModel": {
+        "bin": { "winfsp-setup": { "path": "winfsp-setup.ps1", "kind": "powershell" } },
+        "behaviour": "the PowerShell entry point opens `msiexec /i <payload>` exactly like a double-click, refuses any arguments, and never runs an unattended install",
+        "noAdminRecipe": true,
+        "systemIntegration": "piko system winfsp fails with 'No system integration declared'; Piko performs no elevation and registers no service"
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "env": "none declared",
+        "installedPayload": "C:\\Program Files (x86)\\WinFsp (written by the vendor installer, owned by the system, not by Piko)",
+        "note": "uninstalling the Piko package only deletes the saved installer copy; the installed driver and WinFsp.Launcher service remain"
+      },
+      "checks": {
+        "checkLayout": "passed: 1 file, 2,191,360 bytes, 0 unknown sizes, Authenticode Valid",
+        "updateCheck": "node scripts/update.mjs --check --packages winfsp => current (2.1.25156)",
+        "sourceCheck": "node scripts/check.mjs => 69 packages / 124 versions / 69 automatic",
+        "tests": "tests/winfsp.test.mjs covers the installer-only model, the entry-point guard and series-tag/build discovery"
+      },
+      "isolatedInstall": {
+        "pikoHome": "temporary PIKO_HOME with a loopback HTTP source",
+        "result": "installed 2.1.25156 into apps/winfsp/2.1.25156 (winfsp.msi + winfsp-setup.ps1), piko which winfsp-setup resolved to the generated script, invoking it with arguments was refused, uninstall removed the version directory"
+      },
+      "notVerified": [
+        "real kernel driver installation and service registration (deliberately left to the vendor installer and the user)",
+        "driver load, drive-letter mounting and the WinFsp.Launcher service state",
+        "upgrade, downgrade and uninstall through the MSI",
+        "coexistence with an existing WinFsp install",
+        "arm64 installer"
+      ]
+    }
+  ],
+  "notVerified": [
+    "any privileged installation or driver load",
+    "service registration",
+    "real mount behaviour on the target machine"
+  ],
+  "notes": "WinFsp cannot be packaged as a portable application: extracting an MSI scatters driver files that are useless without installation. The package therefore stores the signed vendor installer and exposes a single explicit entry point, following the same model as nvidia-app."
+}
