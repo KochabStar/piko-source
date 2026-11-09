@@ -13,6 +13,9 @@
 /.tmp-index-*.json
 *.log
 
+# Package drafts written by scripts/add.mjs probe (local only).
+/automation/drafts/
+
 # Local credentials and editor state.
 .env
 .env.*

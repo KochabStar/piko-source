@@ -96,7 +96,7 @@ export function innoEntries(text) {
   requireThat(opened && closed && entries.length, "No Inno file metadata");
   return entries;
 }
-async function listing(tools, file, type, names) {
+export async function listing(tools, file, type, names) {
   return parseListing(
     await capture(await tools.get("sevenzip"), [
       "l",
@@ -112,7 +112,7 @@ async function listing(tools, file, type, names) {
     type,
   );
 }
-async function extractEntry(tools, file, type, entry, target, limit) {
+export async function extractEntry(tools, file, type, entry, target, limit) {
   requireThat(
     !entry.directory && (entry.size === undefined || entry.size <= limit),
     "Selected archive payload exceeds limit",
@@ -296,12 +296,13 @@ function parseBurnManifest(xml) {
   chain.sort((a, b) => Number(a.member.slice(1)) - Number(b.member.slice(1)));
   return { chain, containers };
 }
-// Extract one manifest-declared payload out of a Burn bundle as an MSI.
-async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
-  requireThat(
-    typeof payloadId === "string" && payloadId.length > 0,
-    "Burn payload selection is missing",
-  );
+// Read a bundle's chained payload identities without selecting one. Probing a
+// new package needs to show the choice before a manifest exists.
+export async function burnPayloadChain(tools, file, temp, serial) {
+  const layout = await readBurnLayout(tools, file, temp, serial);
+  return layout.chain;
+}
+async function readBurnLayout(tools, file, temp, serial) {
   const info = await stat(file),
     head = Buffer.alloc(Math.min(info.size, 64 * 1024)),
     reader = await open(file, "r");
@@ -330,12 +331,7 @@ async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
     }
   }
   requireThat(manifest, "Burn UX container has no BurnManifest.xml");
-  const { chain, containers } = parseBurnManifest(manifest),
-    payload = chain.find((p) => p.id === payloadId);
-  requireThat(
-    payload,
-    `Burn bundle has no payload ${payloadId} (available: ${chain.map((p) => p.id).join(", ")})`,
-  );
+  const { chain, containers } = parseBurnManifest(manifest);
   let attached;
   for (const candidate of candidates.slice(1)) {
     if (!containers.some((c) => c.size === candidate.size)) continue;
@@ -355,20 +351,34 @@ async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
     attached,
     "Burn attached container declared by the manifest is missing",
   );
-  const members = await listing(tools, attached, "Cab"),
+  return { chain, attached, serial };
+}
+// Extract one manifest-declared payload out of a Burn bundle as an MSI.
+export async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
+  requireThat(
+    typeof payloadId === "string" && payloadId.length > 0,
+    "Burn payload selection is missing",
+  );
+  const layout = await readBurnLayout(tools, file, temp, serial),
+    payload = layout.chain.find((p) => p.id === payloadId);
+  requireThat(
+    payload,
+    `Burn bundle has no payload ${payloadId} (available: ${layout.chain.map((p) => p.id).join(", ")})`,
+  );
+  const members = await listing(tools, layout.attached, "Cab"),
     member = members.find((m) => m.path === payload.member);
   requireThat(member && !member.directory, "Burn attached member is missing");
   requireThat(
     member.size === payload.size,
     "Burn attached container size disagrees with its manifest",
   );
-  const target = join(temp, "burn-payload-" + serial++ + ".msi");
-  await extractEntry(tools, attached, "Cab", member, target, 2 * GiB);
+  const target = join(temp, "burn-payload-" + layout.serial + ".msi");
+  await extractEntry(tools, layout.attached, "Cab", member, target, 2 * GiB);
   requireThat(
     (await burnDigest(target)) === payload.sha512.toLowerCase(),
     "Burn attached payload does not match its declared digest",
   );
-  return { file: target, serial };
+  return { file: target, serial: layout.serial + 1 };
 }
 function mapped(entries, d, { inno = false, msi = false } = {}) {
   const files = [],

@@ -15,6 +15,37 @@
 
 一个包校验失败只阻止该包发布，保留其已有版本和索引；**其他已验证的更新仍正常生成并自动合并 PR**。单包失败的运行在合并之后仍最终标红，并在运行摘要列出失败包与原因，避免把部分成功标成全部通过。没有有效更新时不创建空 PR；全部失败时不合并。源整体校验、测试、报告完整性或精确文件树校验失败仍停止整次发布。
 
+## 新增一个包
+
+不再需要手工下载、辨认格式、逐条抄写文件映射。`scripts/add.mjs` 把机械部分做完，只留下需要人判断的几项。
+
+1. **探测**：给它一个发布页或资产直链。
+
+   ```powershell
+   node scripts/add.mjs probe <name> <发布页或资产URL> [--version <版本>] [--payload <捆绑包ID>]
+   ```
+
+   它会挑出页面上提到包名的资产（优先 x64/Windows），下载一次，然后按**文件头结构**而不是扩展名判断格式：zip / 7z / tar.gz / MSI（OLE 复合文档）/ Inno（试读元数据）/ Burn（读链上 `BurnManifest.xml`）。判断依据是真实结构，所以把 zip 命名成 `.exe` 或把安装器命名成 `.zip` 也不会认错。
+
+   WiX Burn 捆绑包链上通常有好几个 MSI（CloudDrive2 就是 WinFsp 驱动 + 应用两个），探测会列出全部 `payloadCandidates`；用 `--payload` 指定要哪一个，再跑一次即可得到该载荷的文件树。
+
+   结果写到 `automation/drafts/<name>.json`（已在 `.gitignore`），里面包含 SHA-256、字节数、格式、可执行文件候选和条目样例。
+
+2. **补三项判断**：`bin`（命令表，必须自己定）、`desktop`（要不要快捷方式）、`stripPrefix`（要剥掉的安装前缀），以及 `rule`（更新发现规则）。
+
+3. **校验并发布**：
+
+   ```powershell
+   node scripts/add.mjs apply <name> --dry-run   # 下载、比对 SHA-256、跑 checkLayout
+   node scripts/add.mjs apply <name> --yes       # 写清单 + 索引 + 更新规则
+   node scripts/check.mjs
+   node scripts/update.mjs --check --packages <name>
+   ```
+
+   `apply` 对 MSI／Inno／Burn 会从同一份元数据自动生成显式 `files` 映射（CloudDrive2 那 752 条现在是自动产出的），并按 `stripPrefix` 剥掉前缀。清单、`index.json` 条目和 `automation/rules.json` 一起写入，避免漏改其中一处。
+
+约束没有放松：`checkLayout` 仍然是发布闸门，探测阶段不写任何清单，`--dry-run` 不写文件，签名与摘要校验照旧。探测只**读**载荷，从不执行它。
+
 ### 已发现新版，但主分支版本没变
 
 报告中的 `updated` 表示候选清单已写入更新分支，不表示已经合并到主分支，也不表示本机应用已升级。`blocked` 仅影响对应包；其他更新会继续通过整体校验和精确文件树检查后尝试自动合并。若主分支仍未变化，检查自动合并步骤、仓库保护规则及 PR 是否存在冲突，而不是只看版本发现步骤或 PR 是否创建成功。

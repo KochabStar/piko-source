@@ -12,6 +12,8 @@
     "test": "node --test tests/*.test.mjs",
     "update:discover": "node scripts/update.mjs --discover",
     "update:check": "node scripts/update.mjs --check",
-    "update": "node scripts/update.mjs --write"
+    "update": "node scripts/update.mjs --write",
+    "add:probe": "node scripts/add.mjs probe",
+    "add:apply": "node scripts/add.mjs apply"
   }
 }
