@@ -9,6 +9,7 @@
 - `index.json`：软件、已登记版本与清单路径索引。
 - `packages/<name>/package.json`：Windows x64 模板包清单；同包多个版本共用文件，版本表保存逐版本摘要与配方引用。
 - 模板源需要新版客户端；原 schema 1 完整清单仍可由新版客户端读取。迁移说明见 [模板包清单](#模板包清单)。
+- **Burn 捆绑包格式需要 piko 0.4.14 或更新版本**：`clouddrive2@1.1.3.3` 使用 `format: "burn"` 加 `payload`，0.4.13 及更早客户端会以 `Unsupported or missing download format/URL` 拒绝该清单（其余包不受影响）。
 - [TortoiseSVN 升级与 DLL 占用处理](guides/tortoise-svn.md)：版本化 Shell 配方、旧版本延后清理，以及旧 Scoop 安装的一次性撤销边界。修订 `1.15.0.29830-piko.1` 保留原载荷，后续上游更新自动继承新配方；历史阶段说明中的旧配方行为不适用于此修订。
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
 - [CloudDrive2 快捷方式打开黑窗口](guides/clouddrive2-shortcut.md)：`1.1.3.3` 改打 WinUI 桌面版（GUI 子系统 `CloudDrive.exe`），只解包捆绑链里的应用 MSI；旧服务版 `1.1.3` 保留。
