@@ -78,7 +78,7 @@ GitHub Actions 本身全部固定到提交 SHA。仓库变更和 PR 另由 `.git
 
 ## 模板与历史版本
 
-目前每包一个 `packages/<name>/package.json`，共 68 个包文件、118 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
+目前每包一个 `packages/<name>/package.json`，共 68 个包文件、123 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未删除历史版本、未跳过 SHA-256 校验。
 
 `npm run compact:check` 可预览 schema 1 清单合并；`npm run compact` 执行。迁移允许索引路径改为共享包文件，但必须逐版本保证解析后的完整 JSON 序列化及 manifestHash 不变；原 schema 1 路径未迁移时仍要求文件字节不变。迁移后的客户端必须支持模板格式；先部署新版 Piko，再发布此源。Git 历史仍保留旧清单，模板只控制工作目录和后续重复配置增长，不压缩已有 Git 历史。
 
