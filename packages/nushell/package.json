@@ -23,6 +23,11 @@
     "0.116.1": {
       "recipe": "rb70603cee4e9e9c3",
       "sha256": "6658c9e61fe42c88326c1caa99e8dc9ad99bec6c0bc353e6ecb7c5d3f79feed7"
+    },
+    "0.117.0": {
+      "recipe": "rb70603cee4e9e9c3",
+      "maxBytes": 536870912,
+      "sha256": "8a135f25d3f22f1542107eb117e94628af35ce65402cbc098bfb26914227d3b2"
     }
   }
 }

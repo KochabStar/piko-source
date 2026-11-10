@@ -203,14 +203,15 @@
       }
     },
     "pi": {
-      "latest": "1.5.0",
+      "latest": "1.5.1",
       "versions": {
         "1.4.0": "packages/pi/package.json",
-        "1.5.0": "packages/pi/package.json"
+        "1.5.0": "packages/pi/package.json",
+        "1.5.1": "packages/pi/package.json"
       }
     },
     "oh-my-pi": {
-      "latest": "18.18.3",
+      "latest": "18.18.6",
       "versions": {
         "18.13.2": "packages/oh-my-pi/package.json",
         "18.14.1": "packages/oh-my-pi/package.json",
@@ -220,7 +221,8 @@
         "18.17.0": "packages/oh-my-pi/package.json",
         "18.18.0": "packages/oh-my-pi/package.json",
         "18.18.1": "packages/oh-my-pi/package.json",
-        "18.18.3": "packages/oh-my-pi/package.json"
+        "18.18.3": "packages/oh-my-pi/package.json",
+        "18.18.6": "packages/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -276,7 +278,7 @@
       }
     },
     "orca": {
-      "latest": "1.4.254",
+      "latest": "1.4.255",
       "versions": {
         "1.4.243": "packages/orca/package.json",
         "1.4.245": "packages/orca/package.json",
@@ -287,7 +289,8 @@
         "1.4.251": "packages/orca/package.json",
         "1.4.252": "packages/orca/package.json",
         "1.4.253": "packages/orca/package.json",
-        "1.4.254": "packages/orca/package.json"
+        "1.4.254": "packages/orca/package.json",
+        "1.4.255": "packages/orca/package.json"
       }
     },
     "listary": {
@@ -341,12 +344,13 @@
       }
     },
     "claude-code": {
-      "latest": "2.1.319",
+      "latest": "2.1.321",
       "versions": {
         "2.1.316": "packages/claude-code/package.json",
         "2.1.317": "packages/claude-code/package.json",
         "2.1.318": "packages/claude-code/package.json",
-        "2.1.319": "packages/claude-code/package.json"
+        "2.1.319": "packages/claude-code/package.json",
+        "2.1.321": "packages/claude-code/package.json"
       }
     },
     "opencode": {
@@ -356,9 +360,10 @@
       }
     },
     "nushell": {
-      "latest": "0.116.1",
+      "latest": "0.117.0",
       "versions": {
-        "0.116.1": "packages/nushell/package.json"
+        "0.116.1": "packages/nushell/package.json",
+        "0.117.0": "packages/nushell/package.json"
       }
     },
     "lertaro": {
@@ -370,9 +375,10 @@
       }
     },
     "nvidia-app": {
-      "latest": "11.0.9.565",
+      "latest": "11.0.9.585",
       "versions": {
-        "11.0.9.565": "packages/nvidia-app/package.json"
+        "11.0.9.565": "packages/nvidia-app/package.json",
+        "11.0.9.585": "packages/nvidia-app/package.json"
       }
     },
     "qqnt": {
