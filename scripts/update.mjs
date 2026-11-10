@@ -252,15 +252,57 @@ export async function runUpdate(
           "Combined downloads need an explicit per-artifact update recipe",
         );
         work = await mkdtemp(join(temp, name + "-"));
-        const artifact = await net.download(
-          candidate.url,
-          join(work, "distribution.exe"),
-          {
-            sha256: candidate.sha256,
-            sha512: candidate.sha512,
-            md5: candidate.md5,
+        // A CDN edge can serve the previous build for a newer feed entry, which
+        // shows up as a digest that belongs to an older published version. That
+        // is a transient cache miss, not a republished build, so retry with a
+        // cache-busting query and give up only if every attempt is stale.
+        const published = new Map();
+        for (const version of Object.keys(entry.versions)) {
+          const manifest = catalog.manifests.get(name + "@" + version);
+          if (!manifest) continue;
+          for (const d of downloads(manifest.platforms["windows-x64"]))
+            if (d.sha256)
+              published.set(
+                d.sha256.toLowerCase(),
+                (published.get(d.sha256.toLowerCase()) ?? []).concat(version),
+              );
+        }
+        const publishedAs = (info) =>
+          published.get(info.sha256.toLowerCase()) ?? [];
+        // The feed reports a three-part version (9.9.37) while the published
+        // row is keyed by the PE version (9.9.37.54395), so a digest is only
+        // stale when it belongs to a different version family.
+        const sameFamily = (version) =>
+          version === candidate.version ||
+          version.startsWith(candidate.version + ".");
+        const stale = (info) =>
+          candidate.versionFromPE &&
+          publishedAs(info).length > 0 &&
+          !publishedAs(info).some(sameFamily);
+        let artifact, attempt = 0;
+        for (;;) {
+          const url =
+            attempt === 0
+              ? candidate.url
+              : candidate.url.includes("?")
+                ? candidate.url + "&piko-retry=" + attempt
+                : candidate.url + "?piko-retry=" + attempt;
+          artifact = await net.download(url, join(work, "distribution-" + attempt + ".exe"), {
+            sha256: attempt === 0 ? candidate.sha256 : undefined,
+            sha512: attempt === 0 ? candidate.sha512 : undefined,
+            md5: attempt === 0 ? candidate.md5 : undefined,
             maxBytes: 2 * GiB,
-          },
+          });
+          if (!stale(artifact) || ++attempt >= 3) break;
+          log(name + ": stale CDN build (sha256 " + artifact.sha256.slice(0, 16) + "), retrying");
+        }
+        requireThat(
+          !stale(artifact),
+          "Feed points at " +
+            candidate.version +
+            " but every download served the already-published build " +
+            publishedAs(artifact).join(",") +
+            "; the CDN edge is stale, retry the run",
         );
         if (candidate.versionFromPE && artifact.sha256 === old.sha256) {
           row.version = current.version;
