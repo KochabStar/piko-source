@@ -6,6 +6,7 @@ import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
 import { component, requireThat, loadCatalog } from "./lib/catalog.mjs";
 import { appendManifest } from "./lib/manifest-template.mjs";
+import { prunedVersions, pruneDocument } from "./lib/retention.mjs";
 import { checkSource } from "./check.mjs";
 import { request } from "./lib/net.mjs";
 
@@ -97,15 +98,22 @@ export async function prepareMerge(
     );
     baselineEntry.versions[update.version] = file;
     baselineEntry.latest = update.version;
+    // The updater prunes to the retention window after appending, so the
+    // expected index must drop the same expired versions.
+    for (const version of prunedVersions(baselineEntry))
+      delete baselineEntry.versions[version];
     requireThat(
       entry?.latest === update.version &&
         entry.versions[update.version] === file,
       "Report differs from the generated index",
     );
     const manifest = catalog.manifests.get(update.name + "@" + update.version);
-    if (file === `packages/${update.name}/package.json`) {
+    {
       const previous = JSON.parse(git(["show", baseSha + ":" + file]));
-      const expectedDocument = appendManifest(previous, manifest);
+      const expectedDocument = pruneDocument(
+        appendManifest(previous, manifest),
+        baselineEntry,
+      );
       requireThat(
         isDeepStrictEqual(catalog.documents.get(file), expectedDocument),
         "Template contains changes outside the verified update",

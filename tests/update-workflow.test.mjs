@@ -13,6 +13,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { appendManifest } from "../scripts/lib/manifest-template.mjs";
 
 const workflow = await readFile(
   new URL("../.github/workflows/update-source.yml", import.meta.url),
@@ -131,35 +132,40 @@ async function cliFixture(t) {
       await readFile(join(scripts, "lib", name)),
     );
   await mkdir(join(root, "automation"));
-  await mkdir(join(root, "packages/demo"), { recursive: true });
+  await mkdir(join(root, "packages/dev/demo"), { recursive: true });
   await writeFile(
     join(root, "index.json"),
     JSON.stringify({
       schemaVersion: 1,
       packages: {
         demo: {
+          category: "dev",
           latest: "1.0.0",
-          versions: { "1.0.0": "packages/demo/1.0.0.json" },
+          versions: { "1.0.0": "packages/dev/demo/package.json" },
         },
       },
     }),
   );
   await writeFile(
-    join(root, "packages/demo/1.0.0.json"),
-    JSON.stringify({
-      schemaVersion: 1,
-      name: "demo",
-      version: "1.0.0",
-      platforms: {
-        "windows-x64": {
-          url: "https://vendor.example/demo.exe",
-          sha256: "a".repeat(64),
-          format: "file",
-          file: "demo.exe",
-          bin: { demo: "demo.exe" },
+    join(root, "packages/dev/demo/package.json"),
+    JSON.stringify(
+      appendManifest(undefined, {
+        schemaVersion: 1,
+        name: "demo",
+        version: "1.0.0",
+        platforms: {
+          "windows-x64": {
+            url: "https://vendor.example/demo.exe",
+            sha256: "a".repeat(64),
+            format: "file",
+            file: "demo.exe",
+            bin: { demo: "demo.exe" },
+          },
         },
-      },
-    }),
+      }),
+      null,
+      2,
+    ) + "\n",
   );
   await writeFile(
     join(root, "automation/rules.json"),
@@ -205,19 +211,29 @@ test("a real partial CLI run exits nonzero but publishes a complete report for i
   const { root, output, summary } = await cliFixture(t);
   const indexPath = join(root, "index.json");
   const index = JSON.parse(await readFile(indexPath, "utf8"));
-  const other = JSON.parse(
-    await readFile(join(root, "packages/demo/1.0.0.json"), "utf8"),
+  const otherManifest = {
+    schemaVersion: 1,
+    name: "other",
+    version: "1.0.0",
+    platforms: {
+      "windows-x64": {
+        url: "https://vendor.example/other.exe",
+        sha256: "a".repeat(64),
+        format: "file",
+        file: "other.exe",
+        bin: { other: "other.exe" },
+      },
+    },
+  };
+  await mkdir(join(root, "packages/dev/other"));
+  const otherBytes = Buffer.from(
+    JSON.stringify(appendManifest(undefined, otherManifest), null, 2) + "\n",
   );
-  other.name = "other";
-  other.platforms["windows-x64"].bin = { other: "other.exe" };
-  await mkdir(join(root, "packages/other"));
-  await writeFile(
-    join(root, "packages/other/1.0.0.json"),
-    JSON.stringify(other),
-  );
+  await writeFile(join(root, "packages/dev/other/package.json"), otherBytes);
   index.packages.other = {
+    category: "dev",
     latest: "1.0.0",
-    versions: { "1.0.0": "packages/other/1.0.0.json" },
+    versions: { "1.0.0": "packages/dev/other/package.json" },
   };
   await writeFile(indexPath, JSON.stringify(index));
   await writeFile(
@@ -291,9 +307,11 @@ test("a real partial CLI run exits nonzero but publishes a complete report for i
   const after = JSON.parse(await readFile(indexPath, "utf8"));
   assert.equal(after.packages.demo.latest, "2.0.0");
   assert.deepEqual(after.packages.other, index.packages.other);
-  await assert.rejects(
-    () => readFile(join(root, "packages/other/2.0.0.json")),
-    { code: "ENOENT" },
+  // The blocked package's document stays byte-identical: no partial write.
+  assert.ok(
+    otherBytes.equals(
+      await readFile(join(root, "packages/dev/other/package.json")),
+    ),
   );
   assert.match(await readFile(summary, "utf8"), /Partial success/);
 });

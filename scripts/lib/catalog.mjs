@@ -2,6 +2,22 @@ import { readFile, lstat, readdir } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
 import { createHash } from "node:crypto";
 import { resolveManifestDocument } from "./manifest-template.mjs";
+import { RETENTION_KEEP, prunedVersions } from "./retention.mjs";
+
+// Package categories double as the directory names under packages/: every
+// manifest lives at packages/<category>/<name>/package.json and the index
+// entry repeats the category so the two can never drift apart.
+export const CATEGORIES = [
+  "runtime",
+  "ai",
+  "dev",
+  "editors",
+  "desktop",
+  "games",
+  "system",
+];
+export const manifestPath = (category, name) =>
+  `packages/${category}/${name}/package.json`;
 export const MiB = 1024 * 1024,
   GiB = 1024 * MiB;
 export const digest = (data) => createHash("sha256").update(data).digest("hex");
@@ -397,10 +413,19 @@ export async function loadCatalog(root) {
     indexed = new Set();
   for (const [name, entry] of Object.entries(index.packages)) {
     component(name);
-    keys(entry, ["latest", "versions", "aliases", "runtime"], "index package");
+    keys(
+      entry,
+      ["latest", "versions", "aliases", "runtime", "category"],
+      "index package",
+    );
     requireThat(
       object(entry.versions) && Object.hasOwn(entry.versions, entry.latest),
       "Missing latest manifest",
+    );
+    requireThat(
+      typeof entry.category === "string" &&
+        CATEGORIES.includes(entry.category),
+      "Package category must be one of: " + CATEGORIES.join(", "),
     );
     if (entry.aliases)
       for (const [alias, version] of Object.entries(entry.aliases)) {
@@ -418,8 +443,7 @@ export async function loadCatalog(root) {
     for (const [version, file] of Object.entries(entry.versions)) {
       component(version);
       requireThat(
-        file === `packages/${name}/${version}.json` ||
-          file === `packages/${name}/package.json`,
+        file === manifestPath(entry.category, name),
         "Noncanonical manifest path",
       );
       if (!documents.has(file)) {
@@ -430,8 +454,7 @@ export async function loadCatalog(root) {
       }
       const document = documents.get(file);
       requireThat(
-        file !== `packages/${name}/package.json` ||
-          document.schemaVersion === 2,
+        document.schemaVersion === 2,
         "Shared package files require a template document",
       );
       const m = validateManifest(
@@ -460,22 +483,36 @@ export async function loadCatalog(root) {
       "Unreferenced template recipe",
     );
   }
-  for (const folder of await readdir(join(root, "packages"), {
+  for (const category of await readdir(join(root, "packages"), {
     withFileTypes: true,
   })) {
     requireThat(
-      folder.isDirectory() && !folder.isSymbolicLink(),
-      "Unexpected package entry",
+      category.isDirectory() &&
+        !category.isSymbolicLink() &&
+        CATEGORIES.includes(category.name),
+      "Unknown category directory: " + category.name,
     );
-    for (const file of await readdir(join(root, "packages", folder.name), {
-      withFileTypes: true,
-    }))
+    for (const folder of await readdir(
+      join(root, "packages", category.name),
+      { withFileTypes: true },
+    )) {
       requireThat(
-        file.isFile() &&
-          !file.isSymbolicLink() &&
-          indexed.has(`packages/${folder.name}/${file.name}`),
-        "Unindexed package manifest",
+        folder.isDirectory() && !folder.isSymbolicLink(),
+        "Unexpected package entry",
       );
+      for (const file of await readdir(
+        join(root, "packages", category.name, folder.name),
+        { withFileTypes: true },
+      ))
+        requireThat(
+          file.isFile() &&
+            !file.isSymbolicLink() &&
+            indexed.has(
+              `packages/${category.name}/${folder.name}/${file.name}`,
+            ),
+          "Unindexed package manifest",
+        );
+    }
   }
   return { root, index, manifests, indexBytes, documents, fileBytes };
 }

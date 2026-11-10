@@ -25,7 +25,13 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { requireThat, GiB, MiB } from "./lib/catalog.mjs";
+import {
+  requireThat,
+  GiB,
+  MiB,
+  CATEGORIES,
+  manifestPath,
+} from "./lib/catalog.mjs";
 import {
   burnPayloadChain,
   checkLayout,
@@ -40,6 +46,16 @@ import { Tools, capture } from "./lib/tools.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const draftPath = (name) => join(root, "automation/drafts", name + ".json");
+
+function categoryOf(flags) {
+  const category =
+    typeof flags?.category === "string" ? flags.category : undefined;
+  requireThat(
+    category && CATEGORIES.includes(category),
+    "Category required: --category <" + CATEGORIES.join("|") + ">",
+  );
+  return category;
+}
 
 async function head(file, bytes = 64) {
   const handle = await open(file, "r");
@@ -185,11 +201,13 @@ export async function deriveEntries(file, sniffed, tools) {
 function usage() {
   return [
     "Usage:",
-    "  node scripts/add.mjs probe <name> <release-page-or-asset-url> [--version <v>]",
+    "  node scripts/add.mjs probe <name> <release-page-or-asset-url> [--version <v>] [--category <cat>]",
     "  node scripts/add.mjs apply <name> --dry-run | --yes",
     "",
+    "Categories: " + CATEGORIES.join(", ") + ".",
     "probe writes automation/drafts/<name>.json and prints what it inferred.",
-    "apply verifies the draft with checkLayout and, with --yes, writes the manifest.",
+    "apply requires a category (from the draft or --category) and writes the manifest",
+    "to packages/<category>/<name>/package.json.",
   ].join("\n");
 }
 
@@ -273,6 +291,7 @@ async function probe(name, source, flags) {
       sha256: artifact.sha256,
       bytes: artifact.bytes,
       format: sniffed.format,
+      ...(flags.category ? { category: categoryOf(flags) } : {}),
       ...(payload ? { payload, payloadCandidates: sniffed.burn?.chain } : {}),
       ...(sniffed.burn && !payload
         ? { payloadCandidates: sniffed.burn.chain }
@@ -391,18 +410,27 @@ async function apply(name, flags) {
         },
       },
     };
-    await mkdir(join(root, "packages", name), { recursive: true });
+    const category = draft.category;
+    requireThat(
+      typeof category === "string" && CATEGORIES.includes(category),
+      'Draft has no valid category; add "category": "<' +
+        CATEGORIES.join("|") +
+        '>" to ' +
+        file,
+    );
+    const relative = manifestPath(category, name);
+    await mkdir(dirname(join(root, relative)), { recursive: true });
     await writeFile(
-      join(root, "packages", name, "package.json"),
+      join(root, relative),
       JSON.stringify(document, null, 2) + "\n",
     );
 
     // The index and the update rule are two one-line edits that are easy to get
     // wrong, so write them from the same verified draft.
     const indexPath = join(root, "index.json"),
-      index = JSON.parse(await readFile(indexPath, "utf8")),
-      relative = "packages/" + name + "/package.json";
+      index = JSON.parse(await readFile(indexPath, "utf8"));
     const entry = index.packages[name] ?? { latest: draft.version, versions: {} };
+    entry.category = category;
     entry.versions[draft.version] = relative;
     const latest = compareVersions(draft.version, entry.latest);
     entry.latest = latest > 0 ? draft.version : entry.latest;
@@ -416,9 +444,9 @@ async function apply(name, flags) {
       await writeFile(rulesPath, JSON.stringify(rules, null, 2) + "\n");
     }
     console.log(
-      "\nWrote packages/" +
-        name +
-        "/package.json, updated index.json" +
+      "\nWrote " +
+        relative +
+        ", updated index.json" +
         (draft.rule?.provider ? " and automation/rules.json" : "") +
         ".\nRun: node scripts/check.mjs && node scripts/update.mjs --check --packages " +
         name,

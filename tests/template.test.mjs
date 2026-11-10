@@ -46,13 +46,21 @@ async function fixture(t, { compact = false } = {}) {
   const index = { schemaVersion: 1, packages: {} },
     rules = { schemaVersion: 1, packages: {} };
   for (const name of ["demo", "other"]) {
-    await mkdir(join(root, "packages", name), { recursive: true });
-    const file = `packages/${name}/1.0.0.json`;
+    const file = `packages/dev/${name}/package.json`;
+    await mkdir(join(root, "packages", "dev", name), { recursive: true });
     await writeFile(
       join(root, file),
-      JSON.stringify(manifest(name, "1.0.0"), null, 2) + "\n",
+      JSON.stringify(
+        appendManifest(undefined, manifest(name, "1.0.0")),
+        null,
+        2,
+      ) + "\n",
     );
-    index.packages[name] = { latest: "1.0.0", versions: { "1.0.0": file } };
+    index.packages[name] = {
+      category: "dev",
+      latest: "1.0.0",
+      versions: { "1.0.0": file },
+    };
     rules.packages[name] = {
       provider: "json",
       url: `https://vendor.example/${name}.json`,
@@ -104,20 +112,18 @@ const dependencies = {
   }),
 };
 
-test("compaction replaces version files while preserving exact resolved bytes and immutable history", async (t) => {
+test("compaction is idempotent for template sources and preserves resolved bytes and immutable history", async (t) => {
   const { root, base } = await fixture(t);
   const before = await loadCatalog(root);
   const preview = await compactSource(root);
   assert.equal(preview.written, false);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.equal(preview.changedPackages, 0);
   const report = await compactSource(root, { write: true });
-  assert.equal(report.written, true);
+  assert.equal(report.written, false);
+  assert.equal(report.changedPackages, 0);
   const after = await loadCatalog(root);
   for (const [key, m] of before.manifests)
     assert.equal(JSON.stringify(after.manifests.get(key)), JSON.stringify(m));
-  assert.deepEqual(await readdir(join(root, "packages/demo")), [
-    "package.json",
-  ]);
   await checkSource(root, { base });
   assert.equal((await compactSource(root, { write: true })).changedPackages, 0);
 });
@@ -130,25 +136,25 @@ test("template updates append verified rows without adding files and qualify for
   const result = await runUpdate(root, dependencies);
   assert.equal(result.changed, 1);
   assert.equal(result.blocked, 0);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), [
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
     "package.json",
   ]);
   const c = await loadCatalog(root);
   assert.equal(c.index.packages.demo.latest, "2.0.0");
   assert.equal(
     c.index.packages.demo.versions["2.0.0"],
-    "packages/demo/package.json",
+    "packages/dev/demo/package.json",
   );
   assert.equal(JSON.stringify(c.manifests.get("demo@1.0.0")), original);
   assert.equal(
-    Object.keys(c.documents.get("packages/demo/package.json").recipes).length,
+    Object.keys(c.documents.get("packages/dev/demo/package.json").recipes).length,
     1,
   );
   await checkSource(root, { base });
   const plan = await prepareMerge(root, result, {
     repository: "owner/piko-source",
   });
-  assert.deepEqual(plan.files, ["index.json", "packages/demo/package.json"]);
+  assert.deepEqual(plan.files, ["index.json", "packages/dev/demo/package.json"]);
   assert.deepEqual(
     plan.verifiedUpdates.map((r) => r.version),
     ["2.0.0"],
@@ -157,7 +163,7 @@ test("template updates append verified rows without adding files and qualify for
 
 test("a failed template package remains byte-identical while another verified template can merge", async (t) => {
   const { root } = await fixture(t, { compact: true });
-  const unchanged = await readFile(join(root, "packages/other/package.json"));
+  const unchanged = await readFile(join(root, "packages/dev/other/package.json"));
   const result = await runUpdate(root, {
     ...dependencies,
     packages: ["demo", "other"],
@@ -169,18 +175,18 @@ test("a failed template package remains byte-identical while another verified te
   assert.equal(result.changed, 1);
   assert.equal(result.blocked, 1);
   assert.ok(
-    unchanged.equals(await readFile(join(root, "packages/other/package.json"))),
+    unchanged.equals(await readFile(join(root, "packages/dev/other/package.json"))),
   );
   const plan = await prepareMerge(root, result, {
     repository: "owner/piko-source",
   });
-  assert.deepEqual(plan.files, ["index.json", "packages/demo/package.json"]);
+  assert.deepEqual(plan.files, ["index.json", "packages/dev/demo/package.json"]);
 });
 
 test("shared historical recipe changes are rejected even when a newly added row is verified", async (t) => {
   const { root, base } = await fixture(t, { compact: true });
   const result = await runUpdate(root, dependencies);
-  const file = join(root, "packages/demo/package.json");
+  const file = join(root, "packages/dev/demo/package.json");
   const document = JSON.parse(await readFile(file, "utf8"));
   Object.values(document.recipes)[0].platforms["windows-x64"].bin.demo =
     "wrong.exe";
@@ -200,7 +206,7 @@ test("template changes during payload verification block publication and retain 
       runUpdate(root, {
         ...dependencies,
         verify: async () => {
-          const file = join(root, "packages/demo/package.json");
+          const file = join(root, "packages/dev/demo/package.json");
           await writeFile(file, (await readFile(file, "utf8")) + " ");
           return { files: 1 };
         },

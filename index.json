@@ -2,495 +2,560 @@
   "schemaVersion": 1,
   "packages": {
     "node": {
+      "category": "runtime",
       "runtime": {
         "family": "node",
         "distribution": "official"
       },
       "latest": "26.13.0",
       "versions": {
-        "26.12.1": "packages/node/package.json",
-        "26.13.0": "packages/node/package.json"
+        "26.12.1": "packages/runtime/node/package.json",
+        "26.13.0": "packages/runtime/node/package.json"
       }
     },
     "ripgrep": {
+      "category": "dev",
       "latest": "15.2.0",
       "versions": {
-        "15.2.0": "packages/ripgrep/package.json"
+        "15.2.0": "packages/dev/ripgrep/package.json"
       }
     },
     "lua": {
+      "category": "runtime",
       "latest": "5.5.0",
       "versions": {
-        "5.5.0": "packages/lua/package.json"
+        "5.5.0": "packages/runtime/lua/package.json"
       }
     },
     "z.lua": {
+      "category": "dev",
       "latest": "1.8.27",
       "versions": {
-        "1.8.26": "packages/z.lua/package.json",
-        "1.8.27": "packages/z.lua/package.json"
+        "1.8.26": "packages/dev/z.lua/package.json",
+        "1.8.27": "packages/dev/z.lua/package.json"
       }
     },
     "starship": {
+      "category": "dev",
       "latest": "1.27.0",
       "versions": {
-        "1.27.0": "packages/starship/package.json"
+        "1.27.0": "packages/dev/starship/package.json"
       }
     },
     "fzf": {
+      "category": "dev",
       "latest": "0.75.0",
       "versions": {
-        "0.74.5": "packages/fzf/package.json",
-        "0.75.0": "packages/fzf/package.json"
+        "0.74.5": "packages/dev/fzf/package.json",
+        "0.75.0": "packages/dev/fzf/package.json"
       }
     },
     "psfzf": {
+      "category": "dev",
       "latest": "2.7.12",
       "versions": {
-        "2.7.12": "packages/psfzf/package.json"
+        "2.7.12": "packages/dev/psfzf/package.json"
       }
     },
     "sudo": {
+      "category": "dev",
       "latest": "0.2020.01.26",
       "versions": {
-        "0.2020.01.26": "packages/sudo/package.json"
+        "0.2020.01.26": "packages/dev/sudo/package.json"
       }
     },
     "snipaste": {
+      "category": "desktop",
       "latest": "2.11.3",
       "versions": {
-        "2.11.3": "packages/snipaste/package.json"
+        "2.11.3": "packages/desktop/snipaste/package.json"
       }
     },
     "7zip": {
+      "category": "dev",
       "latest": "26.06",
       "versions": {
-        "26.05": "packages/7zip/package.json",
-        "26.06": "packages/7zip/package.json"
+        "26.05": "packages/dev/7zip/package.json",
+        "26.06": "packages/dev/7zip/package.json"
       }
     },
     "beyondcompare-zh-cn": {
+      "category": "desktop",
       "latest": "5.2.7.32913",
       "versions": {
-        "5.2.6.32774": "packages/beyondcompare-zh-cn/package.json",
-        "5.2.7.32913": "packages/beyondcompare-zh-cn/package.json"
+        "5.2.6.32774": "packages/desktop/beyondcompare-zh-cn/package.json",
+        "5.2.7.32913": "packages/desktop/beyondcompare-zh-cn/package.json"
       }
     },
     "obsidian": {
+      "category": "editors",
       "latest": "1.15.0",
       "versions": {
-        "1.14.5": "packages/obsidian/package.json",
-        "1.15.0": "packages/obsidian/package.json"
+        "1.14.5": "packages/editors/obsidian/package.json",
+        "1.15.0": "packages/editors/obsidian/package.json"
       }
     },
     "tabby": {
+      "category": "desktop",
       "latest": "1.0.238",
       "versions": {
-        "1.0.238": "packages/tabby/package.json"
+        "1.0.238": "packages/desktop/tabby/package.json"
       }
     },
     "llvm": {
+      "category": "dev",
       "latest": "23.1.5",
       "versions": {
-        "23.1.4": "packages/llvm/package.json",
-        "23.1.4-piko.1": "packages/llvm/package.json",
-        "23.1.5": "packages/llvm/package.json"
+        "23.1.4": "packages/dev/llvm/package.json",
+        "23.1.4-piko.1": "packages/dev/llvm/package.json",
+        "23.1.5": "packages/dev/llvm/package.json"
       }
     },
     "firacode-nf": {
+      "category": "system",
       "latest": "3.5.1",
       "versions": {
-        "3.5.1": "packages/firacode-nf/package.json"
+        "3.5.1": "packages/system/firacode-nf/package.json"
       }
     },
     "hack-nf-mono": {
+      "category": "system",
       "latest": "3.5.1",
       "versions": {
-        "3.5.1": "packages/hack-nf-mono/package.json"
+        "3.5.1": "packages/system/hack-nf-mono/package.json"
       }
     },
     "rustup": {
+      "category": "runtime",
       "latest": "1.29.3",
       "versions": {
-        "1.29.2": "packages/rustup/package.json",
-        "1.29.3": "packages/rustup/package.json"
+        "1.29.2": "packages/runtime/rustup/package.json",
+        "1.29.3": "packages/runtime/rustup/package.json"
       }
     },
     "flclash": {
+      "category": "desktop",
       "latest": "0.9.3",
       "versions": {
-        "0.9.2": "packages/flclash/package.json",
-        "0.9.3": "packages/flclash/package.json"
+        "0.9.2": "packages/desktop/flclash/package.json",
+        "0.9.3": "packages/desktop/flclash/package.json"
       }
     },
     "tortoise-svn": {
+      "category": "dev",
       "latest": "1.15.0.29830-piko.1",
       "versions": {
-        "1.14.9.29743": "packages/tortoise-svn/package.json",
-        "1.15.0.29830": "packages/tortoise-svn/package.json",
-        "1.15.0.29830-piko.1": "packages/tortoise-svn/package.json"
+        "1.14.9.29743": "packages/dev/tortoise-svn/package.json",
+        "1.15.0.29830": "packages/dev/tortoise-svn/package.json",
+        "1.15.0.29830-piko.1": "packages/dev/tortoise-svn/package.json"
       }
     },
     "aria2": {
+      "category": "dev",
       "latest": "1.37.0-1",
       "versions": {
-        "1.37.0-1": "packages/aria2/package.json"
+        "1.37.0-1": "packages/dev/aria2/package.json"
       }
     },
     "cmake": {
+      "category": "dev",
       "latest": "4.4.5",
       "versions": {
-        "4.4.5": "packages/cmake/package.json"
+        "4.4.5": "packages/dev/cmake/package.json"
       }
     },
     "dbgate": {
+      "category": "desktop",
       "latest": "7.3.4",
       "versions": {
-        "7.3.2": "packages/dbgate/package.json",
-        "7.3.3": "packages/dbgate/package.json",
-        "7.3.4": "packages/dbgate/package.json"
+        "7.3.2": "packages/desktop/dbgate/package.json",
+        "7.3.3": "packages/desktop/dbgate/package.json",
+        "7.3.4": "packages/desktop/dbgate/package.json"
       }
     },
     "ffmpeg": {
+      "category": "dev",
       "latest": "9.0.2",
       "versions": {
-        "9.0.2": "packages/ffmpeg/package.json"
+        "9.0.2": "packages/dev/ffmpeg/package.json"
       }
     },
     "gh": {
+      "category": "dev",
       "latest": "2.103.3",
       "versions": {
-        "2.103.3": "packages/gh/package.json"
+        "2.103.3": "packages/dev/gh/package.json"
       }
     },
     "git": {
+      "category": "dev",
       "latest": "2.56.0.4",
       "versions": {
-        "2.56.0.4": "packages/git/package.json"
+        "2.56.0.4": "packages/dev/git/package.json"
       }
     },
     "inno-setup": {
+      "category": "dev",
       "latest": "7.1.1",
       "versions": {
-        "7.1.0": "packages/inno-setup/package.json",
-        "7.1.1": "packages/inno-setup/package.json"
+        "7.1.0": "packages/dev/inno-setup/package.json",
+        "7.1.1": "packages/dev/inno-setup/package.json"
       }
     },
     "innounp": {
+      "category": "dev",
       "latest": "2.71.3",
       "versions": {
-        "2.71.2": "packages/innounp/package.json",
-        "2.71.3": "packages/innounp/package.json"
+        "2.71.2": "packages/dev/innounp/package.json",
+        "2.71.3": "packages/dev/innounp/package.json"
       }
     },
     "lazygit": {
+      "category": "dev",
       "latest": "0.66.3",
       "versions": {
-        "0.66.2": "packages/lazygit/package.json",
-        "0.66.3": "packages/lazygit/package.json"
+        "0.66.2": "packages/dev/lazygit/package.json",
+        "0.66.3": "packages/dev/lazygit/package.json"
       }
     },
     "localsend": {
+      "category": "desktop",
       "latest": "1.18.2",
       "versions": {
-        "1.18.2": "packages/localsend/package.json"
+        "1.18.2": "packages/desktop/localsend/package.json"
       }
     },
     "ninja": {
+      "category": "dev",
       "latest": "1.13.2",
       "versions": {
-        "1.13.2": "packages/ninja/package.json"
+        "1.13.2": "packages/dev/ninja/package.json"
       }
     },
     "pi": {
+      "category": "ai",
       "latest": "1.5.1",
       "versions": {
-        "1.4.0": "packages/pi/package.json",
-        "1.5.0": "packages/pi/package.json",
-        "1.5.1": "packages/pi/package.json"
+        "1.4.0": "packages/ai/pi/package.json",
+        "1.5.0": "packages/ai/pi/package.json",
+        "1.5.1": "packages/ai/pi/package.json"
       }
     },
     "oh-my-pi": {
+      "category": "ai",
       "latest": "18.18.6",
       "versions": {
-        "18.13.2": "packages/oh-my-pi/package.json",
-        "18.14.1": "packages/oh-my-pi/package.json",
-        "18.14.2": "packages/oh-my-pi/package.json",
-        "18.15.0": "packages/oh-my-pi/package.json",
-        "18.16.0": "packages/oh-my-pi/package.json",
-        "18.17.0": "packages/oh-my-pi/package.json",
-        "18.18.0": "packages/oh-my-pi/package.json",
-        "18.18.1": "packages/oh-my-pi/package.json",
-        "18.18.3": "packages/oh-my-pi/package.json",
-        "18.18.6": "packages/oh-my-pi/package.json"
+        "18.14.2": "packages/ai/oh-my-pi/package.json",
+        "18.15.0": "packages/ai/oh-my-pi/package.json",
+        "18.16.0": "packages/ai/oh-my-pi/package.json",
+        "18.17.0": "packages/ai/oh-my-pi/package.json",
+        "18.18.0": "packages/ai/oh-my-pi/package.json",
+        "18.18.1": "packages/ai/oh-my-pi/package.json",
+        "18.18.3": "packages/ai/oh-my-pi/package.json",
+        "18.18.6": "packages/ai/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
+      "category": "editors",
       "latest": "4-4215",
       "versions": {
-        "4-4215": "packages/sublime-text/package.json"
+        "4-4215": "packages/editors/sublime-text/package.json"
       }
     },
     "wave-terminal": {
+      "category": "desktop",
       "latest": "0.14.5",
       "versions": {
-        "0.14.5": "packages/wave-terminal/package.json"
+        "0.14.5": "packages/desktop/wave-terminal/package.json"
       }
     },
     "xmake": {
+      "category": "dev",
       "latest": "3.1.2",
       "versions": {
-        "3.1.2": "packages/xmake/package.json"
+        "3.1.2": "packages/dev/xmake/package.json"
       }
     },
     "go": {
-      "latest": "1.27.3",
-      "versions": {
-        "1.27.3": "packages/go/package.json"
-      },
+      "category": "runtime",
       "runtime": {
         "family": "go",
         "distribution": "official"
+      },
+      "latest": "1.27.3",
+      "versions": {
+        "1.27.3": "packages/runtime/go/package.json"
       }
     },
     "uv": {
+      "category": "runtime",
       "latest": "0.13.7",
       "versions": {
-        "0.13.5": "packages/uv/package.json",
-        "0.13.6": "packages/uv/package.json",
-        "0.13.7": "packages/uv/package.json"
+        "0.13.5": "packages/runtime/uv/package.json",
+        "0.13.6": "packages/runtime/uv/package.json",
+        "0.13.7": "packages/runtime/uv/package.json"
       }
     },
     "pixi": {
+      "category": "runtime",
       "latest": "0.84.1",
       "versions": {
-        "0.83.0": "packages/pixi/package.json",
-        "0.84.0": "packages/pixi/package.json",
-        "0.84.1": "packages/pixi/package.json"
+        "0.83.0": "packages/runtime/pixi/package.json",
+        "0.84.0": "packages/runtime/pixi/package.json",
+        "0.84.1": "packages/runtime/pixi/package.json"
       }
     },
     "codex": {
+      "category": "ai",
       "latest": "0.167.0",
       "versions": {
-        "0.164.0": "packages/codex/package.json",
-        "0.166.0": "packages/codex/package.json",
-        "0.167.0": "packages/codex/package.json"
+        "0.164.0": "packages/ai/codex/package.json",
+        "0.166.0": "packages/ai/codex/package.json",
+        "0.167.0": "packages/ai/codex/package.json"
       }
     },
     "orca": {
+      "category": "ai",
       "latest": "1.4.255",
       "versions": {
-        "1.4.243": "packages/orca/package.json",
-        "1.4.245": "packages/orca/package.json",
-        "1.4.246": "packages/orca/package.json",
-        "1.4.247": "packages/orca/package.json",
-        "1.4.248": "packages/orca/package.json",
-        "1.4.250": "packages/orca/package.json",
-        "1.4.251": "packages/orca/package.json",
-        "1.4.252": "packages/orca/package.json",
-        "1.4.253": "packages/orca/package.json",
-        "1.4.254": "packages/orca/package.json",
-        "1.4.255": "packages/orca/package.json"
+        "1.4.247": "packages/ai/orca/package.json",
+        "1.4.248": "packages/ai/orca/package.json",
+        "1.4.250": "packages/ai/orca/package.json",
+        "1.4.251": "packages/ai/orca/package.json",
+        "1.4.252": "packages/ai/orca/package.json",
+        "1.4.253": "packages/ai/orca/package.json",
+        "1.4.254": "packages/ai/orca/package.json",
+        "1.4.255": "packages/ai/orca/package.json"
       }
     },
     "listary": {
+      "category": "desktop",
       "latest": "6.3.5.94",
       "versions": {
-        "6.3.5.94": "packages/listary/package.json"
+        "6.3.5.94": "packages/desktop/listary/package.json"
       }
     },
     "wecom": {
+      "category": "desktop",
       "latest": "5.0.13.6005",
       "versions": {
-        "5.0.13.6005": "packages/wecom/package.json"
+        "5.0.13.6005": "packages/desktop/wecom/package.json"
       }
     },
     "tabbit": {
+      "category": "desktop",
       "latest": "1.20.21.0",
       "versions": {
-        "1.19.25.0": "packages/tabbit/package.json",
-        "1.20.21.0": "packages/tabbit/package.json"
+        "1.19.25.0": "packages/desktop/tabbit/package.json",
+        "1.20.21.0": "packages/desktop/tabbit/package.json"
       }
     },
     "todesk": {
+      "category": "desktop",
       "latest": "5.3.1.0",
       "versions": {
-        "4.9.8.0": "packages/todesk/package.json",
-        "5.2.3.0": "packages/todesk/package.json",
-        "5.3.1.0": "packages/todesk/package.json"
+        "4.9.8.0": "packages/desktop/todesk/package.json",
+        "5.2.3.0": "packages/desktop/todesk/package.json",
+        "5.3.1.0": "packages/desktop/todesk/package.json"
       }
     },
     "dingtalk": {
+      "category": "desktop",
       "latest": "9.0.2.261013001",
       "versions": {
-        "8.2.5.260113006": "packages/dingtalk/package.json",
-        "9.0.2.261013001": "packages/dingtalk/package.json"
+        "8.2.5.260113006": "packages/desktop/dingtalk/package.json",
+        "9.0.2.261013001": "packages/desktop/dingtalk/package.json"
       }
     },
     "wechat": {
+      "category": "desktop",
       "latest": "4.2.0.13",
       "versions": {
-        "4.2.0.9": "packages/wechat/package.json",
-        "4.2.0.12": "packages/wechat/package.json",
-        "4.2.0.13": "packages/wechat/package.json"
+        "4.2.0.9": "packages/desktop/wechat/package.json",
+        "4.2.0.12": "packages/desktop/wechat/package.json",
+        "4.2.0.13": "packages/desktop/wechat/package.json"
       }
     },
     "sunlogin": {
+      "category": "desktop",
       "latest": "16.8.0.33445-piko.2",
       "versions": {
-        "16.8.0.33445": "packages/sunlogin/package.json",
-        "16.8.0.33445-piko.1": "packages/sunlogin/package.json",
-        "16.8.0.33445-piko.2": "packages/sunlogin/package.json"
+        "16.8.0.33445": "packages/desktop/sunlogin/package.json",
+        "16.8.0.33445-piko.1": "packages/desktop/sunlogin/package.json",
+        "16.8.0.33445-piko.2": "packages/desktop/sunlogin/package.json"
       }
     },
     "claude-code": {
+      "category": "ai",
       "latest": "2.1.321",
       "versions": {
-        "2.1.316": "packages/claude-code/package.json",
-        "2.1.317": "packages/claude-code/package.json",
-        "2.1.318": "packages/claude-code/package.json",
-        "2.1.319": "packages/claude-code/package.json",
-        "2.1.321": "packages/claude-code/package.json"
+        "2.1.316": "packages/ai/claude-code/package.json",
+        "2.1.317": "packages/ai/claude-code/package.json",
+        "2.1.318": "packages/ai/claude-code/package.json",
+        "2.1.319": "packages/ai/claude-code/package.json",
+        "2.1.321": "packages/ai/claude-code/package.json"
       }
     },
     "opencode": {
+      "category": "ai",
       "latest": "1.19.5",
       "versions": {
-        "1.19.5": "packages/opencode/package.json"
+        "1.19.5": "packages/ai/opencode/package.json"
       }
     },
     "nushell": {
+      "category": "dev",
       "latest": "0.117.0",
       "versions": {
-        "0.116.1": "packages/nushell/package.json",
-        "0.117.0": "packages/nushell/package.json"
+        "0.116.1": "packages/dev/nushell/package.json",
+        "0.117.0": "packages/dev/nushell/package.json"
       }
     },
     "lertaro": {
+      "category": "desktop",
       "latest": "5.12.9",
       "versions": {
-        "5.12.2": "packages/lertaro/package.json",
-        "5.12.7": "packages/lertaro/package.json",
-        "5.12.9": "packages/lertaro/package.json"
+        "5.12.2": "packages/desktop/lertaro/package.json",
+        "5.12.7": "packages/desktop/lertaro/package.json",
+        "5.12.9": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
+      "category": "desktop",
       "latest": "11.0.9.585",
       "versions": {
-        "11.0.9.565": "packages/nvidia-app/package.json",
-        "11.0.9.585": "packages/nvidia-app/package.json"
+        "11.0.9.565": "packages/desktop/nvidia-app/package.json",
+        "11.0.9.585": "packages/desktop/nvidia-app/package.json"
       }
     },
     "qqnt": {
+      "category": "desktop",
       "latest": "9.9.37.54395",
       "versions": {
-        "9.9.33.52230": "packages/qqnt/package.json",
-        "9.9.36.53644": "packages/qqnt/package.json",
-        "9.9.37.54395": "packages/qqnt/package.json"
+        "9.9.33.52230": "packages/desktop/qqnt/package.json",
+        "9.9.36.53644": "packages/desktop/qqnt/package.json",
+        "9.9.37.54395": "packages/desktop/qqnt/package.json"
       }
     },
     "libreoffice": {
+      "category": "desktop",
       "latest": "26.8.2",
       "versions": {
-        "26.8.2": "packages/libreoffice/package.json"
+        "26.8.2": "packages/desktop/libreoffice/package.json"
       }
     },
     "x64dbg": {
+      "category": "dev",
       "latest": "2026.05.27",
       "versions": {
-        "2026.05.27": "packages/x64dbg/package.json"
+        "2026.05.27": "packages/dev/x64dbg/package.json"
       }
     },
     "baidu-netdisk": {
+      "category": "desktop",
       "latest": "8.9.7.101",
       "versions": {
-        "8.9.7.101": "packages/baidu-netdisk/package.json"
+        "8.9.7.101": "packages/desktop/baidu-netdisk/package.json"
       }
     },
     "clouddrive2": {
+      "category": "desktop",
       "latest": "1.1.3.3",
       "versions": {
-        "1.1.3": "packages/clouddrive2/package.json",
-        "1.1.3.3": "packages/clouddrive2/package.json"
+        "1.1.3": "packages/desktop/clouddrive2/package.json",
+        "1.1.3.3": "packages/desktop/clouddrive2/package.json"
       }
     },
     "bun": {
+      "category": "runtime",
       "latest": "1.4.4",
       "versions": {
-        "1.4.4": "packages/bun/package.json"
+        "1.4.4": "packages/runtime/bun/package.json"
       }
     },
     "steam": {
+      "category": "games",
       "latest": "1769731672",
       "versions": {
-        "1769731672": "packages/steam/package.json"
+        "1769731672": "packages/games/steam/package.json"
       }
     },
     "epic-games-launcher": {
+      "category": "games",
       "latest": "20.3.3",
       "versions": {
-        "20.3.3": "packages/epic-games-launcher/package.json"
+        "20.3.3": "packages/games/epic-games-launcher/package.json"
       }
     },
     "godot": {
+      "category": "games",
       "latest": "4.7.2-piko.1",
       "versions": {
-        "4.7.2": "packages/godot/package.json",
-        "4.7.2-piko.1": "packages/godot/package.json"
+        "4.7.2": "packages/games/godot/package.json",
+        "4.7.2-piko.1": "packages/games/godot/package.json"
       }
     },
     "blender": {
+      "category": "games",
       "latest": "5.2.3",
       "versions": {
-        "5.2.3": "packages/blender/package.json"
+        "5.2.3": "packages/games/blender/package.json"
       }
     },
     "retroarch": {
+      "category": "games",
       "latest": "1.22.2",
       "versions": {
-        "1.22.2": "packages/retroarch/package.json"
+        "1.22.2": "packages/games/retroarch/package.json"
       }
     },
     "ares": {
+      "category": "games",
       "latest": "148",
       "versions": {
-        "148": "packages/ares/package.json"
+        "148": "packages/games/ares/package.json"
       }
     },
     "mgba": {
+      "category": "games",
       "latest": "0.10.5",
       "versions": {
-        "0.10.5": "packages/mgba/package.json"
+        "0.10.5": "packages/games/mgba/package.json"
       }
     },
     "medusa": {
+      "category": "games",
       "latest": "a2",
       "versions": {
-        "a2": "packages/medusa/package.json"
+        "a2": "packages/games/medusa/package.json"
       }
     },
     "shadps4": {
+      "category": "games",
       "latest": "0.21.0",
       "versions": {
-        "0.21.0": "packages/shadps4/package.json"
+        "0.21.0": "packages/games/shadps4/package.json"
       }
     },
     "vscode": {
+      "category": "editors",
       "latest": "1.145.2",
       "versions": {
-        "1.145.2": "packages/vscode/package.json"
+        "1.145.2": "packages/editors/vscode/package.json"
       }
     },
     "winfsp": {
+      "category": "system",
       "latest": "2.1.25156",
       "versions": {
-        "2.1.25156": "packages/winfsp/package.json"
+        "2.1.25156": "packages/system/winfsp/package.json"
       }
     },
     "pebrel": {
+      "category": "desktop",
       "latest": "2.4.0",
       "versions": {
-        "2.4.0": "packages/pebrel/package.json"
+        "2.4.0": "packages/desktop/pebrel/package.json"
       }
     }
   }

@@ -118,7 +118,7 @@
         }
       }
     },
-    "rf9f2df3ca16a1513": {
+    "r2fc9e370b2ed8428": {
       "schemaVersion": 1,
       "name": "clouddrive2",
       "version": "{version}",
@@ -907,7 +907,7 @@
       "sha256": "f4b12582d31bc8fdf00f2a2a715f74d1ae3ced65f5d19effcec590ed24dfce13"
     },
     "1.1.3.3": {
-      "recipe": "rf9f2df3ca16a1513",
+      "recipe": "r2fc9e370b2ed8428",
       "maxBytes": 201326592,
       "sha256": "5be3f54686980ea5153c8cb4f8483177a2dd7932bdd559ac5ef6e469e6a776db"
     }

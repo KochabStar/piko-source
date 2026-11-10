@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { prepareMerge, mergeVerified } from "../scripts/auto-merge.mjs";
+import { appendManifest } from "../scripts/lib/manifest-template.mjs";
 import { request } from "../scripts/lib/net.mjs";
 
 const baseSha = "1".repeat(40),
@@ -19,7 +20,7 @@ const plan = () => ({
   baseSha,
   headRef: "automation/upstream-updates",
   treeSha,
-  files: ["index.json", "packages/demo/2.0.0.json"],
+  files: ["index.json", "packages/dev/demo/package.json"],
   verifiedUpdates: [{ name: "demo", version: "2.0.0", sha256 }],
 });
 const pull = () => ({
@@ -173,7 +174,8 @@ async function fixture(t) {
   t.after(() =>
     rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 }),
   );
-  await mkdir(join(root, "packages/demo"), { recursive: true });
+  await mkdir(join(root, "packages/dev/demo"), { recursive: true });
+  await mkdir(join(root, "packages/dev/other"), { recursive: true });
   await mkdir(join(root, "automation"));
   const m = {
       schemaVersion: 1,
@@ -188,30 +190,34 @@ async function fixture(t) {
         },
       },
     },
-    index = {
-      schemaVersion: 1,
-      packages: {
-        demo: {
-          latest: "1.0.0",
-          versions: { "1.0.0": "packages/demo/1.0.0.json" },
-        },
-      },
-    };
-  await writeFile(join(root, "packages/demo/1.0.0.json"), JSON.stringify(m));
-  const other = structuredClone(m);
+    other = structuredClone(m);
   other.name = "other";
   other.platforms["windows-x64"].url = "https://vendor.example/other-1.0.0.zip";
   other.platforms["windows-x64"].bin = { other: "other.exe" };
-  await mkdir(join(root, "packages/other"));
-  await writeFile(
-    join(root, "packages/other/1.0.0.json"),
-    JSON.stringify(other),
-  );
-  index.packages.other = {
-    latest: "1.0.0",
-    versions: { "1.0.0": "packages/other/1.0.0.json" },
+  const index = {
+    schemaVersion: 1,
+    packages: {
+      demo: {
+        category: "dev",
+        latest: "1.0.0",
+        versions: { "1.0.0": "packages/dev/demo/package.json" },
+      },
+      other: {
+        category: "dev",
+        latest: "1.0.0",
+        versions: { "1.0.0": "packages/dev/other/package.json" },
+      },
+    },
   };
-  await writeFile(join(root, "index.json"), JSON.stringify(index));
+  await writeFile(
+    join(root, "packages/dev/demo/package.json"),
+    JSON.stringify(appendManifest(undefined, m), null, 2) + "\n",
+  );
+  await writeFile(
+    join(root, "packages/dev/other/package.json"),
+    JSON.stringify(appendManifest(undefined, other), null, 2) + "\n",
+  );
+  await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
   await writeFile(
     join(root, "automation/rules.json"),
     JSON.stringify({
@@ -250,10 +256,17 @@ async function fixture(t) {
   m.version = "2.0.0";
   m.platforms["windows-x64"].sha256 = sha256;
   m.platforms["windows-x64"].url = "https://vendor.example/demo-2.0.0.zip";
+  const document = appendManifest(
+    JSON.parse(await readFile(join(root, "packages/dev/demo/package.json"), "utf8")),
+    m,
+  );
+  await writeFile(
+    join(root, "packages/dev/demo/package.json"),
+    JSON.stringify(document, null, 2) + "\n",
+  );
   index.packages.demo.latest = "2.0.0";
-  index.packages.demo.versions["2.0.0"] = "packages/demo/2.0.0.json";
-  await writeFile(join(root, "packages/demo/2.0.0.json"), JSON.stringify(m));
-  await writeFile(join(root, "index.json"), JSON.stringify(index));
+  index.packages.demo.versions["2.0.0"] = "packages/dev/demo/package.json";
+  await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
   const report = {
     mode: "write",
     changed: 1,
@@ -273,7 +286,7 @@ test("prepare binds the entire candidate tree and does not mutate the real index
   assert.equal(p.baseSha, git(["rev-parse", "HEAD"]));
   assert.match(p.treeSha, /^[a-f0-9]{40}$/);
   assert.equal(git(["diff", "--cached", "--name-only"]), before);
-  git(["add", "index.json", "packages/demo/2.0.0.json"]);
+  git(["add", "index.json", "packages/dev/demo/package.json"]);
   assert.equal(p.treeSha, git(["write-tree"]));
 });
 test("a blocked package does not prevent exact-tree preparation and merging of the verified subset", async (t) => {
@@ -288,7 +301,7 @@ test("a blocked package does not prevent exact-tree preparation and merging of t
   const p = await prepareMerge(root, report, {
     repository: "owner/piko-source",
   });
-  assert.deepEqual(p.files, ["index.json", "packages/demo/2.0.0.json"]);
+  assert.deepEqual(p.files, ["index.json", "packages/dev/demo/package.json"]);
   assert.deepEqual(
     p.verifiedUpdates.map((r) => r.name),
     ["demo"],
@@ -411,7 +424,7 @@ test("ignored local reports never become part of the PR tree", async (t) => {
   const p = await prepareMerge(root, report, {
     repository: "owner/piko-source",
   });
-  assert.deepEqual(p.files, ["index.json", "packages/demo/2.0.0.json"]);
+  assert.deepEqual(p.files, ["index.json", "packages/dev/demo/package.json"]);
   assert.equal(
     git(["ls-files", "update-report.json", "update-merge-plan.json"]),
     "",

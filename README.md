@@ -2,14 +2,14 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 70 个包、134 个版本**，新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 70 个包、129 个版本，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
-- `index.json`：软件、已登记版本与清单路径索引。
-- `packages/<name>/package.json`：Windows x64 模板包清单；同包多个版本共用文件，版本表保存逐版本摘要与配方引用。
+- `index.json`：软件、已登记版本与清单路径索引；每个包条目带 `category` 字段。
+- `packages/<category>/<name>/package.json`：Windows x64 模板包清单；分类目录（`runtime`／`ai`／`dev`／`editors`／`desktop`／`games`／`system`）与 index 的 `category` 字段强制一致。同包多个版本共用文件，版本表保存逐版本摘要与配方引用。
 - 模板源需要新版客户端；原 schema 1 完整清单仍可由新版客户端读取。迁移说明见 [模板包清单](#模板包清单)。
-- 新增包用 `node scripts/add.mjs probe <name> <发布页或资产URL>` 探测格式并生成草稿，再用 `apply --dry-run`／`--yes` 校验发布；流程见 [新增一个包](automation/README.md#新增一个包)。
+- 新增包用 `node scripts/add.mjs probe <name> <发布页或资产URL> [--category <分类>]` 探测格式并生成草稿，再用 `apply --dry-run`／`--yes` 校验发布（apply 要求草稿或参数提供分类，清单写入 `packages/<category>/<name>/package.json`）；流程见 [新增一个包](automation/README.md#新增一个包)。
 - **Burn 捆绑包格式需要 piko 0.4.14 或更新版本**：`clouddrive2@1.1.3.3` 使用 `format: "burn"` 加 `payload`，0.4.13 及更早客户端会以 `Unsupported or missing download format/URL` 拒绝该清单（其余包不受影响）。
 - [TortoiseSVN 升级与 DLL 占用处理](guides/tortoise-svn.md)：版本化 Shell 配方、旧版本延后清理，以及旧 Scoop 安装的一次性撤销边界。修订 `1.15.0.29830-piko.1` 保留原载荷，后续上游更新自动继承新配方；历史阶段说明中的旧配方行为不适用于此修订。
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
@@ -20,13 +20,34 @@
 
 ## 模板包清单
 
-现有 **116 份版本清单存于 68 个包文件**，保留全部已登记版本；未启用删除历史版本的保留策略。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+现有 **129 份版本清单存于 70 个包文件**，每包按 [保留策略](#分类与版本保留) 保留最近 8 个版本组。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
 
 - 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
 - 迁移逐版本核对完整展开结果及 `manifestHash`，所有历史版本与原清单完全一致；旧包文件由 Git 历史保留。更新仍下载并检查载荷摘要、大小和布局，不能仅替换 URL 就发布。
 - **先升级客户端，再刷新或发布此源。** 新客户端兼容旧完整清单；旧客户端不能解析模板包。当前改动未自动替换本机 Piko。
 - `npm run compact:check` 预览完整清单转换，`npm run compact` 执行无损合并；已迁移文件再次运行不产生变化。普通自动更新不会再新增同包版本文件。
+
+## 分类与版本保留
+
+70 个包按用途分为 7 类，物理目录与索引 `category` 字段一一对应，`check.mjs` 强制两者一致，不允许未分类的平铺路径：
+
+| 分类 | 目录 | 数量 | 包 |
+| --- | --- | --- | --- |
+| runtime | `packages/runtime/` | 7 | node、go、lua、bun、rustup、uv、pixi |
+| ai | `packages/ai/` | 6 | claude-code、opencode、codex、pi、oh-my-pi、orca |
+| dev | `packages/dev/` | 21 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg |
+| editors | `packages/editors/` | 3 | vscode、sublime-text、obsidian |
+| desktop | `packages/desktop/` | 21 | tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、nvidia-app、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
+| games | `packages/games/` | 9 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender |
+| system | `packages/system/` | 3 | winfsp、firacode-nf、hack-nf-mono |
+
+**版本保留策略（2026-11-10 起）**：每个包保留最近 **8 个版本组**。一个版本组 = 基础版本及其全部 `-piko.N` 修订（同一载荷换入口的修订不与基础版本拆散）；组序按登记顺序（索引 `versions` 的插入顺序，更新器只在末尾追加）。落出窗口的最旧版本组会被裁剪：
+
+- `update.mjs --write` 追加新版本后立即裁剪回 8 组，自动更新不会让源无限增长；`auto-merge` 的期望树校验按同一规则构造，追加与裁剪作为一次已验证变更合并。
+- `npm run prune:check` 预览、`npm run prune` 手动执行裁剪（用于策略启用前的存量清理；本轮已裁掉 orca 1.4.243／245／246 与 oh-my-pi 18.13.2／18.14.1，134→129 版）。
+- `check.mjs` 强制每包不超过 8 组（超窗报错要求 prune）；`--base` 对比时只放行"基线状态下已落出保留窗口"的版本删除，窗口内版本的既有保护（不可删除、不可改写）不变。
+- 被裁版本仅从索引与模板版本表移除并清理无引用 recipe；已安装客户端不受影响，但该版本此后无法重新安装，需要旧版本时从 Git 历史找回。
 
 ## Shell 与配置支持（需要新版客户端）
 
@@ -288,8 +309,8 @@ pi --version
 ## GitHub 自动更新（第六阶段）
 
 - 已为登记的全部包（当前 70 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
-- 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
-- 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
+- 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，追加版本记录（需要时增加独立配方）并按保留策略裁剪最旧版本组，再生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
+- 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。保留窗口内的版本记录受保护；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本，仅放行按保留策略到期的裁剪。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。
 - 脚本只依赖 Node.js 24.6+ 标准库；载荷验证在 Windows x64 运行。`npm run check`、`npm test`、`npm run update:discover` 可在本地检查。
 - 配置文件已加入独立 Git 仓库；远端地址、GitHub 权限与 HTTPS 部署需要按实际仓库配置。详见 [自动更新说明](automation/README.md)。

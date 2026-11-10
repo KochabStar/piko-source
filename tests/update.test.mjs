@@ -26,6 +26,7 @@ import {
 } from "../scripts/lib/catalog.mjs";
 import { discover, compareVersions } from "../scripts/lib/providers.mjs";
 import { network, request } from "../scripts/lib/net.mjs";
+import { appendManifest } from "../scripts/lib/manifest-template.mjs";
 import {
   parseListing,
   innoEntries,
@@ -81,9 +82,13 @@ async function fixture(t, names = ["demo"]) {
   const index = { schemaVersion: 1, packages: {} },
     rules = { schemaVersion: 1, packages: {} };
   for (const name of names) {
-    await mkdir(join(root, "packages", name), { recursive: true });
-    const file = `packages/${name}/1.0.0.json`;
-    index.packages[name] = { latest: "1.0.0", versions: { "1.0.0": file } };
+    const file = `packages/dev/${name}/package.json`;
+    await mkdir(join(root, "packages/dev", name), { recursive: true });
+    index.packages[name] = {
+      category: "dev",
+      latest: "1.0.0",
+      versions: { "1.0.0": file },
+    };
     rules.packages[name] = {
       provider: "json",
       url: "https://vendor.example/latest.json",
@@ -92,7 +97,8 @@ async function fixture(t, names = ["demo"]) {
     };
     await writeFile(
       join(root, file),
-      JSON.stringify(fixtureManifest(name), null, 2) + "\n",
+      JSON.stringify(appendManifest(undefined, fixtureManifest(name)), null, 2) +
+        "\n",
     );
   }
   await mkdir(join(root, "automation"));
@@ -169,19 +175,26 @@ test("discovery never downloads a payload or edits the source", async (t) => {
   assert.equal(r.results[0].status, "available");
   assert.equal(requested, false);
   assert.deepEqual(await readFile(join(root, "index.json")), before);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
+    "package.json",
+  ]);
 });
 test("check verifies the real publisher checksum and leaves index/manifests byte-identical", async (t) => {
   const root = await fixture(t),
     before = await readFile(join(root, "index.json")),
-    old = await readFile(join(root, "packages/demo/1.0.0.json"));
+    old = await readFile(join(root, "packages/dev/demo/package.json"));
   const r = await runUpdate(root, { ...dependencies, mode: "check" });
   assert.equal(r.blocked, 0);
   assert.equal(r.changed, 0);
   assert.equal(r.results[0].status, "validated");
   assert.deepEqual(await readFile(join(root, "index.json")), before);
-  assert.deepEqual(await readFile(join(root, "packages/demo/1.0.0.json")), old);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.deepEqual(
+    await readFile(join(root, "packages/dev/demo/package.json")),
+    old,
+  );
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
+    "package.json",
+  ]);
 });
 test("write appends the verified version, retains old bytes and preserves existing runtime/alias metadata", async (t) => {
   const root = await fixture(t),
@@ -189,7 +202,9 @@ test("write appends the verified version, retains old bytes and preserves existi
   index.packages.demo.runtime = { family: "demo", distribution: "official" };
   index.packages.demo.aliases = { stable: "1.0.0" };
   await writeFile(join(root, "index.json"), JSON.stringify(index));
-  const before = await readFile(join(root, "packages/demo/1.0.0.json"));
+  const previous = (
+    await loadCatalog(root)
+  ).manifests.get("demo@1.0.0");
   const r = await runUpdate(root, { ...dependencies, mode: "write" });
   assert.equal(r.changed, 1);
   const after = await loadCatalog(root);
@@ -202,10 +217,8 @@ test("write appends the verified version, retains old bytes and preserves existi
     after.index.packages.demo.aliases,
     index.packages.demo.aliases,
   );
-  assert.deepEqual(
-    await readFile(join(root, "packages/demo/1.0.0.json")),
-    before,
-  );
+  // The retained 1.0.0 row still resolves to the exact same manifest.
+  assert.deepEqual(after.manifests.get("demo@1.0.0"), previous);
   const next = after.manifests.get("demo@2.0.0").platforms["windows-x64"];
   assert.equal(next.sha256, sha);
   assert.equal(next.configFiles["owned.ps1"], "unchanged configuration");
@@ -232,7 +245,9 @@ test("same-version upstream replacement is refused rather than rewriting an immu
   });
   assert.equal(r.blocked, 1);
   assert.match(r.results[0].reason, /Same-version/);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
+    "package.json",
+  ]);
 });
 test("older feeds cannot downgrade a source and manual policies perform no network requests", async (t) => {
   const root = await fixture(t, ["demo", "other"]);
@@ -290,9 +305,14 @@ test("layout failures preserve the failed package and prepare only independently
   assert.equal(c.index.packages.demo.latest, "1.0.0");
   assert.equal(c.index.packages.other.latest, "2.0.0");
   assert.deepEqual(c.index.packages.demo, oldIndex.packages.demo);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
+    "package.json",
+  ]);
   const plan = await prepareMerge(root, r, { repository: "owner/piko-source" });
-  assert.deepEqual(plan.files, ["index.json", "packages/other/2.0.0.json"]);
+  assert.deepEqual(plan.files, [
+    "index.json",
+    "packages/dev/other/package.json",
+  ]);
   assert.deepEqual(
     plan.verifiedUpdates.map((v) => v.name),
     ["other"],
@@ -531,8 +551,11 @@ test("git comparison rejects alteration or removal of any published manifest", a
   ]);
   const base = git(["rev-parse", "HEAD"]);
   await checkSource(root, { base });
-  const file = join(root, "packages/demo/1.0.0.json");
-  await writeFile(file, (await readFile(file, "utf8")) + "\n");
+  const file = join(root, "packages/dev/demo/package.json");
+  const document = JSON.parse(await readFile(file, "utf8"));
+  Object.values(document.recipes)[0].platforms["windows-x64"].bin.demo =
+    "tampered.exe";
+  await writeFile(file, JSON.stringify(document, null, 2) + "\n");
   await assert.rejects(() => checkSource(root, { base }), /manifest modified/);
 });
 test("concurrent index edits are detected before any new version is published", async (t) => {
@@ -552,7 +575,9 @@ test("concurrent index edits are detected before any new version is published", 
     /changed during verification/,
   );
   assert.deepEqual(await readFile(join(root, "index.json")), userEdit);
-  assert.deepEqual(await readdir(join(root, "packages/demo")), ["1.0.0.json"]);
+  assert.deepEqual(await readdir(join(root, "packages/dev/demo")), [
+    "package.json",
+  ]);
 });
 
 test("Gallery pagination finds newer stable versions and retains the publisher SHA512", async () => {

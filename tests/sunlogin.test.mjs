@@ -10,6 +10,7 @@ import {
   validateManifest,
 } from "../scripts/lib/catalog.mjs";
 import { network } from "../scripts/lib/net.mjs";
+import { appendManifest } from "../scripts/lib/manifest-template.mjs";
 import { fileURLToPath } from "node:url";
 
 const catalog = await loadCatalog(
@@ -58,7 +59,7 @@ test("Sunlogin index retains the revision and latest keeps the corrected GUI ent
   );
   assert.equal(
     index.packages.sunlogin.versions[revision.version],
-    "packages/sunlogin/package.json",
+    "packages/desktop/sunlogin/package.json",
   );
   const latest = catalog.manifests.get(
     "sunlogin@" + index.packages.sunlogin.latest,
@@ -126,7 +127,7 @@ test("Sunlogin index keeps piko.2 as latest with the service integration", async
   assert.equal(index.packages.sunlogin.latest, "16.8.0.33445-piko.2");
   assert.equal(
     index.packages.sunlogin.versions["16.8.0.33445-piko.2"],
-    "packages/sunlogin/package.json",
+    "packages/desktop/sunlogin/package.json",
   );
 });
 
@@ -139,15 +140,18 @@ for (const missingEntry of [false, true]) {
       // Synthetic upstream metadata/payload: no download or application execution.
       const root = await mkdtemp(join(tmpdir(), "piko-sunlogin-update-"));
       t.after(() => rm(root, { recursive: true, force: true, maxRetries: 10 }));
-      const file = "packages/sunlogin/" + revision.version + ".json";
-      const previousBytes = JSON.stringify(revision, null, 2) + "\n";
+      const file = "packages/desktop/sunlogin/package.json";
+      const previousBytes =
+        JSON.stringify(appendManifest(undefined, revision), null, 2) + "\n";
       const rules = JSON.parse(
         await readFile(
           new URL("../automation/rules.json", import.meta.url),
           "utf8",
         ),
       );
-      await mkdir(join(root, "packages/sunlogin"), { recursive: true });
+      await mkdir(join(root, "packages/desktop/sunlogin"), {
+        recursive: true,
+      });
       await mkdir(join(root, "automation"));
       await writeFile(join(root, file), previousBytes);
       await writeFile(
@@ -156,6 +160,7 @@ for (const missingEntry of [false, true]) {
           schemaVersion: 1,
           packages: {
             sunlogin: {
+              category: "desktop",
               latest: revision.version,
               versions: { [revision.version]: file },
             },
@@ -217,7 +222,14 @@ for (const missingEntry of [false, true]) {
         after.index.packages.sunlogin.versions[candidate.version] !== undefined,
         !missingEntry,
       );
-      assert.equal(await readFile(join(root, file), "utf8"), previousBytes);
+      if (missingEntry)
+        // A blocked package leaves the shared template byte-identical.
+        assert.equal(await readFile(join(root, file), "utf8"), previousBytes);
+      else
+        assert.match(
+          await readFile(join(root, file), "utf8"),
+          /"16\.9\.0\.40000"/,
+        );
     },
   );
 }

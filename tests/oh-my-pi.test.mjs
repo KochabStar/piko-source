@@ -11,30 +11,32 @@ const index = await json("../index.json");
 const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
-const old = catalog.manifests.get("oh-my-pi@18.13.2");
-const next = catalog.manifests.get("oh-my-pi@18.14.1");
+// The retention window pruned 18.13.2 and 18.14.1; the oldest retained
+// version anchors the discovery comparison.
+const old = catalog.manifests.get("oh-my-pi@18.14.2");
+const next = catalog.manifests.get("oh-my-pi@18.18.6");
 const rule = (await json("../automation/rules.json")).packages["oh-my-pi"];
 
-test("oh-my-pi retains its published pin and registers the CI-verified native update", () => {
-  validateManifest(next, "oh-my-pi", "18.14.1");
+test("oh-my-pi keeps the retention window and a valid latest manifest", () => {
+  validateManifest(next, "oh-my-pi", "18.18.6");
+  assert.equal(index.packages["oh-my-pi"].category, "ai");
   assert.equal(
-    index.packages["oh-my-pi"].versions["18.13.2"],
-    "packages/oh-my-pi/package.json",
+    index.packages["oh-my-pi"].versions["18.14.2"],
+    "packages/ai/oh-my-pi/package.json",
   );
+  assert.equal(index.packages["oh-my-pi"].versions["18.13.2"], undefined);
+  assert.equal(index.packages["oh-my-pi"].versions["18.14.1"], undefined);
+  assert.equal(Object.keys(index.packages["oh-my-pi"].versions).length, 8);
   assert.equal(
-    index.packages["oh-my-pi"].versions["18.14.1"],
-    "packages/oh-my-pi/package.json",
-  );
-  assert.equal(
-    old.platforms["windows-x64"].sha256,
-    "95c45f53fff419ae4aff5cf07e6af38f297fc7e754947bcb85d9d2253fcae17a",
+    index.packages["oh-my-pi"].versions[index.packages["oh-my-pi"].latest],
+    "packages/ai/oh-my-pi/package.json",
   );
   assert.deepEqual(next.platforms["windows-x64"].bin, { omp: "omp.exe" });
   assert.equal(next.platforms["windows-x64"].file, "omp.exe");
   assert.equal(next.platforms["windows-x64"].format, "file");
 });
 
-test("oh-my-pi discovery resolves the full 18.14.1 version and selects x64 instead of arm64", async () => {
+test("oh-my-pi discovery resolves the full upstream version and selects x64 instead of arm64", async () => {
   const p = next.platforms["windows-x64"];
   const candidate = await discover(rule, old, {
     json: async (url) => {
@@ -43,7 +45,7 @@ test("oh-my-pi discovery resolves the full 18.14.1 version and selects x64 inste
         "https://api.github.com/repos/can1357/oh-my-pi/releases/latest",
       );
       return {
-        tag_name: "v18.14.1",
+        tag_name: "v18.19.0",
         draft: false,
         prerelease: false,
         assets: [
@@ -59,7 +61,7 @@ test("oh-my-pi discovery resolves the full 18.14.1 version and selects x64 inste
       };
     },
   });
-  assert.equal(candidate.version, "18.14.1");
+  assert.equal(candidate.version, "18.19.0");
   assert.equal(candidate.url, p.url);
   assert.equal(candidate.sha256, p.sha256);
   assert.equal(candidate.assetBytes, 242863104);

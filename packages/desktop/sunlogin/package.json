@@ -108,7 +108,7 @@
         }
       }
     },
-    "rf395c23137ab36ed": {
+    "r71424f826b6c0d36": {
       "schemaVersion": 1,
       "name": "sunlogin",
       "version": "{version}",
@@ -202,7 +202,7 @@
       "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
     },
     "16.8.0.33445-piko.2": {
-      "recipe": "rf395c23137ab36ed",
+      "recipe": "r71424f826b6c0d36",
       "maxBytes": 106954752,
       "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
       "maxBytes2": 106954752,

@@ -1,7 +1,12 @@
-import { readFile, writeFile, rename, rm } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { readFile, writeFile, rename, rm, mkdir } from "node:fs/promises";
+import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadCatalog, requireThat, digest } from "./lib/catalog.mjs";
+import {
+  loadCatalog,
+  requireThat,
+  digest,
+  manifestPath,
+} from "./lib/catalog.mjs";
 import { appendManifest } from "./lib/manifest-template.mjs";
 
 export async function compactSource(root, { write = false } = {}) {
@@ -11,15 +16,14 @@ export async function compactSource(root, { write = false } = {}) {
     removed = new Set();
   for (const [name, entry] of Object.entries(index.packages)) {
     let document;
+    const file = manifestPath(entry.category, name);
     for (const version of Object.keys(entry.versions)) {
       const manifest = before.manifests.get(name + "@" + version);
       document = appendManifest(document, manifest);
       const previous = entry.versions[version];
-      const file = `packages/${name}/package.json`;
       if (previous !== file) removed.add(previous);
       entry.versions[version] = file;
     }
-    const file = `packages/${name}/package.json`;
     const bytes = Buffer.from(JSON.stringify(document, null, 2) + "\n");
     if (!before.fileBytes.get(file)?.equals(bytes)) targets.set(file, bytes);
   }
@@ -49,6 +53,7 @@ export async function compactSource(root, { write = false } = {}) {
       const target = join(root, file),
         temp = target + ".tmp-" + process.pid;
       temporary.push(temp);
+      await mkdir(dirname(target), { recursive: true });
       await writeFile(temp, bytes, { flag: "wx" });
       await rename(temp, target);
       written.push(file);

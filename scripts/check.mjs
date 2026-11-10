@@ -4,11 +4,19 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveManifestDocument } from "./lib/manifest-template.mjs";
 import { loadCatalog, validateRules, requireThat } from "./lib/catalog.mjs";
+import { RETENTION_KEEP, prunedVersions } from "./lib/retention.mjs";
 export async function checkSource(root, { base } = {}) {
   const catalog = await loadCatalog(root),
     config = validateRules(
       catalog,
       JSON.parse(await readFile(join(root, "automation/rules.json"), "utf8")),
+    );
+  // The retention window is binding: a package that has accumulated more
+  // version groups than the policy keeps fails validation until pruned.
+  for (const [name, entry] of Object.entries(catalog.index.packages))
+    requireThat(
+      !prunedVersions(entry).length,
+      `Package exceeds the retention window (${RETENTION_KEEP} version groups): ${name}; run "npm run prune"`,
     );
   if (base) {
     requireThat(
@@ -21,14 +29,22 @@ export async function checkSource(root, { base } = {}) {
         maxBuffer: 32 * 1024 * 1024,
       });
     const before = JSON.parse(show("index.json").toString("utf8"));
-    const oldDocuments = new Map();
+    const oldDocuments = new Map(),
+      baselinePruned = new Map();
+    for (const [name, entry] of Object.entries(before.packages))
+      baselinePruned.set(name, new Set(prunedVersions(entry)));
     for (const [name, entry] of Object.entries(before.packages))
       for (const [version, file] of Object.entries(entry.versions)) {
         const nextFile = catalog.index.packages[name]?.versions[version];
-        requireThat(
-          nextFile,
-          "Previously published version removed: " + name + "@" + version,
-        );
+        if (!nextFile) {
+          // A version may only disappear from the index when the retention
+          // window had already expired for it in the baseline state.
+          requireThat(
+            baselinePruned.get(name)?.has(version),
+            "Previously published version removed: " + name + "@" + version,
+          );
+          continue;
+        }
         if (!oldDocuments.has(file)) {
           const bytes = show(file);
           oldDocuments.set(file, {
