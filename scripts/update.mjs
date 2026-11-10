@@ -332,25 +332,39 @@ export async function runUpdate(
         );
         if (candidate.versionFromPE) {
           component(layout.version);
-          row.version = next.version = layout.version;
-          // A publisher can re-upload the same application build, which yields
-          // new bytes and a new digest for an already-published version. That
-          // must not silently replace an immutable manifest, so report both
-          // digests instead of a bare refusal: otherwise the failure looks
-          // identical to a broken rule.
-          requireThat(
-            compareVersions(layout.version, current.version) > 0,
-            "Distribution changed without a newer application version; existing version retained" +
-              " (published " +
-              current.version +
-              " sha256 " +
-              old.sha256.slice(0, 16) +
-              ", upstream " +
-              layout.version +
-              " sha256 " +
-              artifact.sha256.slice(0, 16) +
-              ")",
-          );
+          row.version = layout.version;
+          // A feed edge can lag behind what is already published: QQNT's
+          // pcConfig.json is served per region, and some edges still answer with
+          // the previous build while the newest one is already indexed. That is
+          // a stale hint, not a repackaging and not an upstream regression, so
+          // it must not fail the run. A digest change for a version that is
+          // already published is still refused, because published rows are
+          // immutable.
+          if (compareVersions(layout.version, current.version) <= 0) {
+            requireThat(
+              artifact.sha256.toLowerCase() === old.sha256.toLowerCase(),
+              "Distribution changed without a newer application version; existing version retained" +
+                " (published " +
+                current.version +
+                " sha256 " +
+                old.sha256.slice(0, 16) +
+                ", upstream " +
+                layout.version +
+                " sha256 " +
+                artifact.sha256.slice(0, 16) +
+                ")",
+            );
+            row.version = current.version;
+            Object.assign(row, {
+              status: "provider-behind",
+              reason:
+                "Upstream feed still points at the already-published build " +
+                current.version +
+                "; the edge is behind, no downgrade",
+            });
+            continue;
+          }
+          next.version = layout.version;
         }
         validateManifest(next, name, next.version);
         requireThat(
