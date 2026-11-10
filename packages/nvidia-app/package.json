@@ -18,6 +18,23 @@
           "maxBytes": "{maxBytes}"
         }
       }
+    },
+    "r01921d91d27dbe62": {
+      "schemaVersion": 1,
+      "name": "nvidia-app",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://us.download.nvidia.com/nvapp/client/{version}/x64/NVIDIA_app_v{version}_x64.exe",
+          "sha256": "{sha256}",
+          "format": "file",
+          "file": "NVIDIA_app_setup.exe",
+          "bin": {
+            "nvidia-app-setup": "NVIDIA_app_setup.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
     }
   },
   "versions": {
@@ -25,6 +42,11 @@
       "recipe": "r91c92afe80b9c18c",
       "maxBytes": 268435456,
       "sha256": "d70cc78e9f4d89326dd106bdaeaa01c190b9354afa3136f6543c64743139576a"
+    },
+    "11.0.9.585": {
+      "recipe": "r01921d91d27dbe62",
+      "maxBytes": 268435456,
+      "sha256": "3b5b9e941bd201af8c577eeaf0c20ee6cbf1b0b920dfd277c68370ed61f37788"
     }
   }
 }
