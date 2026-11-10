@@ -341,14 +341,23 @@ export async function runUpdate(
           // already published is still refused, because published rows are
           // immutable.
           if (compareVersions(layout.version, current.version) <= 0) {
+            // The identity that must stay immutable is the published row for the
+            // version actually downloaded, which is not necessarily the latest
+            // one. Comparing against the latest row would reject a byte-identical
+            // re-download of an older build.
+            const sameRow = catalog.manifests.get(name + "@" + layout.version),
+              expected = sameRow
+                ? downloads(sameRow.platforms["windows-x64"])[0].sha256
+                : undefined;
             requireThat(
-              artifact.sha256.toLowerCase() === old.sha256.toLowerCase(),
+              expected === undefined ||
+                artifact.sha256.toLowerCase() === expected.toLowerCase(),
               "Distribution changed without a newer application version; existing version retained" +
                 " (published " +
-                current.version +
+                layout.version +
                 " sha256 " +
-                old.sha256.slice(0, 16) +
-                ", upstream " +
+                String(expected ?? "unknown").slice(0, 16) +
+                ", downloaded " +
                 layout.version +
                 " sha256 " +
                 artifact.sha256.slice(0, 16) +
