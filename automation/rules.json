@@ -479,6 +479,19 @@
       "required": [
         "winfsp-setup.ps1"
       ]
+    },
+    "pebrel": {
+      "provider": "github-release",
+      "repo": "Kuddev/pebrel",
+      "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      "assetRegex": "^Pebrel-v[0-9]+(?:\\.[0-9]+)+-windows-x64\\.zip$",
+      "required": [
+        "pebrel.exe",
+        "pebrel.com",
+        "runtime/conpty.dll",
+        "runtime/OpenConsole.exe",
+        "runtime/pebrel-hook.exe"
+      ]
     }
   }
 }

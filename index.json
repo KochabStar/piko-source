@@ -486,6 +486,12 @@
       "versions": {
         "2.1.25156": "packages/winfsp/package.json"
       }
+    },
+    "pebrel": {
+      "latest": "2.4.0",
+      "versions": {
+        "2.4.0": "packages/pebrel/package.json"
+      }
     }
   }
 }

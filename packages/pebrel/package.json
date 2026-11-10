@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "pebrel",
+  "recipes": {
+    "rdcd08b2959866271": {
+      "schemaVersion": 1,
+      "name": "pebrel",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/Kuddev/pebrel/releases/download/v{version}/Pebrel-v{version}-windows-x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "pebrel": "pebrel.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Pebrel",
+                "path": "pebrel.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.4.0": {
+      "recipe": "rdcd08b2959866271",
+      "sha256": "c3d88a428db402aff27af3a45e2550c8e3b8a5a77a079e580687ed56445c3dc7"
+    }
+  }
+}

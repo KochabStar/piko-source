@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 69 个包、124 个版本**，新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 70 个包、134 个版本**，新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -273,9 +273,21 @@ pi --version
 - 全部六个包都不执行安装器、不注册服务／驱动、不写系统目录；快捷方式等桌面集成仍需单独 `integrate --desktop` 预览确认。
 - **未验收**：六个模拟器的 GUI 运行与手柄／BIOS／ROM 路径配置、RetroArch 在线下载核心与着色器、shadPS4 固件 `sys_modules` 与游戏启动、VS Code 扩展安装与真实工作区。证据见 [模拟器验证记录](verification/emulators-20261108.json)。
 
+## 新增终端模拟器（2026-11-10）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `pebrel` | 2.4.0 | `pebrel`，官方 GitHub 便携 ZIP，解压即用 |
+
+- Pebrel（前身 Nebula）是 Rust＋GPUI 的 GPU 加速终端，带 SSH／SFTP、分屏与 AI CLI 工作流。载荷取官方 `Pebrel-v2.4.0-windows-x64.zip`，根级布局保留 `pebrel.exe`、`pebrel.com` 控制台宿主与 `runtime/`（conpty、OpenConsole、pebrel-hook）捆绑目录，不执行安装器、不装字体或系统集成。
+- SHA-256 三方核对：GitHub 发布资源 digest、发布页 `SHA256SUMS` 与本地重算一致。`pebrel.com`／`pebrel.exe` 直接运行 `--version` 均输出 `Pebrel 2.4.0 (40ec26b5)`，PE FileVersion 与发布版本一致。签名状态如实记录：`pebrel.exe`／`pebrel.com`／`pebrel-hook.exe` 为 NotSigned（上游未签名），`OpenConsole.exe`／`conpty.dll` 为 Valid；证据见 [Pebrel 验证记录](verification/pebrel-20261110.json)。
+- 配置沿用原生用户目录 `%APPDATA%\Pebrel`（`pebrel.lua`），不声明 persist，与 Wave 的原生配置模式一致；不迁移既有 Nebula 安装或数据。
+- 自动更新匹配官方稳定版 `windows-x64.zip` 资产，`required` 强制校验主程序、控制台宿主与 runtime 捆绑文件；实测 `update.mjs --check --packages pebrel` 下载、摘要与布局校验通过，当前版本状态 `current`。
+- `npm run check` 通过；`npm test` 115 项通过、1 项失败，失败为本机 `D:/piko/apps/git/2.56.0.4/etc/gitconfig` 解析错误的预先存在环境问题（无 pebrel 改动的基线同样失败），与本次新增无关。未启动 GUI、未登录、未验证 SSH／AI 集成。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 68 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
+- 已为登记的全部包（当前 70 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
 - 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，只追加版本记录（需要时增加独立配方）并生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。旧版本记录保留；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-10T02:43:49.000Z",
+  "package": "pebrel",
+  "version": "2.4.0",
+  "platform": "windows-x64",
+  "source": "https://github.com/Kuddev/pebrel/releases/download/v2.4.0/Pebrel-v2.4.0-windows-x64.zip",
+  "sha256": "c3d88a428db402aff27af3a45e2550c8e3b8a5a77a079e580687ed56445c3dc7",
+  "archiveBytes": 41896912,
+  "publisherChecks": [
+    "GitHub release asset SHA-256 digest",
+    "release SHA256SUMS sidecar",
+    "independent local re-hash"
+  ],
+  "layout": {
+    "files": 18,
+    "knownExpandedBytes": 134971062,
+    "unknownSizeFiles": 0,
+    "reviewSensitive": false
+  },
+  "executable": {
+    "path": "pebrel.exe",
+    "sha256": "eed702e33b60601239170c52a8cd3b8ca20f43609d696e9e74d97e32e2dbce27",
+    "peFileVersion": "2.4.0",
+    "directVersionOutput": "Pebrel 2.4.0 (40ec26b5)",
+    "directVersionExitCode": 0,
+    "consoleHostPath": "pebrel.com",
+    "consoleHostVersionOutput": "Pebrel 2.4.0 (40ec26b5)"
+  },
+  "signatures": {
+    "pebrel.exe": "NotSigned",
+    "pebrel.com": "NotSigned",
+    "runtime/pebrel-hook.exe": "NotSigned",
+    "runtime/OpenConsole.exe": "Valid",
+    "runtime/conpty.dll": "Valid"
+  },
+  "checks": {
+    "upstreamReleasePrerelease": false,
+    "templateGeneratedViaAppendManifest": true,
+    "updateRuleDiscoversCurrentVersion": true,
+    "updateCheckFullDownloadAndLayout": true,
+    "requiredRuntimeFilesPresent": true,
+    "npmRunCheck": true,
+    "npmTestSuitePassingExceptPreexistingGitConfigFailure": true
+  },
+  "scope": "Official portable Windows x64 ZIP from the v2.4.0 GitHub release, downloaded and re-hashed locally. Layout verified by full extraction (18 files) and by scripts/update.mjs --check --packages pebrel. Native configuration remains at %APPDATA%\\Pebrel (pebrel.lua); no persist declared, following the wave-terminal native-user-config model. No installer execution, GUI launch, shell integration or host changes.",
+  "notVerified": [
+    "GUI runtime, sessions and split panes",
+    "SSH/SFTP workflows and relay setup",
+    "AI CLI integration (Claude Code/Codex hooks)",
+    "Native update installation from within the app",
+    "Config migration from existing Nebula installs",
+    "Isolated piko install/use/shim round-trip (client not exercised in this session)"
+  ]
+}
