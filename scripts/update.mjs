@@ -291,9 +291,23 @@ export async function runUpdate(
         if (candidate.versionFromPE) {
           component(layout.version);
           row.version = next.version = layout.version;
+          // A publisher can re-upload the same application build, which yields
+          // new bytes and a new digest for an already-published version. That
+          // must not silently replace an immutable manifest, so report both
+          // digests instead of a bare refusal: otherwise the failure looks
+          // identical to a broken rule.
           requireThat(
             compareVersions(layout.version, current.version) > 0,
-            "Distribution changed without a newer application version; existing version retained",
+            "Distribution changed without a newer application version; existing version retained" +
+              " (published " +
+              current.version +
+              " sha256 " +
+              old.sha256.slice(0, 16) +
+              ", upstream " +
+              layout.version +
+              " sha256 " +
+              artifact.sha256.slice(0, 16) +
+              ")",
           );
         }
         validateManifest(next, name, next.version);
