@@ -237,6 +237,31 @@ test("the updater prunes to the window while appending a verified version", asyn
     }),
   );
   const body = Buffer.from("verified update payload");
+  // The baseline commit anchors the immutability comparison: appending a
+  // verified version pushes the oldest group out of the window, and check
+  // must accept that prune while still refusing unrelated removals.
+  const git = (args) =>
+    execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }).trim();
+  git(["init", "--initial-branch=main"]);
+  git(["add", "."]);
+  git([
+    "-c",
+    "user.name=Retention fixture",
+    "-c",
+    "user.email=fixture@example.invalid",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "core.hooksPath=" + join(root, "empty-hooks"),
+    "commit",
+    "-m",
+    "baseline",
+  ]);
+  const base = git(["rev-parse", "HEAD"]);
   const r = await runUpdate(root, {
     mode: "write",
     discoverer: async () => ({
@@ -256,4 +281,7 @@ test("the updater prunes to the window while appending a verified version", asyn
   ]);
   const doc = JSON.parse(await readFile(join(root, file), "utf8"));
   assert.deepEqual(Object.keys(doc.versions), Object.keys(after.index.packages.demo.versions));
+  // The pruned baseline version was removed only because the update appended
+  // a newer group; the exact-tree immutability check must accept it.
+  await checkSource(root, { base });
 });

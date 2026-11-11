@@ -31,8 +31,26 @@ export async function checkSource(root, { base } = {}) {
     const before = JSON.parse(show("index.json").toString("utf8"));
     const oldDocuments = new Map(),
       baselinePruned = new Map();
-    for (const [name, entry] of Object.entries(before.packages))
-      baselinePruned.set(name, new Set(prunedVersions(entry)));
+    // A version may disappear when the retention window expired for it —
+    // either already in the baseline, or only because this update appended
+    // the newer groups that pushed it out of the window. Removing anything
+    // without appending is still refused, so published versions never
+    // vanish silently.
+    for (const [name, entry] of Object.entries(before.packages)) {
+      const appended = Object.entries(
+        catalog.index.packages[name]?.versions ?? {},
+      ).filter(([version]) => !entry.versions[version]);
+      const withAppended = appended.length
+        ? {
+            ...entry,
+            versions: {
+              ...entry.versions,
+              ...Object.fromEntries(appended),
+            },
+          }
+        : entry;
+      baselinePruned.set(name, new Set(prunedVersions(withAppended)));
+    }
     for (const [name, entry] of Object.entries(before.packages))
       for (const [version, file] of Object.entries(entry.versions)) {
         const nextFile = catalog.index.packages[name]?.versions[version];
