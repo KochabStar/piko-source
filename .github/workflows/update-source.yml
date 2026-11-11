@@ -2,7 +2,8 @@ name: Update upstream packages
 
 on:
   schedule:
-    - cron: "17 3 * * *"
+    # GitHub cron is UTC; 23:50 UTC = 07:50 Asia/Shanghai.
+    - cron: "50 23 * * *"
   workflow_dispatch:
     inputs:
       packages:
