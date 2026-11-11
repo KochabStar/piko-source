@@ -17,6 +17,8 @@ import {
   component,
   MiB,
   GiB,
+  PLACEHOLDER_SHA256,
+  isPlaceholderManifest,
 } from "./lib/catalog.mjs";
 import { discover, compareVersions } from "./lib/providers.mjs";
 import { network } from "./lib/net.mjs";
@@ -223,21 +225,32 @@ export async function runUpdate(
             continue;
           }
           if (comparison === 0) {
-            requireThat(
-              !candidate.sha256 ||
-                candidate.sha256.toLowerCase() === old.sha256.toLowerCase(),
-              "Same-version publisher digest changed; immutable manifest retained",
+            // A registered placeholder at the feed version falls through to
+            // the download path below, which completes it with the measured
+            // digest; only verified rows are reported current.
+            if (!isPlaceholderManifest(current)) {
+              requireThat(
+                !candidate.sha256 ||
+                  candidate.sha256.toLowerCase() === old.sha256.toLowerCase(),
+                "Same-version publisher digest changed; immutable manifest retained",
+              );
+              row.status = "current";
+              continue;
+            }
+          } else if (Object.hasOwn(entry.versions, candidate.version)) {
+            const indexed = catalog.manifests.get(
+              name + "@" + candidate.version,
             );
-            row.status = "current";
-            continue;
-          }
-          if (Object.hasOwn(entry.versions, candidate.version)) {
-            Object.assign(row, {
-              status: "already-indexed",
-              reason:
-                "Version is already published; current latest selection retained",
-            });
-            continue;
+            if (!isPlaceholderManifest(indexed)) {
+              Object.assign(row, {
+                status: "already-indexed",
+                reason:
+                  "Version is already published; current latest selection retained",
+              });
+              continue;
+            }
+            // Fall through: a registered-but-unverified placeholder is
+            // completed by the normal download-and-verify path below.
           }
         }
         if (mode === "discover") {
@@ -279,21 +292,76 @@ export async function runUpdate(
           publishedAs(info).length > 0 &&
           !publishedAs(info).some(sameFamily);
         let artifact, attempt = 0;
-        for (;;) {
-          const url =
-            attempt === 0
-              ? candidate.url
-              : candidate.url.includes("?")
-                ? candidate.url + "&piko-retry=" + attempt
-                : candidate.url + "?piko-retry=" + attempt;
-          artifact = await net.download(url, join(work, "distribution-" + attempt + ".exe"), {
-            sha256: attempt === 0 ? candidate.sha256 : undefined,
-            sha512: attempt === 0 ? candidate.sha512 : undefined,
-            md5: attempt === 0 ? candidate.md5 : undefined,
-            maxBytes: 2 * GiB,
+        try {
+          for (;;) {
+            const url =
+              attempt === 0
+                ? candidate.url
+                : candidate.url.includes("?")
+                  ? candidate.url + "&piko-retry=" + attempt
+                  : candidate.url + "?piko-retry=" + attempt;
+            artifact = await net.download(
+              url,
+              join(work, "distribution-" + attempt + ".exe"),
+              {
+                sha256: attempt === 0 ? candidate.sha256 : undefined,
+                sha512: attempt === 0 ? candidate.sha512 : undefined,
+                md5: attempt === 0 ? candidate.md5 : undefined,
+                maxBytes: 2 * GiB,
+              },
+            );
+            if (!stale(artifact) || ++attempt >= 3) break;
+            log(
+              name +
+                ": stale CDN build (sha256 " +
+                artifact.sha256.slice(0, 16) +
+                "), retrying",
+            );
+          }
+        } catch (downloadError) {
+          // A feed-discovered release blocked by a geo-restricted or flaky
+          // vendor CDN is still registered with a placeholder digest: the
+          // version and its official URL become installable immediately
+          // through the client's explicit checksum bypass, and the next run
+          // that can actually fetch the payload replaces the placeholder
+          // with the measured digest. PE-version probes need the payload to
+          // even know the version, so they keep the ordinary blocked path.
+          if (
+            !(
+              !candidate.versionFromPE &&
+              downloadError instanceof TypeError &&
+              /fetch failed/i.test(String(downloadError.message))
+            )
+          )
+            throw downloadError;
+          const next = nextManifest(current, candidate, rule);
+          if (name === "tortoise-svn") await applyTortoiseRecipe(next);
+          for (const d of downloads(next.platforms["windows-x64"])) {
+            d.url = candidate.url;
+            d.sha256 = PLACEHOLDER_SHA256;
+          }
+          validateManifest(next, name, next.version);
+          requireThat(
+            !Object.hasOwn(entry.versions, next.version) ||
+              isPlaceholderManifest(
+                catalog.manifests.get(name + "@" + next.version),
+              ),
+            "Never replace an already-published manifest",
+          );
+          Object.assign(row, {
+            version: next.version,
+            status: "registered-unverified",
+            reason:
+              "Payload fetch blocked by the vendor network; placeholder digest, install with --skip-checksum until a run completes it",
           });
-          if (!stale(artifact) || ++attempt >= 3) break;
-          log(name + ": stale CDN build (sha256 " + artifact.sha256.slice(0, 16) + "), retrying");
+          if (mode === "write") planned.push({ name, manifest: next });
+          log(
+            name +
+              ": registered " +
+              next.version +
+              " without a verified download (network blocked)",
+          );
+          continue;
         }
         requireThat(
           !stale(artifact),
@@ -376,7 +444,10 @@ export async function runUpdate(
         }
         validateManifest(next, name, next.version);
         requireThat(
-          !Object.hasOwn(entry.versions, next.version),
+          !Object.hasOwn(entry.versions, next.version) ||
+            isPlaceholderManifest(
+              catalog.manifests.get(name + "@" + next.version),
+            ),
           "Never replace an already-published manifest",
         );
         Object.assign(row, {
@@ -441,10 +512,22 @@ export async function runUpdate(
             ...entry.versions,
             [manifest.version]: file,
           };
-          const nextDocument = pruneDocument(
-            appendManifest(catalog.documents.get(file), manifest),
-            { versions: nextEntry },
-          );
+          // Completing a placeholder replaces its template row instead of
+          // appending a duplicate version; orphaned recipes are dropped.
+          let base = catalog.documents.get(file);
+          if (Object.hasOwn(base?.versions ?? {}, manifest.version)) {
+            const stripped = structuredClone(base);
+            delete stripped.versions[manifest.version];
+            const used = new Set(
+              Object.values(stripped.versions).map((r) => r.recipe),
+            );
+            for (const id of Object.keys(stripped.recipes))
+              if (!used.has(id)) delete stripped.recipes[id];
+            base = stripped;
+          }
+          const nextDocument = pruneDocument(appendManifest(base, manifest), {
+            versions: nextEntry,
+          });
           const tempFile = path + ".tmp-" + process.pid;
           temporary.push(tempFile);
           await writeFile(
@@ -481,8 +564,8 @@ export async function runUpdate(
       }
       await loadCatalog(root);
     }
-    report.changed = report.results.filter(
-      (r) => r.status === "updated",
+    report.changed = report.results.filter((r) =>
+      ["updated", "registered-unverified"].includes(r.status),
     ).length;
     return report;
   } finally {

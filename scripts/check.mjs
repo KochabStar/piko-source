@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { resolveManifestDocument } from "./lib/manifest-template.mjs";
 import { loadCatalog, validateRules, requireThat } from "./lib/catalog.mjs";
 import { RETENTION_KEEP, prunedVersions } from "./lib/retention.mjs";
+import { isPlaceholderManifest } from "./lib/catalog.mjs";
 export async function checkSource(root, { base } = {}) {
   const catalog = await loadCatalog(root),
     config = validateRules(
@@ -73,8 +74,23 @@ export async function checkSource(root, { base } = {}) {
         const old = oldDocuments.get(file);
         const previous = resolveManifestDocument(old.document, name, version);
         const current = catalog.manifests.get(name + "@" + version);
+        // A registered-but-unverified placeholder may only be completed by a
+        // later run: its digest becomes the measured one (and maxBytes the
+        // measured bound); every other field stays byte-for-byte immutable.
+        const comparable = (m) => {
+          const copy = structuredClone(m);
+          const platform = copy.platforms?.["windows-x64"];
+          if (platform)
+            for (const d of platform.downloads ?? [platform]) {
+              delete d.sha256;
+              delete d.maxBytes;
+            }
+          return JSON.stringify(copy);
+        };
         requireThat(
-          JSON.stringify(previous) === JSON.stringify(current),
+          isPlaceholderManifest(previous)
+            ? comparable(previous) === comparable(current)
+            : JSON.stringify(previous) === JSON.stringify(current),
           "Previously published manifest modified: " + name + "@" + version,
         );
         if (old.document.schemaVersion === 1 && nextFile === file)

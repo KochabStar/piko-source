@@ -578,3 +578,16 @@ export function validateRules(catalog, config) {
   }
   return config;
 }
+
+// A feed-discovered version whose payload could not be fetched (typically a
+// geo-restricted vendor CDN blocking the runner) is registered with this
+// all-zero digest so the version is already installable through the client's
+// explicit checksum bypass. The next run that manages to download the payload
+// replaces the placeholder with the measured digest; every other field of a
+// placeholder row stays immutable like any published manifest.
+export const PLACEHOLDER_SHA256 = "0".repeat(64);
+export const isPlaceholderManifest = (manifest) =>
+  !!manifest &&
+  downloads(manifest.platforms["windows-x64"]).some(
+    (d) => d.sha256 === PLACEHOLDER_SHA256,
+  );
