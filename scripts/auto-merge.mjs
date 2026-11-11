@@ -141,9 +141,13 @@ export async function prepareMerge(
         appendManifest(previousDocument, manifest),
         baselineEntry,
       );
+      const actualDocument = catalog.documents.get(file);
       requireThat(
-        isDeepStrictEqual(catalog.documents.get(file), expectedDocument),
-        "Template contains changes outside the verified update",
+        isDeepStrictEqual(actualDocument, expectedDocument),
+        "Template contains changes outside the verified update: " +
+          update.name +
+          "@" +
+          update.version,
       );
     }
     const platform = manifest.platforms["windows-x64"];
