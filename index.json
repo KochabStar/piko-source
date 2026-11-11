@@ -81,10 +81,11 @@
     },
     "beyondcompare-zh-cn": {
       "category": "desktop",
-      "latest": "5.2.7.32913",
+      "latest": "5.2.8.33052",
       "versions": {
         "5.2.6.32774": "packages/desktop/beyondcompare-zh-cn/package.json",
-        "5.2.7.32913": "packages/desktop/beyondcompare-zh-cn/package.json"
+        "5.2.7.32913": "packages/desktop/beyondcompare-zh-cn/package.json",
+        "5.2.8.33052": "packages/desktop/beyondcompare-zh-cn/package.json"
       }
     },
     "obsidian": {
@@ -189,9 +190,10 @@
     },
     "git": {
       "category": "dev",
-      "latest": "2.56.0.4",
+      "latest": "2.56.1",
       "versions": {
-        "2.56.0.4": "packages/dev/git/package.json"
+        "2.56.0.4": "packages/dev/git/package.json",
+        "2.56.1": "packages/dev/git/package.json"
       }
     },
     "inno-setup": {
@@ -234,25 +236,26 @@
     },
     "pi": {
       "category": "ai",
-      "latest": "1.5.1",
+      "latest": "1.5.2",
       "versions": {
         "1.4.0": "packages/ai/pi/package.json",
         "1.5.0": "packages/ai/pi/package.json",
-        "1.5.1": "packages/ai/pi/package.json"
+        "1.5.1": "packages/ai/pi/package.json",
+        "1.5.2": "packages/ai/pi/package.json"
       }
     },
     "oh-my-pi": {
       "category": "ai",
-      "latest": "18.18.6",
+      "latest": "18.18.7",
       "versions": {
-        "18.14.2": "packages/ai/oh-my-pi/package.json",
         "18.15.0": "packages/ai/oh-my-pi/package.json",
         "18.16.0": "packages/ai/oh-my-pi/package.json",
         "18.17.0": "packages/ai/oh-my-pi/package.json",
         "18.18.0": "packages/ai/oh-my-pi/package.json",
         "18.18.1": "packages/ai/oh-my-pi/package.json",
         "18.18.3": "packages/ai/oh-my-pi/package.json",
-        "18.18.6": "packages/ai/oh-my-pi/package.json"
+        "18.18.6": "packages/ai/oh-my-pi/package.json",
+        "18.18.7": "packages/ai/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -282,9 +285,10 @@
         "family": "go",
         "distribution": "official"
       },
-      "latest": "1.27.3",
+      "latest": "1.27.4",
       "versions": {
-        "1.27.3": "packages/runtime/go/package.json"
+        "1.27.3": "packages/runtime/go/package.json",
+        "1.27.4": "packages/runtime/go/package.json"
       }
     },
     "uv": {
@@ -298,34 +302,36 @@
     },
     "pixi": {
       "category": "runtime",
-      "latest": "0.84.1",
+      "latest": "0.84.2",
       "versions": {
         "0.83.0": "packages/runtime/pixi/package.json",
         "0.84.0": "packages/runtime/pixi/package.json",
-        "0.84.1": "packages/runtime/pixi/package.json"
+        "0.84.1": "packages/runtime/pixi/package.json",
+        "0.84.2": "packages/runtime/pixi/package.json"
       }
     },
     "codex": {
       "category": "ai",
-      "latest": "0.167.0",
+      "latest": "0.167.1",
       "versions": {
         "0.164.0": "packages/ai/codex/package.json",
         "0.166.0": "packages/ai/codex/package.json",
-        "0.167.0": "packages/ai/codex/package.json"
+        "0.167.0": "packages/ai/codex/package.json",
+        "0.167.1": "packages/ai/codex/package.json"
       }
     },
     "orca": {
       "category": "ai",
-      "latest": "1.4.255",
+      "latest": "1.4.256",
       "versions": {
-        "1.4.247": "packages/ai/orca/package.json",
         "1.4.248": "packages/ai/orca/package.json",
         "1.4.250": "packages/ai/orca/package.json",
         "1.4.251": "packages/ai/orca/package.json",
         "1.4.252": "packages/ai/orca/package.json",
         "1.4.253": "packages/ai/orca/package.json",
         "1.4.254": "packages/ai/orca/package.json",
-        "1.4.255": "packages/ai/orca/package.json"
+        "1.4.255": "packages/ai/orca/package.json",
+        "1.4.256": "packages/ai/orca/package.json"
       }
     },
     "listary": {
@@ -455,10 +461,11 @@
     },
     "baidu-netdisk": {
       "category": "desktop",
-      "latest": "8.10.1.102",
+      "latest": "8.10.3.101",
       "versions": {
         "8.9.7.101": "packages/desktop/baidu-netdisk/package.json",
-        "8.10.1.102": "packages/desktop/baidu-netdisk/package.json"
+        "8.10.1.102": "packages/desktop/baidu-netdisk/package.json",
+        "8.10.3.101": "packages/desktop/baidu-netdisk/package.json"
       }
     },
     "clouddrive2": {
@@ -543,9 +550,10 @@
     },
     "vscode": {
       "category": "editors",
-      "latest": "1.145.2",
+      "latest": "1.145.3",
       "versions": {
-        "1.145.2": "packages/editors/vscode/package.json"
+        "1.145.2": "packages/editors/vscode/package.json",
+        "1.145.3": "packages/editors/vscode/package.json"
       }
     },
     "winfsp": {
