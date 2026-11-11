@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { validateManifest, loadCatalog } from "../scripts/lib/catalog.mjs";
 import { fileURLToPath } from "node:url";
 import { discover } from "../scripts/lib/providers.mjs";
+import { RETENTION_KEEP } from "../scripts/lib/retention.mjs";
 
 const json = async (path) =>
   JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"));
@@ -11,24 +12,26 @@ const index = await json("../index.json");
 const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
-// The retention window pruned 18.13.2 and 18.14.1; the oldest retained
-// version anchors the discovery comparison.
-const old = catalog.manifests.get("oh-my-pi@18.14.2");
-const next = catalog.manifests.get("oh-my-pi@18.18.6");
+// Snapshot-free anchors: the updater appends new upstream versions and prunes
+// the window on every release, so the assertions describe the shape (window
+// size, pruned history, latest manifest) instead of exact version lists.
+const entry = index.packages["oh-my-pi"];
+const versions = Object.keys(entry.versions);
+const oldest = versions[0],
+  latest = entry.latest;
+const old = catalog.manifests.get("oh-my-pi@" + oldest);
+const next = catalog.manifests.get("oh-my-pi@" + latest);
 const rule = (await json("../automation/rules.json")).packages["oh-my-pi"];
 
 test("oh-my-pi keeps the retention window and a valid latest manifest", () => {
-  validateManifest(next, "oh-my-pi", "18.18.6");
-  assert.equal(index.packages["oh-my-pi"].category, "ai");
+  validateManifest(next, "oh-my-pi", latest);
+  assert.equal(entry.category, "ai");
+  assert.equal(versions.length, RETENTION_KEEP);
+  // 18.13.2 and 18.14.1 were pruned when the window filled and must stay out.
+  assert.equal(entry.versions["18.13.2"], undefined);
+  assert.equal(entry.versions["18.14.1"], undefined);
   assert.equal(
-    index.packages["oh-my-pi"].versions["18.14.2"],
-    "packages/ai/oh-my-pi/package.json",
-  );
-  assert.equal(index.packages["oh-my-pi"].versions["18.13.2"], undefined);
-  assert.equal(index.packages["oh-my-pi"].versions["18.14.1"], undefined);
-  assert.equal(Object.keys(index.packages["oh-my-pi"].versions).length, 8);
-  assert.equal(
-    index.packages["oh-my-pi"].versions[index.packages["oh-my-pi"].latest],
+    entry.versions[latest],
     "packages/ai/oh-my-pi/package.json",
   );
   assert.deepEqual(next.platforms["windows-x64"].bin, { omp: "omp.exe" });
