@@ -21,11 +21,6 @@
     }
   },
   "versions": {
-    "18.14.2": {
-      "recipe": "r607104fb13f7aa5b",
-      "maxBytes": 536870912,
-      "sha256": "aa04e4ff3b2d97d604839edf1bcf5a0085818389d9fc8c1a18875ee7b5e3b0f8"
-    },
     "18.15.0": {
       "recipe": "r607104fb13f7aa5b",
       "maxBytes": 536870912,
@@ -60,6 +55,11 @@
       "recipe": "r607104fb13f7aa5b",
       "maxBytes": 536870912,
       "sha256": "dfb15c27cb2ea192a94761c26aa5cd4eed54b1e0a5a85c02938ab07d769bc8f7"
+    },
+    "18.18.7": {
+      "recipe": "r607104fb13f7aa5b",
+      "maxBytes": 536870912,
+      "sha256": "4a6e39ea34633e03d07a1543ba30842362311f920341378433aa31b6c1404491"
     }
   }
 }
