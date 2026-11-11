@@ -127,8 +127,10 @@ export async function prepareMerge(
         if (!used.has(id)) delete previousDocument.recipes[id];
     } else baselineEntry.versions[update.version] = file;
     baselineEntry.latest = update.version;
-    // The updater prunes to the retention window after appending, so the
-    // expected index must drop the same expired versions.
+    // The updater prunes the appended document against the UNPRUNED entry
+    // (the window is applied once); the expected index drops the same
+    // expired versions. Keep a pre-prune copy for the document comparison.
+    const pruneEntry = structuredClone(baselineEntry);
     for (const version of prunedVersions(baselineEntry))
       delete baselineEntry.versions[version];
     requireThat(
@@ -139,7 +141,7 @@ export async function prepareMerge(
     {
       const expectedDocument = pruneDocument(
         appendManifest(previousDocument, manifest),
-        baselineEntry,
+        pruneEntry,
       );
       const actualDocument = catalog.documents.get(file);
       requireThat(

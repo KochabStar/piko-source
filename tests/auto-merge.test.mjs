@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { prepareMerge, mergeVerified } from "../scripts/auto-merge.mjs";
 import { appendManifest } from "../scripts/lib/manifest-template.mjs";
+import { pruneDocument } from "../scripts/lib/retention.mjs";
 import { request } from "../scripts/lib/net.mjs";
 
 const baseSha = "1".repeat(40),
@@ -429,4 +430,100 @@ test("ignored local reports never become part of the PR tree", async (t) => {
     git(["ls-files", "update-report.json", "update-merge-plan.json"]),
     "",
   );
+});
+
+test("a full retention window appends and prunes identically in the expected tree", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "piko-merge-window-"));
+  t.after(() =>
+    rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 }),
+  );
+  const file = "packages/dev/demo/package.json";
+  await mkdir(join(root, "packages/dev/demo"), { recursive: true });
+  await mkdir(join(root, "automation"));
+  const manifest = (version) => ({
+    schemaVersion: 1,
+    name: "demo",
+    version,
+    platforms: {
+      "windows-x64": {
+        url: `https://vendor.example/demo-${version}.zip`,
+        sha256: "b".repeat(64),
+        format: "file",
+        file: "demo.exe",
+        bin: { demo: "demo.exe" },
+      },
+    },
+  });
+  // Fill the window exactly: appending one more group must prune the oldest
+  // in both the updater's document and the expected merge tree.
+  const seeded = ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.6.0", "1.7.0"];
+  let document;
+  for (const version of seeded)
+    document = appendManifest(document, manifest(version));
+  await writeFile(join(root, file), JSON.stringify(document, null, 2) + "\n");
+  const index = {
+    schemaVersion: 1,
+    packages: {
+      demo: {
+        category: "dev",
+        latest: "1.7.0",
+        versions: Object.fromEntries(seeded.map((v) => [v, file])),
+      },
+    },
+  };
+  await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
+  await writeFile(
+    join(root, "automation/rules.json"),
+    JSON.stringify({
+      schemaVersion: 1,
+      packages: { demo: { provider: "manual", reason: "test fixture" } },
+    }),
+  );
+  const git = (args) =>
+    execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }).trim();
+  git(["init", "--initial-branch=main"]);
+  git(["add", "."]);
+  git([
+    "-c",
+    "user.name=Fixture",
+    "-c",
+    "user.email=fixture@example.invalid",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "core.hooksPath=" + join(root, "empty-hooks"),
+    "commit",
+    "-m",
+    "baseline",
+  ]);
+  const base = JSON.parse(await readFile(join(root, file), "utf8"));
+  const next = manifest("2.0.0");
+  const nextDocument = pruneDocument(
+    appendManifest(base, next),
+    { versions: { ...index.packages.demo.versions, "2.0.0": file } },
+  );
+  await writeFile(join(root, file), JSON.stringify(nextDocument, null, 2) + "\n");
+  index.packages.demo.versions = Object.fromEntries(
+    Object.keys(nextDocument.versions).map((version) => [version, file]),
+  );
+  index.packages.demo.latest = "2.0.0";
+  await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
+  const prepared = await prepareMerge(
+    root,
+    {
+      mode: "write",
+      changed: 1,
+      blocked: 0,
+      results: [
+        { name: "demo", version: "2.0.0", sha256: "b".repeat(64), status: "updated" },
+      ],
+    },
+    { repository: "owner/piko-source" },
+  );
+  assert.deepEqual(prepared.files, ["index.json", file]);
+  assert.equal(Object.keys(nextDocument.versions).length, 8);
 });
