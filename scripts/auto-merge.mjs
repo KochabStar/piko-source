@@ -4,8 +4,17 @@ import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
 import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
-import { component, requireThat, loadCatalog } from "./lib/catalog.mjs";
-import { appendManifest } from "./lib/manifest-template.mjs";
+import {
+  component,
+  requireThat,
+  loadCatalog,
+  PLACEHOLDER_SHA256,
+  isPlaceholderManifest,
+} from "./lib/catalog.mjs";
+import {
+  appendManifest,
+  resolveManifestDocument,
+} from "./lib/manifest-template.mjs";
 import { prunedVersions, pruneDocument } from "./lib/retention.mjs";
 import { checkSource } from "./check.mjs";
 import { request } from "./lib/net.mjs";
@@ -30,7 +39,9 @@ export async function prepareMerge(
     report.mode === "write" && Array.isArray(report.results),
     "Auto-merge requires a completed write report",
   );
-  const updates = report.results.filter((r) => r.status === "updated");
+  const updates = report.results.filter((r) =>
+    ["updated", "registered-unverified"].includes(r.status),
+  );
   requireThat(
     Number.isSafeInteger(report.blocked) &&
       report.blocked >= 0 &&
@@ -52,6 +63,7 @@ export async function prepareMerge(
     report.results.every((r) =>
       [
         "updated",
+        "registered-unverified",
         "current",
         "manual",
         "provider-behind",
@@ -92,11 +104,28 @@ export async function prepareMerge(
     expected.add(file);
     const entry = index.packages[update.name];
     const baselineEntry = expectedIndex.packages[update.name];
+    const manifest = catalog.manifests.get(update.name + "@" + update.version);
+    const previousDocument = JSON.parse(git(["show", baseSha + ":" + file]));
+    // The baseline may already hold this version only as a registered
+    // placeholder; completing it with the measured digest is the one
+    // allowed replacement of a published row.
+    const completing =
+      Object.hasOwn(baselineEntry.versions, update.version) &&
+      isPlaceholderManifest(
+        resolveManifestDocument(previousDocument, update.name, update.version),
+      );
     requireThat(
-      !Object.hasOwn(baselineEntry.versions, update.version),
+      !Object.hasOwn(baselineEntry.versions, update.version) || completing,
       "Verified updates must append a new package version",
     );
-    baselineEntry.versions[update.version] = file;
+    if (completing) {
+      delete previousDocument.versions[update.version];
+      const used = new Set(
+        Object.values(previousDocument.versions).map((row) => row.recipe),
+      );
+      for (const id of Object.keys(previousDocument.recipes))
+        if (!used.has(id)) delete previousDocument.recipes[id];
+    } else baselineEntry.versions[update.version] = file;
     baselineEntry.latest = update.version;
     // The updater prunes to the retention window after appending, so the
     // expected index must drop the same expired versions.
@@ -107,11 +136,9 @@ export async function prepareMerge(
         entry.versions[update.version] === file,
       "Report differs from the generated index",
     );
-    const manifest = catalog.manifests.get(update.name + "@" + update.version);
     {
-      const previous = JSON.parse(git(["show", baseSha + ":" + file]));
       const expectedDocument = pruneDocument(
-        appendManifest(previous, manifest),
+        appendManifest(previousDocument, manifest),
         baselineEntry,
       );
       requireThat(
@@ -120,13 +147,18 @@ export async function prepareMerge(
       );
     }
     const platform = manifest.platforms["windows-x64"];
-    requireThat(
-      /^[a-f0-9]{64}$/.test(update.sha256) &&
-        (platform.downloads ?? [platform]).every(
-          (d) => d.sha256 === update.sha256,
-        ),
-      "Report differs from verified payload checksums",
-    );
+    const rows = platform.downloads ?? [platform];
+    if (isPlaceholderManifest(manifest))
+      requireThat(
+        rows.every((d) => d.sha256 === PLACEHOLDER_SHA256),
+        "Report differs from verified payload checksums",
+      );
+    else
+      requireThat(
+        /^[a-f0-9]{64}$/.test(update.sha256) &&
+          rows.every((d) => d.sha256 === update.sha256),
+        "Report differs from verified payload checksums",
+      );
   }
   requireThat(
     isDeepStrictEqual(index, expectedIndex),
