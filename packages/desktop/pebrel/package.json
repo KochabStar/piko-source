@@ -31,6 +31,11 @@
     "2.4.0": {
       "recipe": "rdcd08b2959866271",
       "sha256": "c3d88a428db402aff27af3a45e2550c8e3b8a5a77a079e580687ed56445c3dc7"
+    },
+    "2.5.3": {
+      "recipe": "rdcd08b2959866271",
+      "maxBytes": 536870912,
+      "sha256": "c6d7faf53defa32fc43e596d5b8a34963ef6241e95d858762bea450d5f127141"
     }
   }
 }
