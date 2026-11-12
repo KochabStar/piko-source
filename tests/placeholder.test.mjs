@@ -165,6 +165,55 @@ test("a network-blocked download registers the discovered version with a placeho
   await checkSource(root, { base });
 });
 
+test("a still-blocked payload keeps its published placeholder instead of re-registering", async (t) => {
+  const { root, git } = await fixture(t);
+  const blockedRun = () =>
+    runUpdate(root, {
+      mode: "write",
+      discoverer: async () => ({
+        version: "2.0.0",
+        url: "https://vendor.example/demo-2.0.0.zip",
+      }),
+      net: network({
+        token: undefined,
+        fetcher: async () => {
+          throw new TypeError("fetch failed");
+        },
+      }),
+      verify: async () => ({ files: 1, unknownSizeFiles: 0 }),
+    });
+  const first = await blockedRun();
+  assert.equal(first.changed, 1);
+  assert.equal(
+    first.results.find((r) => r.name === "demo").status,
+    "registered-unverified",
+  );
+  // Publish the placeholder the way the auto-merged update PR would.
+  git(["add", "."]);
+  git([
+    "-c",
+    "user.name=Placeholder fixture",
+    "-c",
+    "user.email=fixture@example.invalid",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "core.hooksPath=" + join(root, "empty-hooks"),
+    "commit",
+    "-m",
+    "placeholder published",
+  ]);
+  const second = await blockedRun();
+  assert.equal(second.changed, 0);
+  const result = second.results.find((r) => r.name === "demo");
+  assert.equal(result.status, "already-indexed");
+  assert.equal(result.version, "2.0.0");
+  // The run claims no change, so the tree must show none either: the
+  // auto-merge exact-tree check compares both sets.
+  assert.equal(git(["diff", "--name-only", "HEAD", "--"]), "");
+  assert.equal(git(["ls-files", "--others", "--exclude-standard"]), "");
+});
+
 test("a placeholder may not be modified beyond its digest completion", async (t) => {
   const { root, git, file } = await fixture(t);
   await runUpdate(root, {

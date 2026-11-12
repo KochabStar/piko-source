@@ -8,6 +8,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 import {
   loadCatalog,
   validateRules,
@@ -341,13 +342,26 @@ export async function runUpdate(
             d.sha256 = PLACEHOLDER_SHA256;
           }
           validateManifest(next, name, next.version);
+          const registered = catalog.manifests.get(
+            name + "@" + next.version,
+          );
           requireThat(
             !Object.hasOwn(entry.versions, next.version) ||
-              isPlaceholderManifest(
-                catalog.manifests.get(name + "@" + next.version),
-              ),
+              isPlaceholderManifest(registered),
             "Never replace an already-published manifest",
           );
+          // Re-registering the published placeholder byte-for-byte would
+          // leave the working tree unchanged; the auto-merge exact-tree
+          // check counts observed changes, so report the row as indexed
+          // instead of claiming a change no diff can observe.
+          if (isDeepStrictEqual(registered, next)) {
+            Object.assign(row, {
+              status: "already-indexed",
+              reason:
+                "Blocked payload already registered with this placeholder; retained until a run can fetch it",
+            });
+            continue;
+          }
           Object.assign(row, {
             version: next.version,
             status: "registered-unverified",
