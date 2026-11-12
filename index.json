@@ -325,16 +325,16 @@
     },
     "orca": {
       "category": "ai",
-      "latest": "1.4.256",
+      "latest": "1.4.257",
       "versions": {
-        "1.4.248": "packages/ai/orca/package.json",
         "1.4.250": "packages/ai/orca/package.json",
         "1.4.251": "packages/ai/orca/package.json",
         "1.4.252": "packages/ai/orca/package.json",
         "1.4.253": "packages/ai/orca/package.json",
         "1.4.254": "packages/ai/orca/package.json",
         "1.4.255": "packages/ai/orca/package.json",
-        "1.4.256": "packages/ai/orca/package.json"
+        "1.4.256": "packages/ai/orca/package.json",
+        "1.4.257": "packages/ai/orca/package.json"
       }
     },
     "listary": {
