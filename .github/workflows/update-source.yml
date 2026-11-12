@@ -2,8 +2,8 @@ name: Update upstream packages
 
 on:
   schedule:
-    # GitHub cron is UTC; 23:50 UTC = 07:50 Asia/Shanghai.
-    - cron: "50 23 * * *"
+    # GitHub cron is UTC; 02:37 UTC = 10:37 Asia/Shanghai. Avoids the congested UTC-midnight window where scheduled runs are delayed or dropped.
+    - cron: "37 2 * * *"
   workflow_dispatch:
     inputs:
       packages:
