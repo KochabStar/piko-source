@@ -91,10 +91,11 @@
     },
     "obsidian": {
       "category": "editors",
-      "latest": "1.15.0",
+      "latest": "1.15.1",
       "versions": {
         "1.14.5": "packages/editors/obsidian/package.json",
-        "1.15.0": "packages/editors/obsidian/package.json"
+        "1.15.0": "packages/editors/obsidian/package.json",
+        "1.15.1": "packages/editors/obsidian/package.json"
       }
     },
     "tabby": {
@@ -161,19 +162,21 @@
     },
     "cmake": {
       "category": "dev",
-      "latest": "4.4.5",
+      "latest": "4.5.0",
       "versions": {
-        "4.4.5": "packages/dev/cmake/package.json"
+        "4.4.5": "packages/dev/cmake/package.json",
+        "4.5.0": "packages/dev/cmake/package.json"
       }
     },
     "dbgate": {
       "category": "desktop",
-      "latest": "7.3.5",
+      "latest": "7.3.6",
       "versions": {
         "7.3.2": "packages/desktop/dbgate/package.json",
         "7.3.3": "packages/desktop/dbgate/package.json",
         "7.3.4": "packages/desktop/dbgate/package.json",
-        "7.3.5": "packages/desktop/dbgate/package.json"
+        "7.3.5": "packages/desktop/dbgate/package.json",
+        "7.3.6": "packages/desktop/dbgate/package.json"
       }
     },
     "ffmpeg": {
@@ -185,9 +188,10 @@
     },
     "gh": {
       "category": "dev",
-      "latest": "2.103.3",
+      "latest": "2.104.0",
       "versions": {
-        "2.103.3": "packages/dev/gh/package.json"
+        "2.103.3": "packages/dev/gh/package.json",
+        "2.104.0": "packages/dev/gh/package.json"
       }
     },
     "git": {
@@ -248,16 +252,16 @@
     },
     "oh-my-pi": {
       "category": "ai",
-      "latest": "18.19.0",
+      "latest": "18.20.0",
       "versions": {
-        "18.17.0": "packages/ai/oh-my-pi/package.json",
         "18.18.0": "packages/ai/oh-my-pi/package.json",
         "18.18.1": "packages/ai/oh-my-pi/package.json",
         "18.18.3": "packages/ai/oh-my-pi/package.json",
         "18.18.6": "packages/ai/oh-my-pi/package.json",
         "18.18.7": "packages/ai/oh-my-pi/package.json",
         "18.18.9": "packages/ai/oh-my-pi/package.json",
-        "18.19.0": "packages/ai/oh-my-pi/package.json"
+        "18.19.0": "packages/ai/oh-my-pi/package.json",
+        "18.20.0": "packages/ai/oh-my-pi/package.json"
       }
     },
     "sublime-text": {
@@ -295,11 +299,12 @@
     },
     "uv": {
       "category": "runtime",
-      "latest": "0.13.7",
+      "latest": "0.13.8",
       "versions": {
         "0.13.5": "packages/runtime/uv/package.json",
         "0.13.6": "packages/runtime/uv/package.json",
-        "0.13.7": "packages/runtime/uv/package.json"
+        "0.13.7": "packages/runtime/uv/package.json",
+        "0.13.8": "packages/runtime/uv/package.json"
       }
     },
     "pixi": {
@@ -314,27 +319,28 @@
     },
     "codex": {
       "category": "ai",
-      "latest": "0.167.2",
+      "latest": "0.169.0",
       "versions": {
         "0.164.0": "packages/ai/codex/package.json",
         "0.166.0": "packages/ai/codex/package.json",
         "0.167.0": "packages/ai/codex/package.json",
         "0.167.1": "packages/ai/codex/package.json",
-        "0.167.2": "packages/ai/codex/package.json"
+        "0.167.2": "packages/ai/codex/package.json",
+        "0.169.0": "packages/ai/codex/package.json"
       }
     },
     "orca": {
       "category": "ai",
-      "latest": "1.4.257",
+      "latest": "1.4.258",
       "versions": {
-        "1.4.250": "packages/ai/orca/package.json",
         "1.4.251": "packages/ai/orca/package.json",
         "1.4.252": "packages/ai/orca/package.json",
         "1.4.253": "packages/ai/orca/package.json",
         "1.4.254": "packages/ai/orca/package.json",
         "1.4.255": "packages/ai/orca/package.json",
         "1.4.256": "packages/ai/orca/package.json",
-        "1.4.257": "packages/ai/orca/package.json"
+        "1.4.257": "packages/ai/orca/package.json",
+        "1.4.258": "packages/ai/orca/package.json"
       }
     },
     "listary": {
@@ -398,14 +404,15 @@
     },
     "claude-code": {
       "category": "ai",
-      "latest": "2.1.322",
+      "latest": "2.1.323",
       "versions": {
         "2.1.316": "packages/ai/claude-code/package.json",
         "2.1.317": "packages/ai/claude-code/package.json",
         "2.1.318": "packages/ai/claude-code/package.json",
         "2.1.319": "packages/ai/claude-code/package.json",
         "2.1.321": "packages/ai/claude-code/package.json",
-        "2.1.322": "packages/ai/claude-code/package.json"
+        "2.1.322": "packages/ai/claude-code/package.json",
+        "2.1.323": "packages/ai/claude-code/package.json"
       }
     },
     "opencode": {
@@ -425,12 +432,13 @@
     },
     "lertaro": {
       "category": "desktop",
-      "latest": "5.12.10",
+      "latest": "5.13.0",
       "versions": {
         "5.12.2": "packages/desktop/lertaro/package.json",
         "5.12.7": "packages/desktop/lertaro/package.json",
         "5.12.9": "packages/desktop/lertaro/package.json",
-        "5.12.10": "packages/desktop/lertaro/package.json"
+        "5.12.10": "packages/desktop/lertaro/package.json",
+        "5.13.0": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
@@ -466,12 +474,13 @@
     },
     "baidu-netdisk": {
       "category": "desktop",
-      "latest": "8.10.3.102",
+      "latest": "8.10.3.103",
       "versions": {
         "8.9.7.101": "packages/desktop/baidu-netdisk/package.json",
         "8.10.1.102": "packages/desktop/baidu-netdisk/package.json",
         "8.10.3.101": "packages/desktop/baidu-netdisk/package.json",
-        "8.10.3.102": "packages/desktop/baidu-netdisk/package.json"
+        "8.10.3.102": "packages/desktop/baidu-netdisk/package.json",
+        "8.10.3.103": "packages/desktop/baidu-netdisk/package.json"
       }
     },
     "clouddrive2": {
@@ -572,10 +581,11 @@
     },
     "pebrel": {
       "category": "desktop",
-      "latest": "2.5.3",
+      "latest": "2.5.7",
       "versions": {
         "2.4.0": "packages/desktop/pebrel/package.json",
-        "2.5.3": "packages/desktop/pebrel/package.json"
+        "2.5.3": "packages/desktop/pebrel/package.json",
+        "2.5.7": "packages/desktop/pebrel/package.json"
       }
     }
   }
