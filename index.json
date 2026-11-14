@@ -404,7 +404,7 @@
     },
     "claude-code": {
       "category": "ai",
-      "latest": "2.1.323",
+      "latest": "2.1.325",
       "versions": {
         "2.1.316": "packages/ai/claude-code/package.json",
         "2.1.317": "packages/ai/claude-code/package.json",
@@ -412,7 +412,8 @@
         "2.1.319": "packages/ai/claude-code/package.json",
         "2.1.321": "packages/ai/claude-code/package.json",
         "2.1.322": "packages/ai/claude-code/package.json",
-        "2.1.323": "packages/ai/claude-code/package.json"
+        "2.1.323": "packages/ai/claude-code/package.json",
+        "2.1.325": "packages/ai/claude-code/package.json"
       }
     },
     "opencode": {
@@ -432,13 +433,14 @@
     },
     "lertaro": {
       "category": "desktop",
-      "latest": "5.13.0",
+      "latest": "5.13.1",
       "versions": {
         "5.12.2": "packages/desktop/lertaro/package.json",
         "5.12.7": "packages/desktop/lertaro/package.json",
         "5.12.9": "packages/desktop/lertaro/package.json",
         "5.12.10": "packages/desktop/lertaro/package.json",
-        "5.13.0": "packages/desktop/lertaro/package.json"
+        "5.13.0": "packages/desktop/lertaro/package.json",
+        "5.13.1": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
