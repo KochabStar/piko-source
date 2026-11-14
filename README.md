@@ -2,7 +2,7 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 70 个包、129 个版本，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 70 个包、163 个版本，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -15,6 +15,7 @@
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
 - [CloudDrive2 快捷方式打开黑窗口](guides/clouddrive2-shortcut.md)：`1.1.3.3` 改打 WinUI 桌面版（GUI 子系统 `CloudDrive.exe`），只解包捆绑链里的应用 MSI；旧服务版 `1.1.3` 保留。
 - [Godot 装完没有快捷方式](guides/godot-shortcut.md)：`4.7.2-piko.1` 补上指向 GUI 主程序（非 `_console.exe`）的开始菜单入口，载荷与命令表不变；含已有安装的收据修复流程。
+- [Lertaro 后台服务启动失败](guides/lertaro-service.md)：`5.13.1-piko.1` 保留载荷与命令表，把 `LertaroService` 注册从会被回收的版本目录改锚到 `current` 目录联接，服务随默认版本切换；含故障注册的接管流程。
 
 原始两份清单复制自客户端的 `examples/source/`：Node 26.12.1、ripgrep 15.2.0。现已增加 Lua 5.5.0、z.lua 1.8.26、Starship 1.27.0、fzf 0.74.5、PSFzf 2.7.12、sudo 0.2020.01.26、Snipaste 2.11.3；已在第六阶段加入 GitHub Actions 上游更新配置；推送并启用仓库权限后运行，正式 HTTPS 托管仍未部署。后续清单在此维护，客户端示例不自动同步。
 
@@ -169,7 +170,7 @@ pi --version
 - Claude Code 设置进程环境 `DISABLE_UPDATES=1`，OpenCode 设置 `OPENCODE_DISABLE_AUTOUPDATE=1`，由 Piko 管理版本；不改写已有配置、会话或凭据。Claude Code 的 Bash 功能仍需 Git Bash，不自动更改宿主 PATH／Profile。
 - QQNT 已追加 **9.9.36.53644**，保留 9.9.33.52230。**先升级 Piko 至 0.4.1**：客户端和源更新器在下载前调用官网免登录 `GetSign`，签名仅留内存，清单／状态仍保存固定无签名资源身份和 SHA-256；支持内置及 aria2 分段，不采用第三方中转。空缓存真实安装、摘要、完整资源布局与命令解析通过，未启动 GUI、注册扩展／服务或迁移账户数据。见 [实现与升级顺序](guides/qqnt.md)、[原生安装证据](verification/qqnt-native-install-20261102.json)。
 - NVIDIA App 依赖系统安装与配套组件。此包只下载、校验、保存官方完整安装器；`piko install` 不安装系统应用，`nvidia-app-setup` 仅在用户主动调用时打开安装向导。没有 `nvidia-app` 伪便携入口、自动 UAC、管理员配方、服务／驱动／启动项操作；Piko 卸载此包也不会撤销用户另行完成的 NVIDIA 系统安装。
-- Lertaro 需要外部 **x64 .NET 10 Desktop Runtime**，本包不自动安装运行库，也不运行随包安装脚本。`Data` 在首次启动前由 Piko 持久化创建，避免便携程序自动沿用既有系统安装的数据。**上游 GUI 首次启动可能请求 UAC、注册或重装 `Lertaro.Service`；便携不等于无系统副作用。** 此源不自动注册服务，不启动 GUI、不接管现有服务；使用前应审核上游服务行为。真实 GUI 保存、跨版本数据迁移和服务兼容性未验收。
+- Lertaro 需要外部 **x64 .NET 10 Desktop Runtime**，本包不自动安装运行库，也不运行随包安装脚本。`Data` 在首次启动前由 Piko 持久化创建，避免便携程序自动沿用既有系统安装的数据。**上游 GUI 首次启动可能请求 UAC、注册或重装 `Lertaro.Service`；便携不等于无系统副作用。** `5.13.1-piko.1` 起提供显式的 `piko system lertaro` 集成：把服务注册锚定到 `current` 目录联接，而不是会被回收的版本目录；不预览审批就不会执行，也不接管指向本包之外的服务，见 [Lertaro 后台服务](guides/lertaro-service.md)。真实 GUI 保存与跨版本数据迁移仍未验收。
 - Nushell 不改默认登录 Shell、不注入 Profile、不自动注册插件；配置仍使用上游原生用户位置。新版客户端可能在安装时自动登记 QQ／Lertaro 的 Start Menu 入口；旧版客户端或额外桌面集成须按 `integrate --desktop` 预览确认。安装不自动选择默认 CLI 命令。
 
 ## 新增逆向与云盘工具（2026-11-04）

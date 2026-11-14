@@ -30,6 +30,59 @@
           "maxBytes": "{maxBytes}"
         }
       }
+    },
+    "r0501404cff9112b9": {
+      "schemaVersion": 1,
+      "name": "lertaro",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/Lertaro/Lertaro/releases/download/v{version}/Lertaro-Portable.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "stripPrefix": "Lertaro",
+          "bin": {
+            "lertaro": "Lertaro.App.exe",
+            "lff": "lff.exe"
+          },
+          "persist": [
+            "Data",
+            ".piko-system"
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Lertaro",
+                "path": "Lertaro.App.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}",
+          "configFiles": {
+            "piko-service.ps1": "#requires -Version 5.1\nparam([ValidateSet('install','remove')][string]$Action,[Parameter(Mandatory=$true)][string]$Root,[Parameter(Mandatory=$true)][string]$Data)\n$ErrorActionPreference='Stop'\n# Lertaro background service integration. The application registers\n# LertaroService from whichever version directory it happens to run in, so a\n# payload Piko later replaces leaves the registration pointing at a directory\n# that no longer exists and every start fails with \"system cannot find the\n# file\". This anchors the registration at the package's stable current\n# junction, which follows the selected version, and journals what it wrote so\n# removal deletes exactly that service.\n$Root=[IO.Path]::GetFullPath($Root).TrimEnd('\\')\n$apps=Split-Path -Parent $Root\n$stable=Join-Path $apps 'current'\n$image=Join-Path $stable 'Lertaro.Service.exe'\n$journal=Join-Path $Data 'piko-lertaro-service.json'\n$serviceName='LertaroService'\n$displayName='Lertaro Background Service'\nfunction Get-ImagePath([string]$PathName){\n $p=$PathName.Trim()\n if($p.StartsWith('\"')){\n  $end=$p.IndexOf('\"',1)\n  if($end -gt 1){$p=$p.Substring(1,$end-1)}else{$p=$p.Substring(1)}\n }else{\n  $space=$p.IndexOf(' ')\n  if($space -gt 0){$p=$p.Substring(0,$space)}\n }\n $p\n}\nfunction Test-Under([string]$PathName,[string]$Parent){\n if(!$PathName){return $false}\n (Get-ImagePath $PathName).StartsWith($Parent.TrimEnd('\\')+'\\',[System.StringComparison]::OrdinalIgnoreCase)\n}\nfunction Get-Registration{Get-CimInstance Win32_Service -Filter (\"Name='\"+$serviceName+\"'\")}\nfunction Invoke-Sc([string[]]$Arguments){\n $out=& sc.exe @Arguments 2>&1\n $code=$LASTEXITCODE\n if($code -ne 0){throw ('sc.exe '+($Arguments -join ' ')+' failed with exit code '+$code+': '+(($out|Out-String).Trim()))}\n ($out|Out-String).Trim()\n}\nfunction Stop-Registration{\n $registration=Get-Registration\n if(!$registration){return}\n if($registration.State -ne 'Stopped'){\n  $null=Invoke-Sc @('stop',$serviceName)\n  $deadline=(Get-Date).AddSeconds(60)\n  while((Get-Date) -lt $deadline){\n   Start-Sleep -Milliseconds 500\n   $current=Get-Registration\n   if(!$current -or $current.State -eq 'Stopped'){break}\n  }\n  $current=Get-Registration\n  if($current -and $current.State -ne 'Stopped'){throw ('LertaroService did not stop (state '+$current.State+')')}\n }\n if($current -and $current.ProcessId){Stop-Process -Id $current.ProcessId -Force -ErrorAction SilentlyContinue}\n}\nif(!(Test-Path -LiteralPath $stable -PathType Container)){throw 'The package current junction is missing: '+$stable}\nif(!(Test-Path -LiteralPath $image -PathType Leaf)){throw 'The selected version does not ship Lertaro.Service.exe: '+$image}\n$registration=Get-Registration\nif($registration -and !(Test-Under $registration.PathName $apps)){\n throw ('An existing Lertaro service points outside this package ('+$registration.PathName+'); remove it through its owner first')\n}\nif($Action -eq 'install'){\n $null=[IO.Directory]::CreateDirectory($Data)\n $record=$null\n if(Test-Path -LiteralPath $journal -PathType Leaf){\n  $record=Get-Content -LiteralPath $journal -Raw|ConvertFrom-Json\n  if($record.schemaVersion -ne 1){throw 'Unsupported service ownership receipt'}\n  if($record.stable -ine $stable){throw 'The service journal belongs to a different package directory'}\n }\n if($registration){\n  # The application's own registration cannot follow a replaced version, so\n  # rebuild it from the junction rather than editing a stale path in place.\n  Stop-Registration\n  $null=Invoke-Sc @('delete',$serviceName)\n  $deadline=(Get-Date).AddSeconds(30)\n  while((Get-Registration) -and (Get-Date) -lt $deadline){Start-Sleep -Milliseconds 500}\n  if(Get-Registration){throw 'Failed to replace the existing Lertaro service registration'}\n }\n # New-Service hands the image path to CreateService verbatim, so the quotes a\n # path containing spaces needs survive; sc.exe would re-parse them away.\n # Delayed auto start is applied afterwards because New-Service only accepts\n # that startup mode on PowerShell 7, and 5.1 remains the fallback host.\n $quoted=[string]::Format('{0}{1}{0} --service',[char]34,$image)\n $null=New-Service -Name $serviceName -BinaryPathName $quoted -DisplayName $displayName -StartupType Automatic\n $null=Invoke-Sc @('config',$serviceName,'start=','delayed-auto')\n $null=Invoke-Sc @('failure',$serviceName,'reset=','86400','actions=','restart/15000/restart/30000/restart/60000')\n $null=Invoke-Sc @('start',$serviceName)\n $deadline=(Get-Date).AddSeconds(60)\n $ok=$false\n do{\n  Start-Sleep -Milliseconds 500\n  $current=Get-Registration\n  if($current -and $current.State -eq 'Running' -and ((Get-ImagePath $current.PathName) -ieq $image)){$ok=$true;break}\n }while((Get-Date) -lt $deadline)\n if(!$ok){\n  $state=if($current){$current.State}else{'absent'}\n  throw ('LertaroService did not reach Running at '+$image+' (state '+$state+')')\n }\n @{schemaVersion=1;stable=$stable;image=$image;service=$serviceName;state='installed';installed=(Get-Date).ToUniversalTime().ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath $journal -Encoding UTF8\n Write-Output ('Installed Lertaro service registration at '+$image)\n}else{\n if(!(Test-Path -LiteralPath $journal -PathType Leaf)){throw 'No owned Lertaro service registration to remove'}\n $record=Get-Content -LiteralPath $journal -Raw|ConvertFrom-Json\n if($record.schemaVersion -ne 1){throw 'Unsupported service ownership receipt'}\n if($record.stable -ine $stable){throw 'The service journal belongs to a different package directory'}\n if(!$registration){\n  Remove-Item -LiteralPath $journal -Force\n  Write-Output 'Lertaro service was already absent'\n  return\n }\n Stop-Registration\n $null=Invoke-Sc @('delete',$serviceName)\n $deadline=(Get-Date).AddSeconds(30)\n while((Get-Registration) -and (Get-Date) -lt $deadline){Start-Sleep -Milliseconds 500}\n if(Get-Registration){throw 'Failed to delete the Lertaro service registration'}\n Remove-Item -LiteralPath $journal -Force\n Write-Output 'Removed Lertaro service registration'\n}\n"
+          },
+          "admin": {
+            "install": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "install",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            },
+            "remove": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "remove",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "versions": {
@@ -59,6 +112,11 @@
     },
     "5.13.1": {
       "recipe": "r3c1008676076bfeb",
+      "maxBytes": 536870912,
+      "sha256": "65a547196f79cbbd89d4c27f0060fca20a5c7cd32da2230af22b6c56104c6900"
+    },
+    "5.13.1-piko.1": {
+      "recipe": "r0501404cff9112b9",
       "maxBytes": 536870912,
       "sha256": "65a547196f79cbbd89d4c27f0060fca20a5c7cd32da2230af22b6c56104c6900"
     }

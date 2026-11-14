@@ -370,6 +370,7 @@
       "url": "https://download.documentfoundation.org/libreoffice/stable/",
       "versionRegex": "href=\"(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/\"",
       "urlTemplate": "https://download.documentfoundation.org/libreoffice/stable/{version}/win/x86_64/LibreOffice_{version}_Win_x86-64.msi",
+      "layout": "apptree",
       "signature": true
     },
     "x64dbg": {

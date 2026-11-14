@@ -9,11 +9,32 @@ import {
   readdir,
 } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import { createWriteStream } from "node:fs";
+import { createWriteStream, lstatSync } from "node:fs";
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileDigest } from "./net.mjs";
 import { requireThat, MiB } from "./catalog.mjs";
+// PowerShell 7 is preferred when the machine has it; every supported Windows
+// release still ships 5.1, so that stays the fallback. The Store build of pwsh
+// is an app-execution alias, so a plain existence probe has to follow the
+// reparse point instead of trusting a file-type check.
+export function powershellExecutable() {
+  for (const dir of (process.env.PATH ?? "").split(";")) {
+    if (!dir.trim()) continue;
+    const candidate = join(dir.trim(), "pwsh.exe");
+    try {
+      lstatSync(candidate);
+      return candidate;
+    } catch {}
+  }
+  return join(
+    process.env.SystemRoot ?? "C:\\Windows",
+    "System32",
+    "WindowsPowerShell",
+    "v1.0",
+    "powershell.exe",
+  );
+}
 export async function capture(
   program,
   args,

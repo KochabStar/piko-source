@@ -1,7 +1,8 @@
 import { open, mkdir, readFile, stat, readdir } from "node:fs/promises";
+
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import { capture } from "./tools.mjs";
+import { capture, powershellExecutable } from "./tools.mjs";
 import { readMsiPlan } from "./msi.mjs";
 import { pathName, requireThat, GiB, MiB, downloads } from "./catalog.mjs";
 export function parseListing(text, type) {
@@ -380,6 +381,19 @@ export async function resolveBurnPayload(tools, file, payloadId, temp, serial) {
   );
   return { file: target, serial: layout.serial + 1 };
 }
+// The explicit map doubles as the client's permission to read an MSI whose file
+// table repeats a target path. Some vendors repeat paths only for files outside
+// the application tree, so the map is a plain whitelist of that tree; deriving
+// it from the same file table the verifier reads keeps it current when the
+// payload carries its own moving parts (embedded runtimes, bundled extensions).
+export function applicationFiles(plan, prefix) {
+  requireThat(prefix, "Application tree requires an explicit stripPrefix");
+  const files = plan.files
+    .filter((f) => f.path.startsWith(prefix + "/"))
+    .map((f) => f.path.slice(prefix.length + 1));
+  requireThat(files.length > 0, "Application tree is empty");
+  return Object.fromEntries(files.map((path) => [path, path]));
+}
 function mapped(entries, d, { inno = false, msi = false } = {}) {
   const files = [],
     matched = new Set(),
@@ -661,8 +675,13 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
       const plan = await readMsiPlan(
         await tools.get("lessmsi"),
         file,
-        !!d.files,
+        !!d.files || rule.layout === "apptree",
       );
+      if (rule.layout === "apptree")
+        // The whole application tree under stripPrefix is the payload, exactly
+        // as the vendor ships it. Deriving the map keeps embedded runtimes and
+        // bundled extensions in sync instead of freezing one release's paths.
+        effective.files = d.files = applicationFiles(plan, d.stripPrefix);
       if (rule.layout === "epic")
         // Keep the launcher application only: DirectX/GameInput
         // redistributable installers, system-directory VC++ runtimes and
@@ -835,7 +854,7 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
     const script =
       "$ErrorActionPreference='Stop'; Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Security/Microsoft.PowerShell.Security.psd1') -ErrorAction Stop; if((Get-AuthenticodeSignature -LiteralPath $env:PIKO_SOURCE_SIGNATURE_FILE).Status -ne 'Valid'){throw 'Distribution signature is not Valid'}";
     await capture(
-      "powershell.exe",
+      powershellExecutable(),
       ["-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script],
       {
         limit: MiB,

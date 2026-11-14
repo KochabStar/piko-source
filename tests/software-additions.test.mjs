@@ -19,7 +19,6 @@ for (const name of [
   "claude-code",
   "opencode",
   "nushell",
-  "lertaro",
   "nvidia-app",
   "qqnt",
   "codex",
@@ -197,14 +196,49 @@ test("Nushell retains the full archive but does not claim less, activate plugins
   assert.ok(rules.nushell.required.includes("nu_plugin_polars.exe"));
 });
 
-test("Lertaro preserves its native portable Data tree and does not automatically install .NET or a service", () => {
+test("Lertaro keeps its portable Data tree and abandons the vendor's version-anchored service registration", () => {
   const p = platform("lertaro");
   assert.equal(p.stripPrefix, "Lertaro");
-  assert.deepEqual(p.persist, ["Data"]);
+  assert.deepEqual(p.persist, ["Data", ".piko-system"]);
   assert.deepEqual(p.bin, { lertaro: "Lertaro.App.exe", lff: "lff.exe" });
-  assert.equal(p.configFiles, undefined);
   assert.equal(p.depends, undefined);
   assert.ok(rules.lertaro.required.includes("Lertaro.Service.exe"));
+  // The vendor registers LertaroService from the running version directory,
+  // which Piko replaces, so the start path dies with that directory.
+  assert.deepEqual(p.admin, {
+    install: {
+      kind: "powershell",
+      path: "piko-service.ps1",
+      args: ["install", "{root}", "{persist}/.piko-system"],
+    },
+    remove: {
+      kind: "powershell",
+      path: "piko-service.ps1",
+      args: ["remove", "{root}", "{persist}/.piko-system"],
+    },
+  });
+  const script = p.configFiles["piko-service.ps1"];
+  assert.match(script, /Lertaro\.Service\.exe/);
+  assert.match(script, /current/);
+  assert.match(script, /-ieq \$image/);
+  assert.doesNotMatch(script, /5\.13\.1/);
+});
+
+test("future Lertaro updates inherit the current-anchored service integration", () => {
+  const current = manifest("lertaro"),
+    next = nextManifest(
+      current,
+      { version: "5.14.0", url: "https://example.invalid/Lertaro-Portable.zip" },
+      rules.lertaro,
+    );
+  const p = next.platforms["windows-x64"],
+    before = current.platforms["windows-x64"];
+  assert.deepEqual(p.admin, before.admin);
+  assert.deepEqual(p.persist, before.persist);
+  assert.equal(p.configFiles["piko-service.ps1"], before.configFiles["piko-service.ps1"]);
+  // The script derives the stable entry from {root}, so a new version does not
+  // need a new payload or a re-approved recipe.
+  assert.doesNotMatch(p.configFiles["piko-service.ps1"], /5\.13\.1/);
 });
 
 test("NVIDIA App is explicitly an installer-only entry, never a falsely portable app or implicit system install", async () => {

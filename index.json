@@ -433,14 +433,15 @@
     },
     "lertaro": {
       "category": "desktop",
-      "latest": "5.13.1",
+      "latest": "5.13.1-piko.1",
       "versions": {
         "5.12.2": "packages/desktop/lertaro/package.json",
         "5.12.7": "packages/desktop/lertaro/package.json",
         "5.12.9": "packages/desktop/lertaro/package.json",
         "5.12.10": "packages/desktop/lertaro/package.json",
         "5.13.0": "packages/desktop/lertaro/package.json",
-        "5.13.1": "packages/desktop/lertaro/package.json"
+        "5.13.1": "packages/desktop/lertaro/package.json",
+        "5.13.1-piko.1": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
@@ -462,9 +463,10 @@
     },
     "libreoffice": {
       "category": "desktop",
-      "latest": "26.8.2",
+      "latest": "26.8.3",
       "versions": {
-        "26.8.2": "packages/desktop/libreoffice/package.json"
+        "26.8.2": "packages/desktop/libreoffice/package.json",
+        "26.8.3": "packages/desktop/libreoffice/package.json"
       }
     },
     "x64dbg": {

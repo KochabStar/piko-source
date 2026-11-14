@@ -60,6 +60,11 @@ export function nextManifest(current, candidate, rule) {
         ]),
       );
   }
+  // A derived application tree is rebuilt from the next payload's own file
+  // table while verifying it. Persisting the previous release's paths would
+  // ship a map that describes a tree the new payload no longer has.
+  if (rule.layout === "apptree")
+    for (const d of downloads(p)) delete d.files;
   if (candidate.stripPrefix)
     downloads(p)[0].stripPrefix = candidate.stripPrefix;
   for (const [name, b] of Object.entries(p.bin))

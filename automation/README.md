@@ -81,6 +81,7 @@ omp --version
 - `dingtalk` 仅将社区目录的四段数字版本作为发现提示；载荷地址固定生成国内 `dtapp-pub.dingtalk.com/.../win_updater/Release/DingTalkUpdate_v<version>.zip` 完整包。国际版 `-Release` 格式不匹配，不读取社区下载地址；候选仍须通过摘要、PE 版本和布局验证。
 - `steam` 只接受官方引导清单中与国际版 `steamrow` 变体哈希后缀、摘要一致的引导 ZIP，且要求 `IsBootstrapperPackage` 标记；载荷哈希不变时通道时间戳前进不产生新版本。其分发容器是未签名 ZIP，签名规则以载荷路径形式校验解包后的 `steam.exe` 本体，容器完整性由清单 `sha2` 摘要在下载时强制核对。
 - `epic-games-launcher` 只跟随 Epic 官方稳定重定向端点，并要求重定向目标带三段数字构建号的 `EpicInstaller-<version>` 载荷；载荷固定重建成同版本 `.msi` 直链。显式映射仅保留 `Epic Games/Launcher/**` 启动器本体，运行时安装器、系统目录 DLL 与 ProgramData 配置不会进入安装；未来版本载荷增删由映射校验拦下并保留旧版。
+- `libreoffice` 用 `layout: apptree` 从候选载荷自己的文件表重建 `<stripPrefix>` 下的整棵应用树，不沿用上一个版本的映射。该 MSI 只在应用树之外重复目标路径（同路径 VC++ 运行时），因此应用树白名单既满足显式映射要求，又不会因内嵌 Python 运行时（`python-core-3.13.17 → 3.13.18`）或随包扩展（`share/extensions/dict-an/**`）增删而把每个新版本都判为布局变化。已发布版本的清单仍逐字节不可变。
 
 ## 在 GitHub 启用
 
