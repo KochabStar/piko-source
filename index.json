@@ -107,7 +107,7 @@
     },
     "llvm": {
       "category": "dev",
-      "latest": "23.1.4",
+      "latest": "23.1.5",
       "versions": {
         "23.1.4": "packages/dev/llvm/package.json",
         "23.1.5": "packages/dev/llvm/package.json"
