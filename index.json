@@ -146,11 +146,12 @@
     },
     "tortoise-svn": {
       "category": "dev",
-      "latest": "1.15.0.29830-piko.1",
+      "latest": "1.15.0.29830.1",
       "versions": {
         "1.14.9.29743": "packages/dev/tortoise-svn/package.json",
         "1.15.0.29830": "packages/dev/tortoise-svn/package.json",
-        "1.15.0.29830-piko.1": "packages/dev/tortoise-svn/package.json"
+        "1.15.0.29830-piko.1": "packages/dev/tortoise-svn/package.json",
+        "1.15.0.29830.1": "packages/dev/tortoise-svn/package.json"
       }
     },
     "aria2": {
@@ -395,11 +396,12 @@
     },
     "sunlogin": {
       "category": "desktop",
-      "latest": "16.8.0.33445-piko.2",
+      "latest": "16.8.0.33445.3",
       "versions": {
         "16.8.0.33445": "packages/desktop/sunlogin/package.json",
         "16.8.0.33445-piko.1": "packages/desktop/sunlogin/package.json",
-        "16.8.0.33445-piko.2": "packages/desktop/sunlogin/package.json"
+        "16.8.0.33445-piko.2": "packages/desktop/sunlogin/package.json",
+        "16.8.0.33445.3": "packages/desktop/sunlogin/package.json"
       }
     },
     "claude-code": {
@@ -433,7 +435,7 @@
     },
     "lertaro": {
       "category": "desktop",
-      "latest": "5.13.1-piko.1",
+      "latest": "5.13.1.1",
       "versions": {
         "5.12.2": "packages/desktop/lertaro/package.json",
         "5.12.7": "packages/desktop/lertaro/package.json",
@@ -441,7 +443,8 @@
         "5.12.10": "packages/desktop/lertaro/package.json",
         "5.13.0": "packages/desktop/lertaro/package.json",
         "5.13.1": "packages/desktop/lertaro/package.json",
-        "5.13.1-piko.1": "packages/desktop/lertaro/package.json"
+        "5.13.1-piko.1": "packages/desktop/lertaro/package.json",
+        "5.13.1.1": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
@@ -518,10 +521,11 @@
     },
     "godot": {
       "category": "games",
-      "latest": "4.7.2-piko.1",
+      "latest": "4.7.2.1",
       "versions": {
         "4.7.2": "packages/games/godot/package.json",
-        "4.7.2-piko.1": "packages/games/godot/package.json"
+        "4.7.2-piko.1": "packages/games/godot/package.json",
+        "4.7.2.1": "packages/games/godot/package.json"
       }
     },
     "blender": {

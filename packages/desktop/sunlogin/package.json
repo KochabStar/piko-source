@@ -207,6 +207,13 @@
       "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
       "maxBytes2": 106954752,
       "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
+    },
+    "16.8.0.33445.3": {
+      "recipe": "r71424f826b6c0d36",
+      "maxBytes": 106954752,
+      "sha256": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7",
+      "maxBytes2": 106954752,
+      "sha2562": "d1003f291088e024932e4d4de19e4dcf2da282dd8fc1c0153402e562583d0cb7"
     }
   }
 }
