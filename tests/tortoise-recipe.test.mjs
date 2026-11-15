@@ -23,26 +23,19 @@ import { loadCatalog } from "../scripts/lib/catalog.mjs";
 const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
-const original = catalog.manifests.get("tortoise-svn@1.15.0.29830");
-const revision = catalog.manifests.get("tortoise-svn@1.15.0.29830-piko.1");
+// The recipe revision is folded into the upstream version itself.
+const revision = catalog.manifests.get("tortoise-svn@1.15.0.29830");
 const recipe = (m) =>
   m.platforms["windows-x64"].configFiles["piko-shell-extension.ps1"];
-test("SVN recipe revision uses identical payload, version-specific registration and no shared overlay junction", async () => {
-  const body = await tortoiseRecipe(original);
+test("SVN recipe uses identical payload, version-specific registration and no shared overlay junction", async () => {
+  const body = await tortoiseRecipe(revision);
   assert.equal(recipe(revision), body);
-  assert.equal(
-    revision.platforms["windows-x64"].sha256,
-    original.platforms["windows-x64"].sha256,
-  );
-  assert.equal(
-    revision.platforms["windows-x64"].url,
-    original.platforms["windows-x64"].url,
-  );
   assert.equal(
     await tortoiseRecipe(revision),
     body,
     "recipe rebuild is idempotent",
   );
+  assert.match(revision.platforms["windows-x64"].url, /1\.15\.0\.29830/);
   assert.ok(body.includes("schemaVersion=2"));
   assert.ok(body.includes("Existing processes may use the old version"));
   assert.doesNotMatch(
@@ -79,11 +72,6 @@ test("future SVN manifests inherit fixed recipe instead of reintroducing locked-
   assert.equal(recipe(next), recipe(revision));
   assert.equal(next.version, candidate.version);
   assert.equal(next.platforms["windows-x64"].admin.install.args[1], "{root}");
-  assert.equal(
-    recipe(original).includes("New-Item -ItemType Junction"),
-    true,
-    "immutable old manifest unchanged",
-  );
 });
 test(
   "real PowerShell recipe switches versions with retryable ownership, never deleting loaded old payloads",

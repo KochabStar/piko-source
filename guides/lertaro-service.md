@@ -16,15 +16,15 @@ Piko 按版本目录安装，升级后旧版本目录会被回收。注册项仍
 
 `sc.exe start LertaroService` 直接返回 `exit=2`（系统找不到指定的文件）。这与载荷、摘要或签名都无关，载荷本身是完好的；问题只在服务注册锚定了一个会消失的路径。
 
-## 5.13.1-piko.1 的尝试与撤销
+## 曾经的尝试与撤销（历史版本 `5.13.1-piko.1`／`5.13.1.1`）
 
-`5.13.1-piko.1` 曾为此新增 `admin` 系统集成（`piko-service.ps1`），把服务锚定到稳定联接 `apps/lertaro/current`。实测发现该方案不可行：
+曾为此新增 `admin` 系统集成（`piko-service.ps1`），把服务锚定到稳定联接 `apps/lertaro/current`。实测发现该方案不可行：
 
 - Lertaro 自带的 `InstallDirectoryLock` 拒绝联接目录（日志：`'...\current' is a link, not a directory; refusing to lock it`），服务无法进入 Running；
 - 服务每次启动还会**删除安装目录里它不认识的联接**（`Removed a link that was not this product's: ...\Data`），把 Piko 的 `persist` 联接换成真实目录，造成数据分裂；
 - 服务只接受与它同目录启动的 GUI，从 `current` 启动的 `Lertaro.App.exe` 会被拒绝（`Rejected LaunchHook`）。
 
-因此自 `5.13.1.1` 起，配方**不再包含** `admin`／`configFiles`／`persist` 声明：这个应用的数据与服务注册都以它自己的安装目录为准，Piko 不再伪装能持久化它们。载荷、SHA-256、命令表与快捷方式不变。
+因此 `5.13.1` 的配方**不再包含** `admin`／`configFiles`／`persist` 声明（修订原地并入上游版本号）：这个应用的数据与服务注册都以它自己的安装目录为准，Piko 不再伪装能持久化它们。载荷、SHA-256、命令表与快捷方式不变。
 
 ## 实际可行的用法
 

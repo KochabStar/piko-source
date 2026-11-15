@@ -16,13 +16,13 @@ import { fileURLToPath } from "node:url";
 const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
-const original = catalog.manifests.get("sunlogin@16.8.0.33445");
-const revision = catalog.manifests.get("sunlogin@16.8.0.33445-piko.1");
-const service = catalog.manifests.get("sunlogin@16.8.0.33445-piko.2");
+// Revisions (GUI entry fix, service integration) are folded into the single
+// upstream version; sources never publish invented -piko.N versions.
+const revision = catalog.manifests.get("sunlogin@16.8.0.33445");
+const service = revision;
 
-test("Sunlogin revision launches the extracted GUI, not the outer installer", () => {
-  validateManifest(revision, "sunlogin", "16.8.0.33445-piko.1");
-  const before = original.platforms["windows-x64"];
+test("Sunlogin launches the extracted GUI, not the outer installer", async () => {
+  validateManifest(revision, "sunlogin", "16.8.0.33445");
   const after = revision.platforms["windows-x64"];
   assert.deepEqual(after.bin, {
     sunlogin: "flutter/AweSun.exe",
@@ -31,13 +31,15 @@ test("Sunlogin revision launches the extracted GUI, not the outer installer", ()
   assert.deepEqual(after.desktop.shortcuts, [
     { name: "向日葵", path: "flutter/AweSun.exe" },
   ]);
-  assert.deepEqual(after.downloads, before.downloads);
-  assert.deepEqual(after.persist, before.persist);
-  assert.equal(after.maxExpandedBytes, before.maxExpandedBytes);
-  assert.equal(after.admin, undefined);
   assert.equal(after.bootstrap, undefined);
-  assert.equal(before.bin.sunlogin, "AweSun.exe");
-  assert.equal(before.desktop.shortcuts[0].path, "AweSun.exe");
+  const index = JSON.parse(
+    await readFile(new URL("../index.json", import.meta.url), "utf8"),
+  );
+  assert.equal(index.packages.sunlogin.latest, "16.8.0.33445");
+  assert.equal(
+    index.packages.sunlogin.versions["16.8.0.33445"],
+    "packages/desktop/sunlogin/package.json",
+  );
 });
 
 test("future Sunlogin updates retain the GUI command and shortcut targets", () => {
@@ -53,7 +55,7 @@ test("future Sunlogin updates retain the GUI command and shortcut targets", () =
   );
 });
 
-test("Sunlogin index retains the revision and latest keeps the corrected GUI entries", async () => {
+test("Sunlogin index latest keeps the corrected GUI entries", async () => {
   const index = JSON.parse(
     await readFile(new URL("../index.json", import.meta.url), "utf8"),
   );
@@ -85,14 +87,15 @@ test("Sunlogin index retains the revision and latest keeps the corrected GUI ent
   ]);
 });
 
-test("Sunlogin piko.2 adds an owned backend service integration", () => {
-  validateManifest(service, "sunlogin", "16.8.0.33445-piko.2");
+test("Sunlogin owns its backend service integration", () => {
+  validateManifest(service, "sunlogin", "16.8.0.33445");
   const after = service.platforms["windows-x64"];
-  const prior = revision.platforms["windows-x64"];
-  assert.deepEqual(after.bin, prior.bin);
-  assert.deepEqual(after.desktop, prior.desktop);
-  assert.deepEqual(after.downloads, prior.downloads);
-  assert.deepEqual(after.persist, [...prior.persist, ".piko-system"]);
+  assert.deepEqual(after.persist, [
+    "log",
+    "FileTransferFiles",
+    { path: "config.ini", kind: "file", mode: "hardlink", initial: "" },
+    ".piko-system",
+  ]);
   const script = after.configFiles["piko-service.ps1"];
   assert.match(script, /--cmd=install_silent/);
   assert.match(script, /--serviceonly=1/);
@@ -120,13 +123,13 @@ test("future Sunlogin updates inherit the service integration", () => {
   assert.deepEqual(p.persist, service.platforms["windows-x64"].persist);
 });
 
-test("Sunlogin index keeps piko.2 as latest with the service integration", async () => {
+test("Sunlogin index keeps the upstream version as latest", async () => {
   const index = JSON.parse(
     await readFile(new URL("../index.json", import.meta.url), "utf8"),
   );
-  assert.equal(index.packages.sunlogin.latest, "16.8.0.33445-piko.2");
+  assert.equal(index.packages.sunlogin.latest, "16.8.0.33445");
   assert.equal(
-    index.packages.sunlogin.versions["16.8.0.33445-piko.2"],
+    index.packages.sunlogin.versions["16.8.0.33445"],
     "packages/desktop/sunlogin/package.json",
   );
 });

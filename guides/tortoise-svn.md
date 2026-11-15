@@ -1,6 +1,6 @@
 # TortoiseSVN：DLL 占用下的升级与旧安装清理
 
-## 升级策略（配方修订 `1.15.0.29830-piko.1` 起）
+## 升级策略（配方修订已并入 `1.15.0.29830`）
 
 这不是让每次更新前强制关闭 Explorer，而是将 **更新程序／切换注册** 与 **删除旧文件** 分开：
 
@@ -14,7 +14,7 @@
 
 ### 为什么新增一个配方版本
 
-上游程序仍为 **1.15.0.29830**，`-piko.1` 是 Piko 的配方修订号，载荷 URL、SHA-256 及 MSI 文件映射与旧版相同。旧的已发布 JSON 保持不可变，避免原安装收据失效。后续上游出现新版时，更新器会自动套用 `scripts/recipes/tortoise-shell-extension.ps1`，不会回到固定 overlay junction 的旧做法。
+上游程序仍为 **1.15.0.29830**；配方修订（COM／overlay 直接指向版本目录、不再使用固定 `CommonProgramFiles` junction）已原地并入该版本，载荷 URL、SHA-256 及 MSI 文件映射与旧版相同。后续上游出现新版时，更新器会自动套用 `scripts/recipes/tortoise-shell-extension.ps1`，不会回到固定 overlay junction 的旧做法。
 
 ## Piko 原生命令
 
@@ -22,13 +22,13 @@
 
 ```powershell
 piko source refresh main
-piko install main/tortoise-svn@1.15.0.29830-piko.1
+piko install main/tortoise-svn@1.15.0.29830
 ```
 
 **尚未启用 Piko 系统集成**时，先选择，再在自行打开的管理员 PowerShell 中预览／授权：
 
 ```powershell
-piko use main/tortoise-svn@1.15.0.29830-piko.1
+piko use main/tortoise-svn@1.15.0.29830
 piko system main/tortoise-svn --dry-run
 piko system main/tortoise-svn --approve-admin --binding <上一步摘要>
 ```
@@ -37,8 +37,8 @@ piko system main/tortoise-svn --approve-admin --binding <上一步摘要>
 
 ```powershell
 # 候选已安装，旧默认与注册暂时保留
-piko system main/tortoise-svn@1.15.0.29830-piko.1 --upgrade --dry-run
-piko system main/tortoise-svn@1.15.0.29830-piko.1 --upgrade `
+piko system main/tortoise-svn@1.15.0.29830 --upgrade --dry-run
+piko system main/tortoise-svn@1.15.0.29830 --upgrade `
     --approve-admin --binding <上一步组合摘要>
 
 # 更新成功后，旧 DLL 是否释放不影响新版保留

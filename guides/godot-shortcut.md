@@ -8,9 +8,9 @@
 
 顺带排除的另一个可能性：`godot-console` 指向上游的 `_console.exe` 转发器（PE `Subsystem=3`），如果拿它当快捷方式目标，双击会先弹一个控制台窗口再拉起编辑器，入口语义不对。GUI 目标必须是主程序 `Godot_v4.7.2-stable_win64.exe`（PE `Subsystem=2`）。
 
-## 修订内容（4.7.2-piko.1）
+## 修订内容（已并入 `4.7.2`）
 
-新增版本 `4.7.2-piko.1`，只增加一个快捷方式声明：
+在 `4.7.2` 的清单里直接补上快捷方式声明（源现在保持与上游一致的版本号，配方修订原地并入）：
 
 ```json
 "desktop": {
@@ -22,7 +22,7 @@
 
 - 目标为 GUI 子系统的主程序；不使用 `_console.exe`。
 - `name` 只是开始菜单标签，不参与模板替换；`path` 由模板机制替换，但本修订把上游版本写死（上游不存在 `-piko.N` 资产），因此这里直接写 `4.7.2`。
-- 载荷 URL、SHA-256、`bin` 命令表、`persist`／`env` 声明全部不变；`4.7.2` 行保持原样发布，未改写。
+- 载荷 URL、SHA-256、`bin` 命令表、`persist`／`env` 声明全部不变。
 
 ## 更新链路
 
@@ -34,7 +34,7 @@
 
 ```powershell
 piko source refresh main
-piko install main/godot@4.7.2-piko.1
+piko install main/godot@4.7.2
 piko use main/godot@latest
 ```
 
@@ -49,7 +49,7 @@ piko reset godot --yes
 
 ## 验证
 
-- 隔离 `PIKO_HOME` + 本地 HTTP 源（piko 0.4.11）安装 `4.7.2-piko.1`：自动创建 `Piko Apps\Godot.lnk`，目标解析到 `apps/godot/4.7.2-piko.1/Godot_v4.7.2-stable_win64.exe`，工作目录为版本目录。
+- 隔离 `PIKO_HOME` + 本地 HTTP 源（piko 0.4.11）安装：自动创建 `Piko Apps\Godot.lnk`，目标解析到 `apps/godot/4.7.2/Godot_v4.7.2-stable_win64.exe`，工作目录为版本目录。
 - 实际从该快捷方式启动：进程路径为 GUI 主程序，窗口标题 `Godot Engine - 项目管理器`，无控制台窗口。
 - 卸载该版本后快捷方式随所有权收据一并移除。
 - 本机旧 `4.7.2` 安装按上面的收据修复流程补入口，`reset --dry-run` 无剩余待修复项；从修复后的快捷方式启动同样到项目管理器。

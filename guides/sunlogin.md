@@ -4,12 +4,12 @@
 
 `16.8.0.33445` 原清单将根目录的 `AweSun.exe` 同时作为两条命令和开始菜单快捷方式的入口。该文件是官方外层分发程序，直接启动会出现安装界面。原来的载荷、版本和签名检查未验证 GUI 启动行为，因此没有发现入口错误。
 
-修订 `16.8.0.33445-piko.1` 仅修正启动入口：
+修订（已并入 `16.8.0.33445`）仅修正启动入口：
 
 - `sunlogin`、`awesun`：`flutter/AweSun.exe`。
 - 开始菜单“向日葵”：`flutter/AweSun.exe`，工作目录由客户端设置为其所在的 `flutter` 目录。
 - 下载 URL、SHA-256、PE 资源解包路径及持久化声明保持不变。外层 `AweSun.exe` 仍保留，不自动执行。
-- 旧清单不可变，新增修订并调整索引；后续上游版本继承修订后的入口。
+- 配方修订原地并入上游版本号；后续上游版本继承修订后的入口。
 
 ## 已有安装
 
@@ -17,7 +17,7 @@
 
 ```powershell
 piko source refresh main
-piko install main/sunlogin@16.8.0.33445-piko.1
+piko install main/sunlogin@16.8.0.33445
 piko use main/sunlogin@latest
 piko which sunlogin
 piko which awesun
@@ -28,7 +28,7 @@ piko reset sunlogin --dry-run
 
 本次对报告问题的本机旧版本做了独立入口修复：先备份状态、安装收据及原快捷方式，再在客户端 mutation lock 下同步修正命令与桌面声明，通过客户端选择事务重新生成快捷方式及所有权记录。保留旧版本号、原下载身份及 manifest hash；这是有备份记录的本地修复，不把旧安装伪装成已经发布的新修订。
 
-## 后台服务集成（16.8.0.33445-piko.2）
+## 后台服务集成
 
 ### 现象与原因
 
@@ -36,7 +36,7 @@ GUI 入口修订后，客户端可以启动但一直停留在“连接服务中�
 
 ### 修订内容
 
-`16.8.0.33445-piko.2` 在保持 piko.1 全部声明（载荷、入口、持久化）不变的基础上新增：
+服务集成在入口修订的基础上新增：
 
 - `configFiles`：`piko-service.ps1`，随安装写入版本目录。
 - `admin` 系统集成：install/remove 都执行该脚本，参数 `install|remove {root} {persist}/.piko-system`。
@@ -47,7 +47,7 @@ install 复用厂商外层程序的静默服务安装：`AweSun.exe --mod=instal
 ### 用法（需管理员终端，Piko 不会自动提权）
 
 ```powershell
-piko install main/sunlogin@16.8.0.33445-piko.2
+piko install main/sunlogin@16.8.0.33445
 piko use main/sunlogin@latest
 piko system sunlogin                                  # 预览，记下 --binding
 piko system sunlogin --approve-admin --binding <binding>
@@ -61,11 +61,11 @@ piko system sunlogin --upgrade --approve-admin --binding <binding>   # 版本切
 
 - 不安装驱动、不开机项、不迁移设备身份或凭据：服务端配置（`AweSun\config.ini` 等）留在各自版本目录，卸载旧版本即丢弃；身份跨版本迁移未验收。
 - 服务注册锚定具体版本目录而非 `current`，与 piko 版本不可变原则一致；未 remove 就 reset/删除版本目录会留下死服务，与本文开头的残留问题同源。
-- 与 piko.1 修订一样，本修订必须发布到正在使用的软件源后才对其它机器生效。
+- 修订必须发布到正在使用的软件源后才对其它机器生效。
 
 ## 后续更新
 
-本修订必须先发布到正在使用的软件源；只修改本地仓库不会改变远端清单。发布后，后续上游版本从当前 `latest` 清单生成，因此会继承 `flutter/AweSun.exe` 的两条命令及快捷方式目标，而不是继承旧清单的安装器入口。布局校验同时要求目标 EXE、Flutter 引擎和数据文件存在；路径或资源布局改变时阻止该候选发布，不自动回退到外层安装器。该校验不代替新版 GUI／远控功能验收。piko.2 起还会继承后台服务集成声明。
+本修订必须先发布到正在使用的软件源；只修改本地仓库不会改变远端清单。发布后，后续上游版本从当前 `latest` 清单生成，因此会继承 `flutter/AweSun.exe` 的两条命令及快捷方式目标，而不是继承旧清单的安装器入口。布局校验同时要求目标 EXE、Flutter 引擎和数据文件存在；路径或资源布局改变时阻止该候选发布，不自动回退到外层安装器。该校验不代替新版 GUI／远控功能验收。当前清单还会继承后台服务集成声明。
 
 保持跟随 `latest` 时，后续执行：
 

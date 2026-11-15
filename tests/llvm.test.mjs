@@ -8,18 +8,14 @@ const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
 const read = async (version) => catalog.manifests.get("llvm@" + version);
-test("LLVM recipe revision exposes lld-link without changing the verified payload or published version", async () => {
-  const old = await read("23.1.4");
-  const fixed = await read("23.1.4-piko.1");
-  assert.equal(old.platforms["windows-x64"].bin["lld-link"], undefined);
+test("LLVM exposes lld-link; revisions are folded into the upstream version", async () => {
+  const fixed = await read("23.1.4");
   assert.equal(
     fixed.platforms["windows-x64"].bin["lld-link"],
     "bin/lld-link.exe",
   );
-  const expected = structuredClone(old);
-  expected.version = fixed.version;
-  expected.platforms["windows-x64"].bin["lld-link"] = "bin/lld-link.exe";
-  assert.deepEqual(fixed, expected);
+  assert.equal(fixed.version, "23.1.4");
+  assert.equal(await read("23.1.4-piko.1"), undefined);
   validateManifest(fixed, "llvm", fixed.version);
   const next = nextManifest(fixed, { version: "24.0.0" }, {});
   assert.equal(
