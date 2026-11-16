@@ -18,6 +18,8 @@
 ```powershell
 piko source refresh main
 piko install main/sunlogin@16.8.0.33445
+piko system main/sunlogin@16.8.0.33445 --dry-run
+piko system main/sunlogin@16.8.0.33445 --approve-admin --binding <binding>
 piko use main/sunlogin@latest
 piko which sunlogin
 piko which awesun
@@ -39,29 +41,33 @@ GUI 入口修订后，客户端可以启动但一直停留在“连接服务中�
 服务集成在入口修订的基础上新增：
 
 - `configFiles`：`piko-service.ps1`，随安装写入版本目录。
-- `admin` 系统集成：install/remove 都执行该脚本，参数 `install|remove {root} {persist}/.piko-system`。
-- `persist` 追加 `.piko-system`，存放服务所有权台账。
+- `admin.required: true` 系统集成：install/remove 都执行该脚本，参数 `install|remove {root} {persist}/.piko-system`，需要显式管理员审批。
+- `persist` 追加实际服务配置 `AweSun/config.ini` 和 `.piko-system`；台账与完整服务数据备份保存在后者，不只保留顶层 GUI `config.ini`。
 
-install 复用厂商外层程序的静默服务安装：`AweSun.exe --mod=install --admin=1 --cmd=install_silent --serviceonly=1 --path=<版本目录>`，以轮询 `AweSunService` 运行且镜像路径锚定本版本目录为成功条件；成功后把实际注册到的服务名写入台账。remove 只停止并删除台账记录、且镜像路径仍锚定本版本目录的服务，外部服务跳过并提示。台账记录版本目录，另一版本持有注册时拒绝重复安装，需先用旧版本 remove 或走 `--upgrade` 一次审批完成切换。
+install 只调用厂商 service-only 安装器：`AweSun.exe --mod=install --admin=1 --cmd=install_silent --serviceonly=1 --path=<版本目录>`，不猜参数，也不把外层文件直接注册为服务。脚本先验证 Piko `.piko-install.json` 的 name、source identity、key、checksum、manifestHash 和真实 Root；服务镜像必须是 exact `AweSunService`/`SunloginService`，并位于同一已验证包目录的明确版本子目录中。路径比较带目录边界，拒绝 sibling prefix、包根外路径、重解析点和未加引号的歧义 PathName。成功条件是服务运行且镜像锚定当前真实版本目录，随后把服务名、镜像、安装身份和状态写入原子所有权台账。
 
 ### 用法（需管理员终端，Piko 不会自动提权）
 
 ```powershell
 piko install main/sunlogin@16.8.0.33445
-piko use main/sunlogin@latest
-piko system sunlogin                                  # 预览，记下 --binding
-piko system sunlogin --approve-admin --binding <binding>
-piko system sunlogin --remove --approve-admin --binding <binding>
-piko system sunlogin --upgrade --approve-admin --binding <binding>   # 版本切换时旧移除+新安装
+piko system main/sunlogin@16.8.0.33445 --dry-run           # 预览安装并记下 binding
+piko system main/sunlogin@16.8.0.33445 --approve-admin --binding <install-binding>
+piko use main/sunlogin@latest                          # 必需服务成功后选择
+
+# 卸载集成与升级分别重新预览，不能复用 install binding
+piko system sunlogin --remove --dry-run
+piko system sunlogin --remove --approve-admin --binding <remove-binding>
+piko system sunlogin --upgrade --dry-run
+piko system sunlogin --upgrade --approve-admin --binding <upgrade-binding>
 ```
 
-本机若已有手动/旧安装注册的服务（包括指向 `current` 的注册），脚本会拒绝接管；先显式删除现有 `AweSunService`、`SunloginService` 再走上述流程。
+remove 支持 `installed`、`installing`、`recovery`、`cleanup-pending` 状态，即使外层 `AweSun.exe` 已缺失也能清理已证明归属的服务。没有本地服务台账时，不凭服务名接管：只有服务 PathName 严格落在同一 Piko 包目录、能通过对应版本 `.piko-install.json` 身份校验，并且是旧 `current/AweSun/AweSun.exe` 或 `OldAweSun.exe` 明确布局时，才建立 recovery 台账并清理。外部同名服务、无 receipt、路径歧义或 sibling prefix 均保持不动并拒绝；未激活候选不得停止或删除其他版本的活动服务、台账或共享 `AweSun/config.ini`。每次停止/删除前都会重新校验服务身份；失败会保留 `cleanup-pending` 记录，重新预览后可重试，不删除旧程序目录。
 
 ### 边界
 
-- 不安装驱动、不开机项、不迁移设备身份或凭据：服务端配置（`AweSun\config.ini` 等）留在各自版本目录，卸载旧版本即丢弃；身份跨版本迁移未验收。
-- 服务注册锚定具体版本目录而非 `current`，与 piko 版本不可变原则一致；未 remove 就 reset/删除版本目录会留下死服务，与本文开头的残留问题同源。
-- 修订必须发布到正在使用的软件源后才对其它机器生效。
+- 不安装驱动、不开机项。服务脚本停止同一厂商数据树的全部服务后备份完整 `AweSun` 树，只有完整备份才写 `complete.json` 标记。实际 `AweSun/config.ini` 持久化；厂商安装器若原子替换文件，脚本会停服、备份新旧配置、更新共享文件并重建硬链接，然后再启动服务，重建失败会保留 `cleanup-pending`，不会假装配置已保存。未知数据保留在备份中，不把旧二进制自动恢复到新版本；跨版本配置兼容和远控身份仍需实际验收。
+- 新装、升级、卸载重装都以真实版本 Root 传参，不依赖 `current` 已切换。升级先 remove 旧版本，再 install 新版本，成功后客户端才选择新版本；失败保留旧程序目录和可重试台账。
+- 服务注册锚定具体版本目录而非 `current`。直接 reset/删除版本目录前必须完成显式 remove；若失败，保留状态记录，不静默丢失服务数据。
 
 ## 后续更新
 
@@ -84,5 +90,5 @@ piko reset sunlogin --dry-run
 
 - 实际从修复后的快捷方式启动，进程路径为 `flutter/AweSun.exe`，不是根目录分发程序。
 - `piko which sunlogin`、`piko which awesun` 均解析到该 GUI；`piko reset sunlogin --dry-run` 没有待修复项。
-- 回归覆盖修订的两条命令、快捷方式、原载荷／持久化声明不变，以及后续版本继承。更新检查额外要求 Flutter 引擎和数据文件存在。
+- 行为回归使用临时 Piko 根和隔离 PowerShell 替身，覆盖真实 receipt/path 边界、厂商参数、旧 `current/AweSun/OldAweSun` 收养、失败安装/停服失败可恢复、缺外层安装器 remove、外部服务与未激活候选保护，以及原子替换后 `AweSun/config.ini` 停服备份和硬链接修复。不会操作日常机器的真实服务或注册表。
 - 不安装或启动远控服务，不修改启动项，不安装驱动，不迁移设备身份或凭据。GUI 能启动不代表远程连接、被控、无人值守、实际配置保存或跨版本迁移已验收。

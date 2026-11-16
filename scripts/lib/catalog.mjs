@@ -348,7 +348,9 @@ export function validateManifest(m, name, version) {
   }
   if (p.bootstrap) exec(p.bootstrap);
   if (p.admin) {
-    keys(p.admin, ["install", "remove"], "admin");
+    keys(p.admin, ["install", "remove", "required"], "admin");
+    if (p.admin.required !== undefined)
+      requireThat(typeof p.admin.required === "boolean", "Invalid required admin flag");
     exec(p.admin.install);
     exec(p.admin.remove);
   }
