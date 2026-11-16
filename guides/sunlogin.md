@@ -18,13 +18,14 @@
 ```powershell
 piko source refresh main
 piko install main/sunlogin@16.8.0.33445
-piko system main/sunlogin@16.8.0.33445 --dry-run
-piko system main/sunlogin@16.8.0.33445 --approve-admin --binding <binding>
+piko system main/sunlogin@16.8.0.33445 --approve-admin
 piko use main/sunlogin@latest
 piko which sunlogin
 piko which awesun
 piko reset sunlogin --dry-run
 ```
+
+以上 `system` 与 `use` 需在管理员终端执行（Piko 不会自动提权）。Piko ≥ 0.4.23 中 `--approve-admin` 单独一条命令即可：同一次调用先打印完整计划再执行，无需 `--dry-run` 预览后抄写 binding；如需先审阅再执行，仍可 `--dry-run` 预览并用 `--binding` 绑定早前预览。旧客户端保持两步预览/binding 流程。
 
 如果源别名不是 `main`，请使用实际别名。不要手改 `.lnk` 后假定 `reset` 会接管：客户端按内容摘要验证快捷方式所有权，外部修改可能被拒绝。也不要只修改安装收据或只修改状态，两者必须一致。
 
@@ -50,16 +51,15 @@ install 只调用厂商 service-only 安装器：`AweSun.exe --mod=install --adm
 
 ```powershell
 piko install main/sunlogin@16.8.0.33445
-piko system main/sunlogin@16.8.0.33445 --dry-run           # 预览安装并记下 binding
-piko system main/sunlogin@16.8.0.33445 --approve-admin --binding <install-binding>
+piko system main/sunlogin@16.8.0.33445 --approve-admin   # 管理员终端，一条命令
 piko use main/sunlogin@latest                          # 必需服务成功后选择
 
-# 卸载集成与升级分别重新预览，不能复用 install binding
-piko system sunlogin --remove --dry-run
-piko system sunlogin --remove --approve-admin --binding <remove-binding>
-piko system sunlogin --upgrade --dry-run
-piko system sunlogin --upgrade --approve-admin --binding <upgrade-binding>
+# 卸载集成与升级也各是一条命令（管理员终端）
+piko system sunlogin --remove --approve-admin
+piko update main/sunlogin --approve-admin   # 或：piko system main/sunlogin@<新版本> --upgrade --approve-admin
 ```
+
+Piko ≥ 0.4.23 支持 `--approve-admin` 单命令审批（同次调用打印计划并执行）；旧客户端使用 `--dry-run` 预览 + `--binding` 两步，且各动作 binding 不可复用。
 
 remove 支持 `installed`、`installing`、`recovery`、`cleanup-pending` 状态，即使外层 `AweSun.exe` 已缺失也能清理已证明归属的服务。没有本地服务台账时，不凭服务名接管：只有服务 PathName 严格落在同一 Piko 包目录、能通过对应版本 `.piko-install.json` 身份校验，并且是旧 `current/AweSun/AweSun.exe` 或 `OldAweSun.exe` 明确布局时，才建立 recovery 台账并清理。外部同名服务、无 receipt、路径歧义或 sibling prefix 均保持不动并拒绝；未激活候选不得停止或删除其他版本的活动服务、台账或共享 `AweSun/config.ini`。每次停止/删除前都会重新校验服务身份；失败会保留 `cleanup-pending` 记录，重新预览后可重试，不删除旧程序目录。
 

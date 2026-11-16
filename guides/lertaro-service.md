@@ -35,20 +35,20 @@ Piko 按版本目录安装，升级后旧版本目录会被回收。注册项仍
 
 ## 新电脑安装与授权
 
-使用支持必需服务生命周期的客户端，刷新源并安装/选择版本。安装服务需要管理员权限以及客户端本次预览给出的审批绑定；普通解压不等于服务已经可用。
+使用支持必需服务生命周期的客户端（Piko ≥ 0.4.23 支持单命令 `--approve-admin` 审批），刷新源并安装/选择版本。安装服务需要管理员权限与显式审批；普通解压不等于服务已经可用。
 
 ```powershell
 piko source refresh main
 piko install main/lertaro@5.13.1
-piko system lertaro
-piko system lertaro --approve-admin --binding <本次预览的binding>
+piko system lertaro --approve-admin   # 管理员终端，一条命令：打印计划并执行
+piko use main/lertaro@latest
 ```
 
-客户端可能在安装流程中直接给出必需服务的审批步骤，应以实际预览为准。服务进入 `Running` 且镜像与真实版本目录一致后才算系统集成成功；缺少运行时等启动错误会保留台账并返回失败，不能假装安装完成。
+Piko ≥ 0.4.23 中 `--approve-admin` 单独一条命令即可完成审批（同次调用先打印完整计划再执行）；旧客户端使用 `--dry-run` 预览后 `--approve-admin --binding <预览 binding>` 两步。安装服务需要管理员权限；普通解压不等于服务已经可用。服务进入 `Running` 且镜像与真实版本目录一致后才算系统集成成功；缺少运行时等启动错误会保留台账并返回失败，不能假装安装完成。
 
 ## 升级、卸载与重装
 
-1. 先退出 Lertaro GUI 与 `lff`。升级经显式授权执行**旧 remove → 新 install → 全部成功才选择新默认版本**，脚本不依赖 `current` 切换。旧版本目录必须在 remove 成功后才能回收。
+1. 先退出 Lertaro GUI 与 `lff`。升级在管理员终端一条命令完成（Piko ≥ 0.4.23）：`piko update main/lertaro --approve-admin`，或 `piko system main/lertaro@<新版本> --upgrade --approve-admin`。流程仍为显式授权的**旧 remove → 新 install → 全部成功才选择新默认版本**，脚本不依赖 `current` 切换。旧版本目录必须在 remove 成功后才能回收。
 2. remove 停止并确认服务停止，将真实 `Data` 复制到新的备份代次，保留隐藏文件和 ACL；复制失败不会把半份备份标记为完整，也不会删除服务注册。成功后删除同包服务注册，但保留原 Data、台账及完整备份。
 3. 新 install 从完整备份恢复到新版本的临时真实目录，复制完成后更名为 `Data`，重新注册真实路径服务。目标已有非空且未被此次迁移认领的 Data 时报告冲突，保留两份数据，不合并、不覆盖。
 4. 卸载后重新安装时保留包持久目录，再次预览并显式授权即可恢复 Data 与服务。不要主动清理 `persist/lertaro`，否则将失去这些备份。
