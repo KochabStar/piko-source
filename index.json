@@ -429,14 +429,15 @@
     },
     "lertaro": {
       "category": "desktop",
-      "latest": "5.13.1",
+      "latest": "5.13.3",
       "versions": {
         "5.12.2": "packages/desktop/lertaro/package.json",
         "5.12.7": "packages/desktop/lertaro/package.json",
         "5.12.9": "packages/desktop/lertaro/package.json",
         "5.12.10": "packages/desktop/lertaro/package.json",
         "5.13.0": "packages/desktop/lertaro/package.json",
-        "5.13.1": "packages/desktop/lertaro/package.json"
+        "5.13.1": "packages/desktop/lertaro/package.json",
+        "5.13.3": "packages/desktop/lertaro/package.json"
       }
     },
     "nvidia-app": {
