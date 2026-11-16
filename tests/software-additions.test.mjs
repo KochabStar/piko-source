@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { realpathSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -233,7 +234,11 @@ test("future Lertaro releases retain the required service recipe without persist
 });
 
 test("Lertaro script lifecycle with isolated services and temporary data", { skip: process.platform !== "win32" }, async (t) => {
-  const temp = await mkdtemp(join(tmpdir(), "piko-lertaro-behavior-"));
+  // tmpdir() may return an 8.3 short path (CI runners: RUNNER~1) while the
+  // service script resolves long paths; normalize once so both sides agree.
+  const temp = realpathSync.native(
+    await mkdtemp(join(tmpdir(), "piko-lertaro-behavior-")),
+  );
   t.after(() => rm(temp, { recursive: true, force: true, maxRetries: 10 }));
   const ps = join(process.env.SystemRoot, "System32/WindowsPowerShell/v1.0/powershell.exe");
   const recipe = platform("lertaro").configFiles["piko-service.ps1"];
@@ -302,7 +307,7 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
     const invoke = async (action, root, services = [], flags = {}) => {
       const fake = join(home, "fake.json"), result = join(home, "result.json");
       await writeFile(fake, JSON.stringify({ services, calls: [], copies: [], acls: [], failCopy: false, failRestore: false, failStart: false, failDelete: false, ...flags }));
-      execFileSync(ps, ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(harness, "utf16le").toString("base64")], {
+      execFileSync(ps, ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", Buffer.from(harness, "utf16le").toString("base64")], {
         env: { ...process.env, FAKE: fake, RESULT: result, RECIPE: join(root, "piko-service.ps1"), ROOT: root, DATA: data, ACTION: action }, timeout: 30000, stdio: ["ignore", "pipe", "pipe"],
       });
       return JSON.parse((await readFile(result, "utf8")).replace(/^\uFEFF/, ""));
