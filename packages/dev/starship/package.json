@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "starship",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "starship/starship",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^starship-x86_64-pc-windows-msvc\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r9eebb87fff5f3444": {
       "schemaVersion": 1,

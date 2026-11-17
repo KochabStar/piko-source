@@ -1,6 +1,17 @@
 {
   "schemaVersion": 2,
   "name": "qqnt",
+  "upstream": {
+    "provider": "qqnt",
+    "signature": true,
+    "versionFromPE": true,
+    "layout": "qqnt",
+    "required": [
+      "QQEX.exe",
+      "versions/config.json"
+    ],
+    "trust": "publisher"
+  },
   "recipes": {
     "r458c57c00541b6ce": {
       "schemaVersion": 1,

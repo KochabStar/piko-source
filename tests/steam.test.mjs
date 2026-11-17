@@ -7,14 +7,12 @@ import {
   validateManifest,
   validateRules,
 } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.steam.latest;
 const manifest = catalog.manifests.get("steam@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -107,8 +105,8 @@ test("steam discovery binds the international row bootstrapper with its signed m
   const rule = rules.packages.steam;
   assert.equal(rule.provider, "steam");
   assert.equal(rule.url, CDN + "/steam_client_win32");
-  validateRules(catalog, rules);
-  const candidate = await discover(rule, null, {
+  validateRules(catalog);
+  const candidate = await discover(rule, { ...manifest, version: "1.0.0", platforms: { "windows-x64": { ...platform, url: CDN + "/previous.zip" } } }, {
     text: async (url) => {
       assert.equal(url, rule.url);
       return bootstrapManifest();
@@ -136,27 +134,27 @@ test("steam discovery rejects channels that diverge from the pinned row payload"
     text: async () => bootstrapManifest(overrides),
   });
   await assert.rejects(
-    discover(rules.packages.steam, null, net({ rowHash: "f".repeat(40) })),
+    discover(rules.packages.steam, manifest, net({ rowHash: "f".repeat(40) })),
     /pinned international row payload/,
   );
   await assert.rejects(
-    discover(rules.packages.steam, null, net({ rowSha2: "0".repeat(64) })),
+    discover(rules.packages.steam, manifest, net({ rowSha2: "0".repeat(64) })),
     /pinned international row payload/,
   );
   await assert.rejects(
-    discover(rules.packages.steam, null, net({ bootstrapper: "0" })),
+    discover(rules.packages.steam, manifest, net({ bootstrapper: "0" })),
     /pinned international row payload/,
   );
   await assert.rejects(
-    discover(rules.packages.steam, null, net({ rowBootstrapper: "0" })),
+    discover(rules.packages.steam, manifest, net({ rowBootstrapper: "0" })),
     /pinned international row payload/,
   );
   await assert.rejects(
-    discover(rules.packages.steam, null, net({ stamp: "1234567890" })),
+    discover(rules.packages.steam, manifest, net({ stamp: "1234567890" })),
     /current timestamp/,
   );
   await assert.rejects(
-    discover(rules.packages.steam, null, {
+    discover(rules.packages.steam, manifest, {
       text: async () => '"win32"\n{',
     }),
     /truncated/,

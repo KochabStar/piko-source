@@ -1,13 +1,13 @@
-# 软件源自动更新
+# 软件源规则与可选历史快照
 
 软件源可独立运行，不依赖相邻的 Piko 客户端源码。维护脚本使用 Node.js 24.6+ 标准库，无 npm 运行依赖；下载载荷的布局、PE 版本和签名验证在 Windows x64 上运行。
 
 ## 更新流程
 
-`.github/workflows/update-source.yml` 每天 **03:17 UTC** 检查上游，也可通过 Actions → **Update upstream packages** 手动运行。`packages` 输入可填写以英文逗号分隔的包名；空值检查全部包。更新工作流只在默认分支运行。
+普通客户端 update 直接使用静态包文档顶层 `upstream` 与审核配方，不要求源按次发布版本。`.github/workflows/update-source.yml` 仅为手动触发的可选历史快照审核工具，`packages` 为空时检查全部包；不承担客户端运行时更新。
 
 1. 校验当前索引、清单与更新规则，并运行测试。
-2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 69 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。`steam` 解析官方 CDN 引导清单（Valve KV），固定国际版 `steamrow` 引导 ZIP 的内容寻址地址与 `sha2` 摘要，仅当载荷哈希变化时以新通道时间戳登记版本；`steamchina` 渠道不匹配。`epic-games-launcher` 跟随 Epic 官方稳定重定向端点发现构建号，载荷固定为同版本官方 MSI 直链并按 `layout: "epic"` 重建只含启动器本体的显式映射。`godot` 匹配官方稳定 tag 的 Windows x64 ZIP 并以 `verifyPEVersion` 核对 PE 版本；`blender` 解析官方 `download.blender.org` 发布目录清单并渲染官方直链，大版本／次版本目录升级需人工更新规则 URL。
+2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 70 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。`steam` 解析官方 CDN 引导清单（Valve KV），固定国际版 `steamrow` 引导 ZIP 的内容寻址地址与 `sha2` 摘要，仅当载荷哈希变化时以新通道时间戳登记版本；`steamchina` 渠道不匹配。`epic-games-launcher` 跟随 Epic 官方稳定重定向端点发现构建号，载荷固定为同版本官方 MSI 直链并按 `layout: "epic"` 重建只含启动器本体的显式映射。`godot` 匹配官方稳定 tag 的 Windows x64 ZIP 并以 `verifyPEVersion` 核对 PE 版本；`blender` 解析官方 `download.blender.org` 发布目录清单并渲染官方直链，大版本／次版本目录升级需人工更新规则 URL。
 3. 下载候选载荷，计算 SHA-256；GitHub、Node、Go、rustup 提供官方摘要时必须比对，PowerShell Gallery 比对 SHA-512，向日葵另比对官方 MD5。部分桌面分发同时要求 Windows 签名状态为 `Valid`。
 4. 使用单独固定版本、固定摘要的 7-Zip、innounp、lessmsi 读取或解包元数据。检查命令、快捷方式、字体及执行配方引用的文件，检查显式文件映射、嵌套载荷、文件类型、大小、链接和路径冲突。MSI 同时核对数据库中的文件标识和 CAB 内容；不会运行 MSI 安装动作。
 5. 在 `packages/<category>/<name>/package.json` 中追加已验证版本的 SHA-256／配方引用，按保留策略裁剪落窗版本，再更新 `index.json`。旧版本展开后的内容和安装哈希不可改变，模板包只允许增加版本或确有需要的新配方。源在验证期间被手动修改时拒绝覆盖。
@@ -31,7 +31,7 @@
 
    结果写到 `automation/drafts/<name>.json`（已在 `.gitignore`），里面包含 SHA-256、字节数、格式、可执行文件候选和条目样例。
 
-2. **补三项判断**：`bin`（命令表，必须自己定）、`desktop`（要不要快捷方式）、`stripPrefix`（要剥掉的安装前缀），以及 `rule`（更新发现规则）。
+2. **补齐审核信息**：`bin`、`desktop`、`stripPrefix`，以及必填 `upstream`（provider、repo／URL／正则、必要布局与签名策略、显式 trust）。`publisher` 只用于有上游强摘要或必需有效签名的规则；其他规则明确选择 `https`，委托该 HTTPS 发布端，计算哈希不构成发布者验证。
 
 3. **校验并发布**：
 
@@ -42,7 +42,7 @@
    node scripts/update.mjs --check --packages <name>
    ```
 
-   `apply` 对 MSI／Inno／Burn 会从同一份元数据自动生成显式 `files` 映射（CloudDrive2 那 752 条现在是自动产出的），并按 `stripPrefix` 剥掉前缀。清单、`index.json` 条目和 `automation/rules.json` 一起写入，避免漏改其中一处。
+   `apply` 从同一元数据生成 MSI／Inno／Burn 的显式文件映射，并把 `upstream` 与配方写入包文档，再写入索引；不存在独立规则配置。
 
 约束没有放松：`checkLayout` 仍然是发布闸门，探测阶段不写任何清单，`--dry-run` 不写文件，签名与摘要校验照旧。探测只**读**载荷，从不执行它。
 

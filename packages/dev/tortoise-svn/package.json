@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "tortoise-svn",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://tortoisesvn.net/downloads.html",
+    "versionRegex": "TortoiseSVN-(?<version>[0-9.]+)-x64-svn-(?<svn>[0-9.]+)\\.msi",
+    "urlTemplate": "https://downloads.sourceforge.net/project/tortoisesvn/{major}.{minor}.{patch}/Application/TortoiseSVN-{version}-x64-svn-{svn}.msi",
+    "trust": "https"
+  },
   "recipes": {
     "rb40c07b53ac57635": {
       "schemaVersion": 1,

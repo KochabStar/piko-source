@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
   "name": "baidu-netdisk",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://pan.baidu.com/disk/cmsdata?do=client",
+    "versionRegex": "BaiduNetdisk_(?<version>[0-9]+(?:\\.[0-9]+){3})\\.exe",
+    "urlTemplate": "https://issuepcdn.baidupcs.com/issue/netdisk/yunguanjia/BaiduNetdisk_{version}.exe",
+    "signature": true,
+    "layout": "baidu",
+    "trust": "publisher"
+  },
   "recipes": {
     "rde25a91f1a37da29": {
       "schemaVersion": 1,

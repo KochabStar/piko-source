@@ -1,3 +1,4 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
@@ -219,16 +220,13 @@ async function fixture(t) {
     JSON.stringify(appendManifest(undefined, other), null, 2) + "\n",
   );
   await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
+  await embedRules(root, JSON.parse(JSON.stringify({
       schemaVersion: 1,
       packages: {
         demo: { provider: "manual", reason: "test fixture" },
         other: { provider: "manual", reason: "test fixture" },
       },
-    }),
-  );
+    })));
   await writeFile(
     join(root, ".gitignore"),
     "/update-report.json\n/update-merge-plan.json\n",
@@ -472,13 +470,9 @@ test("a full retention window appends and prunes identically in the expected tre
     },
   };
   await writeFile(join(root, "index.json"), JSON.stringify(index, null, 2) + "\n");
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
-      schemaVersion: 1,
-      packages: { demo: { provider: "manual", reason: "test fixture" } },
-    }),
-  );
+  await embedRules(root, {
+    packages: { demo: { provider: "manual", reason: "test fixture" } },
+  });
   const git = (args) =>
     execFileSync("git", args, {
       cwd: root,

@@ -1,6 +1,10 @@
 {
   "schemaVersion": 2,
   "name": "node",
+  "upstream": {
+    "provider": "node",
+    "trust": "publisher"
+  },
   "recipes": {
     "re4ce18ebe400f945": {
       "schemaVersion": 1,

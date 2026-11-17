@@ -1,6 +1,10 @@
 {
   "schemaVersion": 2,
   "name": "go",
+  "upstream": {
+    "provider": "go",
+    "trust": "publisher"
+  },
   "recipes": {
     "r2cd87f7373f10627": {
       "schemaVersion": 1,

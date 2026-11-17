@@ -1,3 +1,4 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -167,13 +168,10 @@ async function cliFixture(t) {
       2,
     ) + "\n",
   );
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
+  await embedRules(root, JSON.parse(JSON.stringify({
       schemaVersion: 1,
       packages: { demo: { provider: "manual", reason: "Offline fixture" } },
-    }),
-  );
+    })));
   return {
     root,
     output: join(root, "outputs"),
@@ -226,7 +224,7 @@ test("a real partial CLI run exits nonzero but publishes a complete report for i
     },
   };
   await mkdir(join(root, "packages/dev/other"));
-  const otherBytes = Buffer.from(
+  let otherBytes = Buffer.from(
     JSON.stringify(appendManifest(undefined, otherManifest), null, 2) + "\n",
   );
   await writeFile(join(root, "packages/dev/other/package.json"), otherBytes);
@@ -236,9 +234,7 @@ test("a real partial CLI run exits nonzero but publishes a complete report for i
     versions: { "1.0.0": "packages/dev/other/package.json" },
   };
   await writeFile(indexPath, JSON.stringify(index));
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
+  await embedRules(root, JSON.parse(JSON.stringify({
       schemaVersion: 1,
       packages: Object.fromEntries(
         ["demo", "other"].map((name) => [
@@ -251,8 +247,8 @@ test("a real partial CLI run exits nonzero but publishes a complete report for i
           },
         ]),
       ),
-    }),
-  );
+    })));
+  otherBytes = await readFile(join(root, "packages/dev/other/package.json"));
   const payload = "MZoffline fixture, not an executable";
   const checksum = createHash("sha256").update(payload).digest("hex");
   const mock = join(root, "offline-network.mjs");

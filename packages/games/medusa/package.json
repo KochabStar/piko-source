@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "medusa",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://mgba.io/downloads.html",
+    "versionRegex": "medusa-(?<version>a[0-9]+)-win64\\.7z",
+    "urlTemplate": "https://github.com/mgba-emu/mgba/releases/download/medusa-{version}/medusa-{version}-win64.7z",
+    "trust": "https"
+  },
   "recipes": {
     "r76a9f83240bd6ca5": {
       "schemaVersion": 1,

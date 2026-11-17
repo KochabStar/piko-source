@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "nvidia-app",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://www.nvidia.com/en-us/software/nvidia-app/",
+    "versionRegex": "https://us\\.download\\.nvidia\\.com/nvapp/client/(?<version>[0-9]+(?:\\.[0-9]+)+)/x64/NVIDIA_app_v\\k<version>_x64\\.exe",
+    "urlTemplate": "https://us.download.nvidia.com/nvapp/client/{version}/x64/NVIDIA_app_v{version}_x64.exe",
+    "signature": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "r91c92afe80b9c18c": {
       "schemaVersion": 1,

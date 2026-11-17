@@ -12,9 +12,7 @@ import { resolveManifestDocument } from "../scripts/lib/manifest-template.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.libreoffice.latest;
 const document = catalog.documents.get(
   "packages/desktop/libreoffice/package.json",
@@ -66,7 +64,7 @@ test("applicationFiles refuses a payload with no application tree", () => {
 });
 
 test("libreoffice derives its payload per release instead of freezing one release's paths", () => {
-  assert.equal(validateRules(catalog, rules).packages.libreoffice.layout, "apptree");
+  assert.equal(validateRules(catalog).packages.libreoffice.layout, "apptree");
   const platform = current.platforms["windows-x64"];
   assert.equal(platform.format, "msi");
   assert.equal(platform.stripPrefix, "LibreOffice");

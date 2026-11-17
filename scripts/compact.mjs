@@ -24,6 +24,7 @@ export async function compactSource(root, { write = false } = {}) {
       if (previous !== file) removed.add(previous);
       entry.versions[version] = file;
     }
+    document.upstream = before.documents.get(before.index.packages[name].versions[before.index.packages[name].latest]).upstream;
     const bytes = Buffer.from(JSON.stringify(document, null, 2) + "\n");
     if (!before.fileBytes.get(file)?.equals(bytes)) targets.set(file, bytes);
   }

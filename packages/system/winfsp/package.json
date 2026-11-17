@@ -1,6 +1,17 @@
 {
   "schemaVersion": 2,
   "name": "winfsp",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://winfsp.dev/rel/",
+    "versionRegex": "releases/download/v2\\.1/winfsp-(?<version>[0-9]+(?:\\.[0-9]+)+)\\.msi",
+    "urlTemplate": "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-{version}.msi",
+    "signature": true,
+    "required": [
+      "winfsp-setup.ps1"
+    ],
+    "trust": "publisher"
+  },
   "recipes": {
     "rcdfc9d57f56339b3": {
       "schemaVersion": 1,

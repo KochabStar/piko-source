@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
   "name": "wecom",
+  "upstream": {
+    "provider": "redirect",
+    "url": "https://work.weixin.qq.com/wework_admin/commdownload?platform=win&from=wwindex",
+    "versionRegex": "WeCom_(?<version>[0-9.]+)\\.exe",
+    "urlTemplate": "https://dldir1.qq.com/wework/work_weixin/WeCom_{version}.exe",
+    "layout": "wecom",
+    "signature": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "r8de6c2c1ae4829f1": {
       "schemaVersion": 1,

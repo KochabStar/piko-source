@@ -1,3 +1,4 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -12,7 +13,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { runUpdate, nextManifest, markdownReport } from "../scripts/update.mjs";
+import { runUpdate, markdownReport } from "../scripts/update.mjs";
 import { checkSource } from "../scripts/check.mjs";
 import { prepareMerge } from "../scripts/auto-merge.mjs";
 import {
@@ -24,7 +25,7 @@ import {
   validateRules,
   MiB,
 } from "../scripts/lib/catalog.mjs";
-import { discover, compareVersions } from "../scripts/lib/providers.mjs";
+import { discover, compareVersions, nextManifest } from "../scripts/lib/upstream.mjs";
 import { network, request } from "../scripts/lib/net.mjs";
 import { appendManifest } from "../scripts/lib/manifest-template.mjs";
 import {
@@ -90,6 +91,7 @@ async function fixture(t, names = ["demo"]) {
       versions: { "1.0.0": file },
     };
     rules.packages[name] = {
+      trust: "https",
       provider: "json",
       url: "https://vendor.example/latest.json",
       versionPath: "version",
@@ -102,7 +104,7 @@ async function fixture(t, names = ["demo"]) {
     );
   }
   await mkdir(join(root, "automation"));
-  await writeFile(join(root, "automation/rules.json"), JSON.stringify(rules));
+  await embedRules(root, rules);
   await writeFile(
     join(root, "index.json"),
     JSON.stringify(index, null, 2) + "\n",
@@ -328,7 +330,7 @@ test("selection is validated before a network request", async (t) => {
 test("version-bound approval/configuration code cannot be blindly rewritten", () => {
   const m = fixtureManifest();
   m.platforms["windows-x64"].configFiles["owned.ps1"] = "run version 1.0.0";
-  assert.throws(() => nextManifest(m, candidate, {}), /manual recipe review/);
+  assert.throws(() => nextManifest(m, candidate, { provider: "manual", trust: "https", reason: "recipe regression" }), /manual recipe review/);
 });
 test("mutable marketing URLs require a newer native PE version before publishing", async (t) => {
   const root = await fixture(t);
@@ -364,6 +366,7 @@ test("mutable marketing URLs publish the inspected native version rather than th
 test("GitHub assets must be unique, stable, from the configured repo, with matching published digests", async () => {
   const m = fixtureManifest(),
     rule = {
+      trust: "https",
       provider: "github-release",
       repo: "owner/project",
       versionRegex: "^v(?<version>[0-9.]+)$",
@@ -584,6 +587,7 @@ test("Gallery pagination finds newer stable versions and retains the publisher S
   let calls = 0;
   const r = await discover(
     {
+      trust: "https",
       provider: "nuget",
       url: "https://gallery.example/api/v2/feed",
       urlTemplate: "https://gallery.example/packages/psfzf.{version}.nupkg",
@@ -593,18 +597,19 @@ test("Gallery pagination finds newer stable versions and retains the publisher S
       text: async (url) => {
         calls++;
         return url.includes("skip")
-          ? "<entry><d:Version>2.10.0</d:Version><d:PackageHashAlgorithm>SHA512</d:PackageHashAlgorithm><d:PackageHash>publisher-sha512</d:PackageHash></entry><entry><d:Version>3.0.0-alpha</d:Version></entry>"
+          ? "<entry><d:Version>2.10.0</d:Version><d:PackageHashAlgorithm>SHA512</d:PackageHashAlgorithm><d:PackageHash>" + "a".repeat(128) + "</d:PackageHash></entry><entry><d:Version>3.0.0-alpha</d:Version></entry>"
           : '<entry><d:Version>2.9.0</d:Version></entry><link rel="next" href="https://gallery.example/api/v2/feed?skip=100" />';
       },
     },
   );
   assert.equal(calls, 2);
   assert.equal(r.version, "2.10.0");
-  assert.equal(r.sha512, "publisher-sha512");
+  assert.equal(r.sha512, "a".repeat(128));
   await assert.rejects(
     () =>
       discover(
         {
+          trust: "https",
           provider: "nuget",
           url: "https://gallery.example/api/v2/feed",
           urlTemplate: "https://gallery.example/{version}",
@@ -622,6 +627,7 @@ test("Gallery pagination finds newer stable versions and retains the publisher S
 test("official Rustup single-quoted TOML and publisher SHA256 are supported", async () => {
   const r = await discover(
     {
+      trust: "https",
       provider: "rustup",
       url: "https://static.rust-lang.org/release.toml",
       urlTemplate:
@@ -641,6 +647,7 @@ test("official Rustup single-quoted TOML and publisher SHA256 are supported", as
 
 test("ToDesk stable links are read without evaluating Nuxt or selecting gray releases", async () => {
   const rule = {
+    trust: "https",
     provider: "regex",
     url: "https://www.todesk.com/download.html",
     versionRegex:
@@ -662,6 +669,7 @@ test("ToDesk stable links are read without evaluating Nuxt or selecting gray rel
 test("Tabbit chooses the Windows x64 release while preserving the full CN payload", async () => {
   const r = await discover(
     {
+      trust: "https",
       provider: "tabbit",
       url: "https://www.tabbit.ai/api/v0/upgrade/latest",
       urlTemplate:

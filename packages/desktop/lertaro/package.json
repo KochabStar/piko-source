@@ -1,6 +1,23 @@
 {
   "schemaVersion": 2,
   "name": "lertaro",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "Lertaro/Lertaro",
+    "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^Lertaro-Portable\\.zip$",
+    "required": [
+      "Lertaro.App.dll",
+      "Lertaro.App.runtimeconfig.json",
+      "Lertaro.Core.dll",
+      "Lertaro.Service.exe",
+      "Lertaro.Service.dll",
+      "Lertaro.Service.runtimeconfig.json",
+      "lff.dll",
+      "Plugins/Lertaro.Plugins.CoreExtensions.dll"
+    ],
+    "trust": "https"
+  },
   "recipes": {
     "r3c1008676076bfeb": {
       "schemaVersion": 1,

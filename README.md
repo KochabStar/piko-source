@@ -2,7 +2,13 @@
 
 独立于 `../piko/` 客户端项目维护的软件源目录，对应 `../piko/docs/replacement-gaps.md` 的 P0 软件源工作。
 
-**当前共 70 个包、163 个版本，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+## 运行时上游规则
+
+全部包的 schema 2 文档在顶层发布 `upstream`，与已审核的 `recipes` 一同通过普通静态目录提供。客户端默认 update 直接发现上游并验证载荷，不需要源维护者在每次发版后追加索引。精确历史版本仍由不可变版本行解析；离线只使用已保存的精确清单，绝不探测网络。
+
+`trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
+
+**当前共 70 个包、159 个历史版本锚点，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -15,19 +21,28 @@
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
 - [CloudDrive2 快捷方式打开黑窗口](guides/clouddrive2-shortcut.md)：`1.1.3.3` 改打 WinUI 桌面版（GUI 子系统 `CloudDrive.exe`），只解包捆绑链里的应用 MSI；旧服务版 `1.1.3` 保留。
 - [Godot 装完没有快捷方式](guides/godot-shortcut.md)：`4.7.2-piko.1` 补上指向 GUI 主程序（非 `_console.exe`）的开始菜单入口，载荷与命令表不变；含已有安装的收据修复流程。
-- [Lertaro 后台服务启动失败](guides/lertaro-service.md)：`5.13.1-piko.1` 保留载荷与命令表，把 `LertaroService` 注册从会被回收的版本目录改锚到 `current` 目录联接，服务随默认版本切换；含故障注册的接管流程。
+- [Lertaro 后台服务与数据目录](guides/lertaro-service.md)：当前配方使用真实版本目录和显式管理员脚本，保留 `Data` 备份、迁移与所有权台账；历史 `current` 联接方案已撤销，不能只改成普通 SCM 声明。
 
 原始两份清单复制自客户端的 `examples/source/`：Node 26.12.1、ripgrep 15.2.0。现已增加 Lua 5.5.0、z.lua 1.8.26、Starship 1.27.0、fzf 0.74.5、PSFzf 2.7.12、sudo 0.2020.01.26、Snipaste 2.11.3；已在第六阶段加入 GitHub Actions 上游更新配置；推送并启用仓库权限后运行，正式 HTTPS 托管仍未部署。后续清单在此维护，客户端示例不自动同步。
 
 ## 模板包清单
 
-现有 **129 份版本清单存于 70 个包文件**，每包按 [保留策略](#分类与版本保留) 保留最近 8 个版本组。普通更新复用 URL／安装配方模板，仅在版本表追加版本、SHA-256、可选下载配额，再更新索引 `latest`。主题、持久化、Shell 和管理员配方等布局发生变化时，增加独立 recipe，避免改动旧版本含义。
+版本表是已审核的历史锚点，而不是每次上游发版的发布前提。可选维护工具可追加经过完整验证的快照；布局或执行配方变化仍需要人工审核独立 recipe。
 
-- 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1，各版本指向相同包文件。客户端只允许已登记并带校验值的版本，不通过拼 URL 随意安装未知版本。
+- 模板文件使用 `schemaVersion: 2`；`index.json` 仍为 schema 1。顶层 `upstream` 描述发现、信任与布局约束；`recipes`／`versions` 保留精确历史安装含义。
 - 仅替换声明式下载和路径字段中的 `{version}`，不替换配置正文、Shell／执行脚本及 `{root}`、`{persist}` 等既有占位符。多下载分别保存 SHA-256。
 - 迁移逐版本核对完整展开结果及 `manifestHash`，所有历史版本与原清单完全一致；旧包文件由 Git 历史保留。更新仍下载并检查载荷摘要、大小和布局，不能仅替换 URL 就发布。
 - **先升级客户端，再刷新或发布此源。** 新客户端兼容旧完整清单；旧客户端不能解析模板包。当前改动未自动替换本机 Piko。
 - `npm run compact:check` 预览完整清单转换，`npm run compact` 执行无损合并；已迁移文件再次运行不产生变化。普通自动更新不会再新增同包版本文件。
+
+### 声明式 Windows 服务
+
+新版客户端支持 distribution 的 `services` 数组，供**确实可由包内原生 `.exe` 直接注册**的普通 LocalSystem／own-process 服务使用。每项包含 `name`、`displayName`、包内相对 `binPath`（`.exe`）及 `startType: "auto" | "demand" | "disabled"`；可选 `description`、`args: string[]`、服务依赖 `depends: string[]`、`startAfterInstall` 和 `stopBeforeUninstall`。禁用服务不能声明自动启动；同名（不分大小写）、自身／循环依赖、不安全路径和未知字段均拒绝。
+
+服务指向校验过的真实版本目录，而非 `current` 联接；参数由客户端按 Windows 规则逐项引用，不作为 Shell 脚本。模板只插值 `binPath` 中的版本，`args` 保持字面值，不展开 `{root}`／`{persist}`。系统写操作要求用户手动打开管理员终端，不自动 UAC，也不接管缺少自身收据的同名服务。`piko service list` 和 `piko service <source>/<package>@<version> status|start|stop|restart` 提供生命周期管理；卸载根据收据逆序撤销。
+
+添加服务语义须追加新 recipe 和新版本／修订，不能改写已有发布版本的展开内容与摘要。当前 Lertaro 仍有不可省略的真实数据迁移脚本，WinFsp 仍是厂商 MSI／驱动安装器，因此本次不对这两个包伪造 `services` 声明；具体边界见 Lertaro 指南。
+
 
 ## 分类与版本保留
 
@@ -50,7 +65,7 @@
 - `check.mjs` 强制每包不超过 8 组（超窗报错要求 prune）；`--base` 对比时放行"基线状态下已落出保留窗口"或"因本次追加新组而被挤出窗口"的版本删除，窗口内版本的既有保护（不可删除、不可改写）不变。
 - 被裁版本仅从索引与模板版本表移除并清理无引用 recipe；已安装客户端不受影响，但该版本此后无法重新安装，需要旧版本时从 Git 历史找回。
 
-**网络受限包的占位登记（2026-11-11 起）**：feed 已发现新版本但载荷下载遭遇网络失败（如百度网盘 CDN 对海外 runner 的地域限制）时，更新器仍以全零占位 SHA-256 登记该版本（状态 `registered-unverified`），版本号与官方 URL 立即可用，客户端安装时需显式 `--skip-checksum`。后续任何一次成功下载会把占位摘要替换为实测值（这是唯一允许修改已发布行的字段）；占位行的其余字段与其他已发布版本一样不可改写。依赖 PE 版本探测的包（版本号本身需要下载才能确定）不适用占位登记，仍按 blocked 保留现状。
+**网络受限载荷**：发现版本但下载失败时只报告 blocked，保留已有索引与历史清单；绝不登记全零摘要或要求用户绕过校验。后续成功下载、验证摘要／签名与布局后，才可生成可选历史快照。已发布历史行没有摘要补全例外。
 
 ## Shell 与配置支持（需要新版客户端）
 
@@ -195,6 +210,7 @@ pi --version
 - **不解包、不做便携安装。** WinFsp 是内核态文件系统驱动加 `WinFsp.Launcher` 服务，解出 MSI 里的文件并不会让驱动可用；所以清单用 `format: "file"` 原样保存 `winfsp.msi`，安装动作与系统改动全部留给官方安装器。
 - `winfsp-setup` 是一个 PowerShell 入口，作用等同双击 MSI：用 `msiexec /i` 打开交互式安装向导，UAC 由 Windows 自己弹，用户在向导里确认前不会写入任何东西。入口拒绝任何参数，避免被当成无人值守安装通道；没有 `admin` 配方，`piko system winfsp` 会直接报"未声明系统集成"。
 - 卸载 Piko 包只删除保存的安装器副本，不会卸载系统里已安装的 WinFsp 驱动或服务；撤销需走 Windows"应用和功能"或官方 MSI 卸载。
+- 新增的一等 `services` 只表达普通包内原生可执行文件的 SCM 注册，不能替代 MSI 的内核驱动部署与厂商安装动作；本包不添加伪服务声明，既有 recipe 和已发布摘要保持不变。
 - 自动更新从 `winfsp.dev/rel/` 的下载按钮匹配 `winfsp-<build>.msi`：tag 用的是系列号（`v2.1`），资产名与 MSI 版本用的是构建号（`2.1.25156`），两者必须分开重建，否则下一次构建会拼出错误的下载地址。页面上同时出现的 `nfs-win` 与 `sshfs-win` 是两个独立项目，不属于本包。
 - 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`；`node scripts/update.mjs --check --packages winfsp` 返回 `current`。隔离 Piko（`PIKO_HOME` + 本地 HTTP 源）安装后载荷为 `winfsp.msi` 与 `winfsp-setup.ps1`，`piko which winfsp-setup` 解析到该脚本，带参数调用被拒绝，卸载后版本目录清空。证据见 [WinFsp 验证记录](verification/winfsp-20261109.json)。
 - **未验收**：真实的内核驱动安装、服务注册、版本升级／降级与卸载；驱动能否加载、已挂载盘符是否正常，都需要在目标机上由用户手动完成安装后再单独确认。
@@ -312,7 +328,7 @@ pi --version
 ## GitHub 自动更新（第六阶段）
 
 - 已为登记的全部包（当前 70 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
-- 每天 **03:17 UTC** 定时检查，也支持手动选择包名。校验官方摘要、分发签名及载荷布局后，追加版本记录（需要时增加独立配方）并按保留策略裁剪最旧版本组，再生成 PR；**已验证更新通过源整体校验、测试及远端完整文件树比对后自动 squash 合并；单包失败仅保留该包旧版，不阻止其他成功项**。不会升级本机软件；失败包仍在摘要报告，整体校验或合并失败时保留 PR 待处理。
+- 手动选择包名运行可选历史快照工具。校验官方摘要、分发签名及载荷布局后，追加历史记录并按保留策略裁剪，再生成 PR；已验证更新通过源整体校验、测试及精确远端文件树比对后自动 squash 合并。单包失败只保留该包历史，不阻止其他成功项；普通客户端更新不依赖该工作流。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。保留窗口内的版本记录受保护；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本，仅放行按保留策略到期的裁剪。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。
 - 脚本只依赖 Node.js 24.6+ 标准库；载荷验证在 Windows x64 运行。`npm run check`、`npm test`、`npm run update:discover` 可在本地检查。

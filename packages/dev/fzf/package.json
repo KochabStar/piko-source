@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "fzf",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "junegunn/fzf",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^fzf-[0-9]+(?:\\.[0-9]+)+-windows_amd64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r2939b9059aa5765e": {
       "schemaVersion": 1,

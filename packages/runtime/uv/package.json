@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "uv",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "astral-sh/uv",
+    "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^uv-x86_64-pc-windows-msvc\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r36bff38ca83420cc": {
       "schemaVersion": 1,

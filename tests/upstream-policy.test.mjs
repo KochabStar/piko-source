@@ -1,11 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { discover } from "../scripts/lib/providers.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
 
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 
 test("innounp discovers the upstream version and downloads its official archive", async () => {
   const rule = rules.packages.innounp;

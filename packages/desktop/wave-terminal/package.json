@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "wave-terminal",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "wavetermdev/waveterm",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^Wave-win32-x64-[0-9]+(?:\\.[0-9]+)+\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "ra10fd1b7726656de": {
       "schemaVersion": 1,

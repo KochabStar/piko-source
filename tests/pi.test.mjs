@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { validateManifest, loadCatalog } from "../scripts/lib/catalog.mjs";
 import { fileURLToPath } from "node:url";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const json = async (path) =>
   JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"));
@@ -14,7 +14,7 @@ const catalog = await loadCatalog(
   fileURLToPath(new URL("../", import.meta.url)),
 );
 const manifest = catalog.manifests.get("pi@" + entry.latest);
-const rules = await json("../automation/rules.json");
+const rules = { packages: { pi: (await json("../" + entry.versions[entry.latest])).upstream } };
 const rule = rules.packages.pi;
 const platform = manifest.platforms["windows-x64"];
 const version = "9.8.7";
@@ -87,7 +87,7 @@ test("Pi discovery selects only the stable Windows x64 binary archive and keeps 
   assert.equal(candidate.sha256, sha256);
   assert.equal(candidate.assetBytes, 123);
   const next = nextManifest(manifest, candidate, rule);
-  assert.deepEqual(next.platforms["windows-x64"], platform);
+  assert.deepEqual(next.platforms["windows-x64"], { ...platform, url: candidate.url, sha256: candidate.sha256 });
   assert.equal(next.version, version);
   validateManifest(next, "pi", version);
 });

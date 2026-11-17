@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "git",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "git-for-windows/git",
+    "versionRegex": "^v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)\\.windows\\.[0-9]+$",
+    "assetRegex": "^PortableGit-(?<version>[0-9.]+)-64-bit\\.7z\\.exe$",
+    "versionFrom": "asset",
+    "trust": "https"
+  },
   "recipes": {
     "r6237868bb9357e21": {
       "schemaVersion": 1,

@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "inno-setup",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "jrsoftware/issrc",
+    "versionRegex": "^is-(?<version>[0-9_]+)$",
+    "assetRegex": "^innosetup-[0-9]+(?:\\.[0-9]+)+-x64\\.exe$",
+    "trust": "https"
+  },
   "recipes": {
     "r05095f0e1fa58035": {
       "schemaVersion": 1,

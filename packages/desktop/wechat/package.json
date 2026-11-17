@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
   "name": "wechat",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://pc.weixin.qq.com/",
+    "versionRegex": "WeChatWin_(?<version>[0-9.]+)\\.exe",
+    "urlTemplate": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_{version}.exe",
+    "versionFromPE": true,
+    "signature": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "r1ff62e55e1169a29": {
       "schemaVersion": 1,

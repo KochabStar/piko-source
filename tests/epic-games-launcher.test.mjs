@@ -7,14 +7,12 @@ import {
   validateManifest,
   validateRules,
 } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages["epic-games-launcher"].latest;
 const manifest = catalog.manifests.get("epic-games-launcher@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -79,7 +77,7 @@ test("epic-games-launcher discovery follows the official stable redirect to the 
     rule.url,
     "https://launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncherInstaller.exe",
   );
-  validateRules(catalog, rules);
+  validateRules(catalog);
   const candidate = await discover(rule, manifest, {
     redirect: async (url) => {
       assert.equal(url, rule.url);

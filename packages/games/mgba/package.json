@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "mgba",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "mgba-emu/mgba",
+    "versionRegex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+    "assetRegex": "^mGBA-[0-9]+(?:\\.[0-9]+)+-win64\\.7z$",
+    "trust": "https"
+  },
   "recipes": {
     "rac266eafe5743428": {
       "schemaVersion": 1,

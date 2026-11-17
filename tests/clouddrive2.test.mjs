@@ -8,13 +8,11 @@ import {
   validateRules,
   downloads,
 } from "../scripts/lib/catalog.mjs";
-import { discover, render } from "../scripts/lib/providers.mjs";
+import { discover, render } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.clouddrive2.latest;
 const manifest = catalog.manifests.get("clouddrive2@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -97,7 +95,7 @@ test("CloudDrive2 discovers the separate desktop-app channel and rebuilds the ex
   assert.equal(rule.signature, true);
   assert.equal(rule.versionTemplate, "{assetver}.{appbuild}");
   assert.deepEqual(rule.required, ["CloudDrive.exe"]);
-  validateRules(catalog, rules);
+  validateRules(catalog);
   // The page carries both channels: the core-service installer (v1.1.3) and
   // the desktop app (app-v1.1.3-24 publishing 1.1.3-3-windows-x64.exe). Only
   // the app bundle is a managed application now.

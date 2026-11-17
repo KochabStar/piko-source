@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
   "name": "aria2",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "aria2/aria2",
+    "versionRegex": "^release-(?<version>[0-9.]+)$",
+    "assetRegex": "^aria2-(?<version>[0-9.]+)-win-64bit-build(?<build>[0-9]+)\\.zip$",
+    "versionFrom": "aria2",
+    "stripPrefixFromAsset": true,
+    "trust": "https"
+  },
   "recipes": {
     "r932670e581f7dfd2": {
       "schemaVersion": 1,

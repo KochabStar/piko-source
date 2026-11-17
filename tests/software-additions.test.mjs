@@ -7,14 +7,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCatalog, validateManifest } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-).packages;
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) }).packages;
 const manifest = (name) =>
   catalog.manifests.get(name + "@" + catalog.index.packages[name].latest);
 const platform = (name) => manifest(name).platforms["windows-x64"];
@@ -61,7 +59,7 @@ const nativeNet = (release = nativeRelease(), latest = version) => ({
   },
   json: async (url) => {
     assert.equal(url, `${base}/${version}/manifest.json`);
-    return release;
+    return JSON.parse(JSON.stringify(release));
   },
 });
 
@@ -79,7 +77,7 @@ test("Claude Code discovers a version-bound native binary with the official chec
   assert.deepEqual(
     nextManifest(manifest("claude-code"), candidate, rules["claude-code"])
       .platforms,
-    manifest("claude-code").platforms,
+    { "windows-x64": { ...manifest("claude-code").platforms["windows-x64"], url: candidate.url, sha256: candidate.sha256 } },
   );
 });
 
@@ -132,7 +130,15 @@ test("Claude Code rejects mismatched manifests, missing x64, bad checksums and i
           manifest("claude-code"),
           nativeNet(release),
         ),
-      /Invalid Claude Code Windows x64 manifest/,
+      (error) => {
+        const platform = release.platforms?.["win32-x64"];
+        const validMetadata = release.version === version && platform?.binary === "claude.exe" &&
+          Number.isSafeInteger(platform.size) && platform.size > 0 && platform.size <= 2 ** 31;
+        assert.match(error.message, validMetadata
+          ? /Invalid(?: or zero)? upstream digest/
+          : /Invalid Claude Code Windows x64 manifest/);
+        return true;
+      },
     );
 });
 
@@ -166,7 +172,7 @@ for (const [name, asset, tag] of [
     assert.equal(candidate.url, url);
     assert.equal(candidate.sha256, checksum);
     const next = nextManifest(manifest(name), candidate, rule);
-    assert.deepEqual(next.platforms, manifest(name).platforms);
+    assert.deepEqual(next.platforms, { "windows-x64": { ...manifest(name).platforms["windows-x64"], url: candidate.url, sha256: candidate.sha256 } });
     validateManifest(next, name, version);
   });
   test(`${name} refuses missing or ambiguous Windows x64 assets`, async () => {
@@ -223,7 +229,7 @@ test("future Lertaro releases retain the required service recipe without persist
   const current = manifest("lertaro"),
     next = nextManifest(
       current,
-      { version: "5.14.0", url: "https://example.invalid/Lertaro-Portable.zip" },
+      { version: "5.14.0", url: "https://example.invalid/Lertaro-Portable.zip", sha256: checksum },
       rules.lertaro,
     );
   validateManifest(next, "lertaro", "5.14.0");

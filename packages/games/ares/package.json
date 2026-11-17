@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "ares",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "ares-emulator/ares",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)*)$",
+    "assetRegex": "^ares-windows-x64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "ra41e18613073ef69": {
       "schemaVersion": 1,

@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "ripgrep",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "BurntSushi/ripgrep",
+    "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^ripgrep-[0-9]+(?:\\.[0-9]+)+-x86_64-pc-windows-msvc\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "rd30071f84d08f8f9": {
       "schemaVersion": 1,

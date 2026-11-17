@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "vscode",
+  "upstream": {
+    "provider": "json",
+    "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
+    "versionPath": "productVersion",
+    "urlTemplate": "https://update.code.visualstudio.com/{version}/win32-x64-archive/stable",
+    "trust": "https"
+  },
   "recipes": {
     "r341f87d708f197ab": {
       "schemaVersion": 1,

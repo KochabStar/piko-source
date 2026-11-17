@@ -3,14 +3,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { loadCatalog, validateManifest, validateRules } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.godot.latest;
 const manifest = catalog.manifests.get("godot@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -86,7 +84,7 @@ test("godot discovery selects the standard win64 editor asset among mono/32-bit/
   const rule = rules.packages.godot;
   assert.equal(rule.provider, "github-release");
   assert.equal(rule.repo, "godotengine/godot");
-  validateRules(catalog, rules);
+  validateRules(catalog);
   const checksum = "a".repeat(64);
   const asset = (name, extra = {}) => ({
     name,

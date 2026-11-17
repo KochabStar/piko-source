@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "innounp",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/docs/innounp.htm",
+    "versionRegex": "Version\\s+(?<version>\\d+\\.\\d+\\.\\d+)",
+    "urlTemplate": "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/bin/innounp-2.zip",
+    "trust": "https"
+  },
   "recipes": {
     "r78062e536723f2b8": {
       "schemaVersion": 1,

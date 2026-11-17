@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "flclash",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "chen08209/FlClash",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^FlClash-[0-9]+(?:\\.[0-9]+)+-windows-amd64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r0d41f06cf834c1aa": {
       "schemaVersion": 1,

@@ -8,8 +8,6 @@ import {
   component,
   requireThat,
   loadCatalog,
-  PLACEHOLDER_SHA256,
-  isPlaceholderManifest,
 } from "./lib/catalog.mjs";
 import {
   appendManifest,
@@ -40,7 +38,7 @@ export async function prepareMerge(
     "Auto-merge requires a completed write report",
   );
   const updates = report.results.filter((r) =>
-    ["updated", "registered-unverified"].includes(r.status),
+    r.status === "updated",
   );
   requireThat(
     Number.isSafeInteger(report.blocked) &&
@@ -63,7 +61,6 @@ export async function prepareMerge(
     report.results.every((r) =>
       [
         "updated",
-        "registered-unverified",
         "current",
         "manual",
         "provider-behind",
@@ -106,26 +103,11 @@ export async function prepareMerge(
     const baselineEntry = expectedIndex.packages[update.name];
     const manifest = catalog.manifests.get(update.name + "@" + update.version);
     const previousDocument = JSON.parse(git(["show", baseSha + ":" + file]));
-    // The baseline may already hold this version only as a registered
-    // placeholder; completing it with the measured digest is the one
-    // allowed replacement of a published row.
-    const completing =
-      Object.hasOwn(baselineEntry.versions, update.version) &&
-      isPlaceholderManifest(
-        resolveManifestDocument(previousDocument, update.name, update.version),
-      );
     requireThat(
-      !Object.hasOwn(baselineEntry.versions, update.version) || completing,
+      !Object.hasOwn(baselineEntry.versions, update.version),
       "Verified updates must append a new package version",
     );
-    if (completing) {
-      delete previousDocument.versions[update.version];
-      const used = new Set(
-        Object.values(previousDocument.versions).map((row) => row.recipe),
-      );
-      for (const id of Object.keys(previousDocument.recipes))
-        if (!used.has(id)) delete previousDocument.recipes[id];
-    } else baselineEntry.versions[update.version] = file;
+    baselineEntry.versions[update.version] = file;
     baselineEntry.latest = update.version;
     // The updater prunes the appended document against the UNPRUNED entry
     // (the window is applied once); the expected index drops the same
@@ -154,17 +136,11 @@ export async function prepareMerge(
     }
     const platform = manifest.platforms["windows-x64"];
     const rows = platform.downloads ?? [platform];
-    if (isPlaceholderManifest(manifest))
-      requireThat(
-        rows.every((d) => d.sha256 === PLACEHOLDER_SHA256),
-        "Report differs from verified payload checksums",
-      );
-    else
-      requireThat(
-        /^[a-f0-9]{64}$/.test(update.sha256) &&
-          rows.every((d) => d.sha256 === update.sha256),
-        "Report differs from verified payload checksums",
-      );
+    requireThat(
+      /^[a-f0-9]{64}$/.test(update.sha256) && !/^0+$/.test(update.sha256) &&
+        rows.every((d) => d.sha256 === update.sha256),
+      "Report differs from verified payload checksums",
+    );
   }
   requireThat(
     isDeepStrictEqual(index, expectedIndex),

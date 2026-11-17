@@ -1,6 +1,21 @@
 {
   "schemaVersion": 2,
   "name": "pi",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "earendil-works/pi",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^pi-windows-x64\\.zip$",
+    "required": [
+      "package.json",
+      "photon_rs_bg.wasm",
+      "theme/dark.json",
+      "theme/light.json",
+      "assets/clankolas.png",
+      "native/win32/prebuilds/win32-x64/win32-platform.node"
+    ],
+    "trust": "https"
+  },
   "recipes": {
     "r41c1a1fdb00720cf": {
       "schemaVersion": 1,

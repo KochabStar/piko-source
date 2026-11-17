@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { network } from "../scripts/lib/net.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
 import { QQDownloadSession } from "../scripts/lib/qq-download.mjs";
 
 const endpoint =
@@ -15,7 +15,7 @@ const signed = (secret = "a".repeat(32)) =>
   url + "?sign=" + secret + "&t=1793580150";
 const success = (u = signed()) =>
   Response.json({ retcode: 0, data: { url: u } });
-const rule = { provider: "qqnt", versionFromPE: true };
+const rule = { provider: "qqnt", trust: "https", versionFromPE: true };
 
 test("QQ metadata discovery uses only the official unsigned version-bound x64 channel", async () => {
   const candidate = await discover(

@@ -1,6 +1,12 @@
 {
   "schemaVersion": 2,
   "name": "sudo",
+  "upstream": {
+    "provider": "github-file",
+    "repo": "lukesampson/psutils",
+    "path": "sudo.ps1",
+    "trust": "https"
+  },
   "recipes": {
     "r19a406eafeae58b4": {
       "schemaVersion": 1,

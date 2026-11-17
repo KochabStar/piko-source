@@ -1,6 +1,20 @@
 {
   "schemaVersion": 2,
   "name": "sunlogin",
+  "upstream": {
+    "provider": "json",
+    "url": "https://client-api.oray.com/softwares/SUNLOGIN_X_WINDOWS?x64=1",
+    "versionPath": "versionno",
+    "md5Path": "md5",
+    "urlTemplate": "https://d-cdn.oray.com/sl/windows/AweSun_{version}_x64.exe",
+    "signature": true,
+    "required": [
+      "flutter/flutter_windows.dll",
+      "flutter/data/icudtl.dat",
+      "flutter/data/app.so"
+    ],
+    "trust": "publisher"
+  },
   "recipes": {
     "raa6052fc9fd6d580": {
       "schemaVersion": 1,

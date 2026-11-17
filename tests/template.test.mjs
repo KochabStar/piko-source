@@ -1,3 +1,4 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -69,7 +70,7 @@ async function fixture(t, { compact = false } = {}) {
     };
   }
   await mkdir(join(root, "automation"));
-  await writeFile(join(root, "automation/rules.json"), JSON.stringify(rules));
+  await embedRules(root, rules);
   await writeFile(
     join(root, "index.json"),
     JSON.stringify(index, null, 2) + "\n",

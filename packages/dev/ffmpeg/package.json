@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "ffmpeg",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "GyanD/codexffmpeg",
+    "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^ffmpeg-[0-9]+(?:\\.[0-9]+)+-full_build\\.7z$",
+    "trust": "https"
+  },
   "recipes": {
     "rf761ba69e84e3580": {
       "schemaVersion": 1,

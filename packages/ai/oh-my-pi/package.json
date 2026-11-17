@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "oh-my-pi",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "can1357/oh-my-pi",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^omp-windows-x64\\.exe$",
+    "trust": "https"
+  },
   "recipes": {
     "r607104fb13f7aa5b": {
       "schemaVersion": 1,

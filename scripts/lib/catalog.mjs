@@ -1,3 +1,4 @@
+import { validateUpstreamRule } from "./upstream.mjs";
 import { readFile, lstat, readdir } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
 import { createHash } from "node:crypto";
@@ -87,6 +88,56 @@ function uniquePaths(paths) {
     seen.add(path.toLowerCase());
   }
 }
+export function validateServices(value) {
+  requireThat(Array.isArray(value) && value.length <= 32, "services requires at most 32 declarations");
+  const seen = new Set();
+  const text = (value, max, empty = false) => requireThat(typeof value === "string" && (empty || value.trim()) && value.length <= max && !/[\x00-\x1f\x7f]/.test(value), "Invalid service text");
+  const name = (value) => {
+    text(value, 256);
+    requireThat(/^[A-Za-z0-9][A-Za-z0-9_. $-]{0,255}$/.test(value) && value.trim() === value, "Invalid Windows service name");
+  };
+  for (const service of value) {
+    keys(service, ["name", "displayName", "description", "binPath", "args", "startType", "depends", "startAfterInstall", "stopBeforeUninstall"], "service");
+    name(service.name);
+    const key = service.name.toLowerCase();
+    requireThat(!seen.has(key), "Case-colliding Windows service name"); seen.add(key);
+    text(service.displayName, 256);
+    if (service.description !== undefined) text(service.description, 8192, true);
+    pathName(service.binPath);
+    requireThat(/\.exe$/i.test(service.binPath), "Service binPath must be an .exe");
+    requireThat(["auto", "demand", "disabled"].includes(service.startType), "Invalid service startType");
+    if (service.args !== undefined) {
+      requireThat(Array.isArray(service.args) && service.args.length <= 128, "Invalid service args");
+      for (const argument of service.args) text(argument, 8192, true);
+    }
+    if (service.depends !== undefined) {
+      requireThat(Array.isArray(service.depends) && service.depends.length <= 64, "Invalid service depends");
+      const dependencies = new Set();
+      for (const dependency of service.depends) {
+        name(dependency);
+        const dependencyKey = dependency.toLowerCase();
+        requireThat(key !== dependencyKey && !dependencies.has(dependencyKey), "Duplicate or self service dependency");
+        dependencies.add(dependencyKey);
+      }
+    }
+    for (const flag of ["startAfterInstall", "stopBeforeUninstall"])
+      requireThat(service[flag] === undefined || typeof service[flag] === "boolean", "Invalid service lifecycle flag");
+    requireThat(service.startType !== "disabled" || service.startAfterInstall !== true, "Disabled services cannot startAfterInstall");
+  }
+  const declarations = new Map(value.map((service) => [service.name.toLowerCase(), service]));
+  const visiting = new Set(), visited = new Set();
+  function visit(key) {
+    requireThat(!visiting.has(key), "Cyclic service dependencies");
+    if (visited.has(key)) return;
+    visiting.add(key);
+    for (const dependency of declarations.get(key)?.depends ?? []) {
+      const next = dependency.toLowerCase();
+      if (declarations.has(next)) visit(next);
+    }
+    visiting.delete(key); visited.add(key);
+  }
+  for (const key of declarations.keys()) visit(key);
+}
 export const downloads = (platform) => platform.downloads ?? [platform];
 export function validateManifest(m, name, version) {
   keys(m, ["schemaVersion", "name", "version", "platforms"], "manifest");
@@ -126,6 +177,7 @@ export function validateManifest(m, name, version) {
       "desktop",
       "bootstrap",
       "admin",
+      "services",
       "maxExpandedBytes",
     ],
     "distribution",
@@ -347,6 +399,7 @@ export function validateManifest(m, name, version) {
     if (v.outputs) uniquePaths(v.outputs);
   }
   if (p.bootstrap) exec(p.bootstrap);
+  if (p.services !== undefined) validateServices(p.services);
   if (p.admin) {
     keys(p.admin, ["install", "remove", "required"], "admin");
     if (p.admin.required !== undefined)
@@ -431,10 +484,15 @@ export async function loadCatalog(root) {
     );
     if (entry.aliases)
       for (const [alias, version] of Object.entries(entry.aliases)) {
-        component(alias);
         requireThat(
-          Object.hasOwn(entry.versions, version),
-          "Alias points outside catalog",
+          /^[a-z][a-z0-9-]{0,39}$/.test(alias) && alias !== "latest" &&
+            !Object.hasOwn(entry.versions, alias) && typeof version === "string",
+          "Invalid version alias",
+        );
+        component(version);
+        requireThat(
+          Object.hasOwn(entry.versions, version) || /^\d+(?:\.\d+){0,3}(?:-[a-zA-Z0-9.-]+)?(?:\+[a-zA-Z0-9.-]+)?$/.test(version),
+          "Invalid version alias target",
         );
       }
     if (entry.runtime) {
@@ -455,6 +513,7 @@ export async function loadCatalog(root) {
         documents.set(file, JSON.parse(bytes.toString("utf8")));
       }
       const document = documents.get(file);
+      validateUpstreamRule(document.upstream);
       requireThat(
         document.schemaVersion === 2,
         "Shared package files require a template document",
@@ -518,78 +577,13 @@ export async function loadCatalog(root) {
   }
   return { root, index, manifests, indexBytes, documents, fileBytes };
 }
-export function validateRules(catalog, config) {
-  requireThat(
-    config.schemaVersion === 1 && object(config.packages),
-    "Invalid updater rules",
-  );
-  requireThat(
-    Object.keys(config.packages).length ===
-      Object.keys(catalog.index.packages).length,
-    "Every package needs an update policy",
-  );
-  for (const [name, rule] of Object.entries(config.packages)) {
-    requireThat(
-      Object.hasOwn(catalog.index.packages, name) && object(rule),
-      "Unknown update package",
-    );
-    requireThat(
-      [
-        "github-release",
-        "github-tags",
-        "github-file",
-        "node",
-        "go",
-        "claude-code",
-        "qqnt",
-        "nuget",
-        "regex",
-        "json",
-        "redirect",
-        "tabbit",
-        "rustup",
-        "steam",
-        "manual",
-      ].includes(rule.provider),
-      "Unknown update provider",
-    );
-    if (rule.provider === "manual")
-      requireThat(
-        typeof rule.reason === "string" && rule.reason.length > 0,
-        "Pinned packages need a reason",
-      );
-    if (rule.repo)
-      requireThat(/^[\w.-]+\/[\w.-]+$/.test(rule.repo), "Invalid repository");
-    for (const key of ["versionRegex", "assetRegex", "urlRegex"])
-      if (rule[key]) new RegExp(rule[key]);
-    if (rule.versionTemplate !== undefined)
-      requireThat(
-        typeof rule.versionTemplate === "string" &&
-          /[{}]/.test(rule.versionTemplate) &&
-          !/[\/]/.test(rule.versionTemplate),
-        "Invalid version template",
-      );
-    if (rule.url) httpsURL(rule.url);
-    requireThat(
-      rule.signature === undefined ||
-        rule.signature === true ||
-        typeof rule.signature === "string",
-      "Signature rules must be true or a payload path",
-    );
-    if (typeof rule.signature === "string") pathName(rule.signature);
-  }
-  return config;
+export function validateRules(catalog) {
+  return {
+    schemaVersion: 1,
+    packages: Object.fromEntries(Object.entries(catalog.index.packages).map(([name, entry]) => [
+      name,
+      validateUpstreamRule(catalog.documents.get(entry.versions[entry.latest]).upstream),
+    ])),
+  };
 }
 
-// A feed-discovered version whose payload could not be fetched (typically a
-// geo-restricted vendor CDN blocking the runner) is registered with this
-// all-zero digest so the version is already installable through the client's
-// explicit checksum bypass. The next run that manages to download the payload
-// replaces the placeholder with the measured digest; every other field of a
-// placeholder row stays immutable like any published manifest.
-export const PLACEHOLDER_SHA256 = "0".repeat(64);
-export const isPlaceholderManifest = (manifest) =>
-  !!manifest &&
-  downloads(manifest.platforms["windows-x64"]).some(
-    (d) => d.sha256 === PLACEHOLDER_SHA256,
-  );

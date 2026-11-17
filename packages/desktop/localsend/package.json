@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "localsend",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "localsend/localsend",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^LocalSend-[0-9]+(?:\\.[0-9]+)+-windows-x86-64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r576e0f434d7d9dbd": {
       "schemaVersion": 1,

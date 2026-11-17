@@ -16,7 +16,7 @@ import {
   tortoiseRecipe,
   applyTortoiseRecipe,
 } from "../scripts/lib/tortoise-recipe.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 import { fileURLToPath } from "node:url";
 import { loadCatalog } from "../scripts/lib/catalog.mjs";
 
@@ -66,8 +66,8 @@ test("SVN recipe uses identical payload, version-specific registration and no sh
   );
 });
 test("future SVN manifests inherit fixed recipe instead of reintroducing locked-junction behavior", async () => {
-  const candidate = { version: "1.16.0.30000" };
-  const next = nextManifest(revision, candidate, {});
+  const candidate = { version: "1.16.0.30000", url: "https://vendor.example/svn.msi" };
+  const next = nextManifest(revision, candidate, { provider: "manual", trust: "https", reason: "recipe regression" });
   await applyTortoiseRecipe(next);
   assert.equal(recipe(next), recipe(revision));
   assert.equal(next.version, candidate.version);

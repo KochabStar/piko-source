@@ -1,6 +1,12 @@
 {
   "schemaVersion": 2,
   "name": "rustup",
+  "upstream": {
+    "provider": "rustup",
+    "url": "https://static.rust-lang.org/rustup/release-stable.toml",
+    "urlTemplate": "https://static.rust-lang.org/rustup/archive/{version}/x86_64-pc-windows-msvc/rustup-init.exe",
+    "trust": "publisher"
+  },
   "recipes": {
     "r4ac6c50505b1a41a": {
       "schemaVersion": 1,

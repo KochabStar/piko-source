@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "godot",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "godotengine/godot",
+    "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+){1,2})-stable$",
+    "assetRegex": "^Godot_v[0-9.]+-stable_win64\\.exe\\.zip$",
+    "verifyPEVersion": true,
+    "trust": "https"
+  },
   "recipes": {
     "r2d4cd1994526fe9a": {
       "schemaVersion": 1,

@@ -1,10 +1,12 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm, realpath, symlink, readdir } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { nextManifest, runUpdate } from "../scripts/update.mjs";
+import { runUpdate } from "../scripts/update.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 import {
   digest,
   loadCatalog,
@@ -44,7 +46,7 @@ test("Sunlogin launches the extracted GUI, not the outer installer", async () =>
 });
 
 test("future Sunlogin updates retain the GUI command and shortcut targets", () => {
-  const next = nextManifest(revision, { version: "16.9.0.40000" }, {});
+  const next = nextManifest(revision, { version: "16.9.0.40000", url: "https://vendor.example/new.exe" }, { provider: "manual", trust: "https", reason: "recipe regression" });
   assert.equal(next.version, "16.9.0.40000");
   assert.deepEqual(
     next.platforms["windows-x64"].bin,
@@ -75,12 +77,7 @@ test("Sunlogin index latest keeps the corrected GUI entries", async () => {
     latest.platforms["windows-x64"].desktop,
     revision.platforms["windows-x64"].desktop,
   );
-  const rules = JSON.parse(
-    await readFile(
-      new URL("../automation/rules.json", import.meta.url),
-      "utf8",
-    ),
-  );
+  const rules = ({ packages: { sunlogin: catalog.documents.get(catalog.index.packages.sunlogin.versions[catalog.index.packages.sunlogin.latest]).upstream } });
   assert.deepEqual(rules.packages.sunlogin.required, [
     "flutter/flutter_windows.dll",
     "flutter/data/icudtl.dat",
@@ -119,7 +116,7 @@ test("Sunlogin owns its backend service integration", () => {
 });
 
 test("future Sunlogin updates inherit the service integration", () => {
-  const next = nextManifest(service, { version: "16.9.0.40000" }, {});
+  const next = nextManifest(service, { version: "16.9.0.40000", url: "https://vendor.example/new.exe" }, { provider: "manual", trust: "https", reason: "recipe regression" });
   const p = next.platforms["windows-x64"];
   assert.deepEqual(p.admin, service.platforms["windows-x64"].admin);
   assert.ok(p.configFiles["piko-service.ps1"]);
@@ -377,14 +374,8 @@ for (const missingEntry of [false, true]) {
       const root = await mkdtemp(join(tmpdir(), "piko-sunlogin-update-"));
       t.after(() => rm(root, { recursive: true, force: true, maxRetries: 10 }));
       const file = "packages/desktop/sunlogin/package.json";
-      const previousBytes =
-        JSON.stringify(appendManifest(undefined, revision), null, 2) + "\n";
-      const rules = JSON.parse(
-        await readFile(
-          new URL("../automation/rules.json", import.meta.url),
-          "utf8",
-        ),
-      );
+      const rules = { packages: { sunlogin: catalog.documents.get(catalog.index.packages.sunlogin.versions[catalog.index.packages.sunlogin.latest]).upstream } };
+      let previousBytes = JSON.stringify({ ...appendManifest(undefined, revision), upstream: rules.packages.sunlogin }, null, 2) + "\n";
       await mkdir(join(root, "packages/desktop/sunlogin"), {
         recursive: true,
       });
@@ -403,13 +394,8 @@ for (const missingEntry of [false, true]) {
           },
         }),
       );
-      await writeFile(
-        join(root, "automation/rules.json"),
-        JSON.stringify({
-          schemaVersion: 1,
-          packages: { sunlogin: rules.packages.sunlogin },
-        }),
-      );
+      await embedRules(root, { packages: { sunlogin: rules.packages.sunlogin } });
+      previousBytes = await readFile(join(root, file), "utf8");
       const payload = Buffer.from("synthetic update pipeline fixture");
       const candidate = {
         version: "16.9.0.40000",

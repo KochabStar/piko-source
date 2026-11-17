@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { validateManifest, loadCatalog } from "../scripts/lib/catalog.mjs";
 import { fileURLToPath } from "node:url";
-import { discover } from "../scripts/lib/providers.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
 import { RETENTION_KEEP } from "../scripts/lib/retention.mjs";
 
 const json = async (path) =>
@@ -21,7 +21,7 @@ const oldest = versions[0],
   latest = entry.latest;
 const old = catalog.manifests.get("oh-my-pi@" + oldest);
 const next = catalog.manifests.get("oh-my-pi@" + latest);
-const rule = (await json("../automation/rules.json")).packages["oh-my-pi"];
+const rule = (await json("../" + entry.versions[entry.latest])).upstream;
 
 test("oh-my-pi keeps the retention window and a valid latest manifest", () => {
   validateManifest(next, "oh-my-pi", latest);

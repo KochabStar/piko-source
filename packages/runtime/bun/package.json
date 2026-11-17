@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "bun",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "oven-sh/bun",
+    "versionRegex": "^bun-v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^bun-windows-x64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r8597fca819617a88": {
       "schemaVersion": 1,

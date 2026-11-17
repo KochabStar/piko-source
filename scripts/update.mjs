@@ -18,10 +18,8 @@ import {
   component,
   MiB,
   GiB,
-  PLACEHOLDER_SHA256,
-  isPlaceholderManifest,
 } from "./lib/catalog.mjs";
-import { discover, compareVersions } from "./lib/providers.mjs";
+import { discover, compareVersions, nextManifest } from "./lib/upstream.mjs";
 import { network } from "./lib/net.mjs";
 import { applyTortoiseRecipe } from "./lib/tortoise-recipe.mjs";
 import { Tools } from "./lib/tools.mjs";
@@ -29,81 +27,6 @@ import { checkLayout } from "./lib/layout.mjs";
 import { appendManifest } from "./lib/manifest-template.mjs";
 import { pruneDocument } from "./lib/retention.mjs";
 
-export function nextManifest(current, candidate, rule) {
-  const next = structuredClone(current),
-    p = next.platforms["windows-x64"];
-  next.version = candidate.version;
-  // A piko.N revision keeps the upstream version literally in its URLs and
-  // payload names, because upstream never publishes a "-piko.N" artifact.
-  // Retarget both spellings so the next upstream release does not inherit a
-  // manifest whose version and payload disagree.
-  const upstream = current.version.replace(/-piko\.[0-9]+$/, "");
-  const updatePath = (s) =>
-    typeof s === "string"
-      ? (upstream === current.version
-          ? s
-          : s.replaceAll(upstream, candidate.version)
-        ).replaceAll(current.version, candidate.version)
-      : s;
-  for (const d of downloads(p)) {
-    for (const key of ["file", "into", "stripPrefix"])
-      if (d[key]) d[key] = updatePath(d[key]);
-    if (d.nested)
-      for (const step of d.nested)
-        for (const key of ["path", "stripPrefix"])
-          if (step[key]) step[key] = updatePath(step[key]);
-    if (d.files)
-      d.files = Object.fromEntries(
-        Object.entries(d.files).map(([from, to]) => [
-          updatePath(from),
-          updatePath(to),
-        ]),
-      );
-  }
-  // A derived application tree is rebuilt from the next payload's own file
-  // table while verifying it. Persisting the previous release's paths would
-  // ship a map that describes a tree the new payload no longer has.
-  if (rule.layout === "apptree")
-    for (const d of downloads(p)) delete d.files;
-  if (candidate.stripPrefix)
-    downloads(p)[0].stripPrefix = candidate.stripPrefix;
-  for (const [name, b] of Object.entries(p.bin))
-    if (typeof b === "string") p.bin[name] = updatePath(b);
-    else b.path = updatePath(b.path);
-  if (rule.layout === "lua") {
-    const old = current.version.split(".").slice(0, 2).join(""),
-      version = candidate.version.split(".").slice(0, 2).join("");
-    for (const [name, b] of Object.entries(p.bin))
-      if (
-        typeof b === "string" &&
-        new RegExp("^(?:lua|luac|wlua)" + old + "\\.exe$").test(b)
-      )
-        p.bin[name] = b.replace(old + ".exe", version + ".exe");
-  }
-  for (const kind of ["shortcuts", "fonts", "associations", "menus"])
-    if (p.desktop?.[kind])
-      p.desktop[kind] = p.desktop[kind].map((e) =>
-        typeof e === "string"
-          ? updatePath(e)
-          : { ...e, path: updatePath(e.path) },
-      );
-  // Persist paths, configuration code and execution declarations must retain
-  // their original meaning. Version-bound code needs an explicit review.
-  const sensitive = JSON.stringify({
-    persist: p.persist,
-    configFiles: p.configFiles,
-    configTemplates: p.configTemplates,
-    shell: p.shell,
-    bootstrap: p.bootstrap,
-    admin: p.admin,
-  });
-  requireThat(
-    current.version === candidate.version ||
-      !sensitive.includes(current.version),
-    "Version-bound configuration/execution code requires manual recipe review",
-  );
-  return next;
-}
 export function markdownReport(report) {
   const clean = (s) =>
     String(s ?? "")
@@ -171,10 +94,7 @@ export async function runUpdate(
     "Unknown update mode",
   );
   const catalog = await loadCatalog(root),
-    config = validateRules(
-      catalog,
-      JSON.parse(await readFile(join(root, "automation/rules.json"), "utf8")),
-    );
+    config = validateRules(catalog);
   const names = packages?.length
     ? [...new Set(packages)]
     : Object.keys(catalog.index.packages);
@@ -204,12 +124,22 @@ export async function runUpdate(
       log(name + ": checking " + rule.provider);
       let work;
       try {
+        if (rule.provider === "manual") {
+          Object.assign(row, { status: "manual", reason: rule.reason });
+          continue;
+        }
         const candidate = await discoverer(rule, current, net);
         if (candidate.manual) {
           Object.assign(row, { status: "manual", reason: candidate.reason });
           continue;
         }
         component(candidate.version);
+        requireThat(
+          rule.trust !== "publisher" || !!rule.signature ||
+            /^[a-f0-9]{64}$/i.test(candidate.sha256 ?? "") ||
+            /^[a-f0-9]{128}$/i.test(candidate.sha512 ?? ""),
+          "Publisher trust requires a strong upstream digest or required signature",
+        );
         Object.assign(row, {
           version: candidate.version,
           url: candidate.url,
@@ -231,32 +161,18 @@ export async function runUpdate(
             continue;
           }
           if (comparison === 0) {
-            // A registered placeholder at the feed version falls through to
-            // the download path below, which completes it with the measured
-            // digest; only verified rows are reported current.
-            if (!isPlaceholderManifest(current)) {
-              requireThat(
-                !candidate.sha256 ||
-                  candidate.sha256.toLowerCase() === old.sha256.toLowerCase(),
-                "Same-version publisher digest changed; immutable manifest retained",
-              );
-              row.status = "current";
-              continue;
-            }
-          } else if (Object.hasOwn(entry.versions, candidate.version)) {
-            const indexed = catalog.manifests.get(
-              name + "@" + candidate.version,
+            requireThat(
+              !candidate.sha256 || candidate.sha256.toLowerCase() === old.sha256.toLowerCase(),
+              "Same-version publisher digest changed; immutable manifest retained",
             );
-            if (!isPlaceholderManifest(indexed)) {
-              Object.assign(row, {
-                status: "already-indexed",
-                reason:
-                  "Version is already published; current latest selection retained",
-              });
-              continue;
-            }
-            // Fall through: a registered-but-unverified placeholder is
-            // completed by the normal download-and-verify path below.
+            row.status = "current";
+            continue;
+          } else if (Object.hasOwn(entry.versions, candidate.version)) {
+            Object.assign(row, {
+              status: "already-indexed",
+              reason: "Version is already published; current latest selection retained",
+            });
+            continue;
           }
         }
         if (mode === "discover") {
@@ -310,9 +226,9 @@ export async function runUpdate(
               url,
               join(work, "distribution-" + attempt + ".exe"),
               {
-                sha256: attempt === 0 ? candidate.sha256 : undefined,
-                sha512: attempt === 0 ? candidate.sha512 : undefined,
-                md5: attempt === 0 ? candidate.md5 : undefined,
+                sha256: candidate.sha256,
+                sha512: candidate.sha512,
+                md5: candidate.md5,
                 maxBytes: 2 * GiB,
               },
             );
@@ -325,62 +241,7 @@ export async function runUpdate(
             );
           }
         } catch (downloadError) {
-          // A feed-discovered release blocked by a geo-restricted or flaky
-          // vendor CDN is still registered with a placeholder digest: the
-          // version and its official URL become installable immediately
-          // through the client's explicit checksum bypass, and the next run
-          // that can actually fetch the payload replaces the placeholder
-          // with the measured digest. PE-version probes need the payload to
-          // even know the version, so they keep the ordinary blocked path.
-          if (
-            !(
-              !candidate.versionFromPE &&
-              downloadError instanceof TypeError &&
-              /fetch failed/i.test(String(downloadError.message))
-            )
-          )
-            throw downloadError;
-          const next = nextManifest(current, candidate, rule);
-          if (name === "tortoise-svn") await applyTortoiseRecipe(next);
-          for (const d of downloads(next.platforms["windows-x64"])) {
-            d.url = candidate.url;
-            d.sha256 = PLACEHOLDER_SHA256;
-          }
-          validateManifest(next, name, next.version);
-          const registered = catalog.manifests.get(
-            name + "@" + next.version,
-          );
-          requireThat(
-            !Object.hasOwn(entry.versions, next.version) ||
-              isPlaceholderManifest(registered),
-            "Never replace an already-published manifest",
-          );
-          // Re-registering the published placeholder byte-for-byte would
-          // leave the working tree unchanged; the auto-merge exact-tree
-          // check counts observed changes, so report the row as indexed
-          // instead of claiming a change no diff can observe.
-          if (isDeepStrictEqual(registered, next)) {
-            Object.assign(row, {
-              status: "already-indexed",
-              reason:
-                "Blocked payload already registered with this placeholder; retained until a run can fetch it",
-            });
-            continue;
-          }
-          Object.assign(row, {
-            version: next.version,
-            status: "registered-unverified",
-            reason:
-              "Payload fetch blocked by the vendor network; placeholder digest, install with --skip-checksum until a run completes it",
-          });
-          if (mode === "write") planned.push({ name, manifest: next });
-          log(
-            name +
-              ": registered " +
-              next.version +
-              " without a verified download (network blocked)",
-          );
-          continue;
+          throw downloadError;
         }
         requireThat(
           !stale(artifact),
@@ -463,10 +324,7 @@ export async function runUpdate(
         }
         validateManifest(next, name, next.version);
         requireThat(
-          !Object.hasOwn(entry.versions, next.version) ||
-            isPlaceholderManifest(
-              catalog.manifests.get(name + "@" + next.version),
-            ),
+          !Object.hasOwn(entry.versions, next.version),
           "Never replace an already-published manifest",
         );
         Object.assign(row, {
@@ -531,19 +389,7 @@ export async function runUpdate(
             ...entry.versions,
             [manifest.version]: file,
           };
-          // Completing a placeholder replaces its template row instead of
-          // appending a duplicate version; orphaned recipes are dropped.
-          let base = catalog.documents.get(file);
-          if (Object.hasOwn(base?.versions ?? {}, manifest.version)) {
-            const stripped = structuredClone(base);
-            delete stripped.versions[manifest.version];
-            const used = new Set(
-              Object.values(stripped.versions).map((r) => r.recipe),
-            );
-            for (const id of Object.keys(stripped.recipes))
-              if (!used.has(id)) delete stripped.recipes[id];
-            base = stripped;
-          }
+          const base = catalog.documents.get(file);
           const nextDocument = pruneDocument(appendManifest(base, manifest), {
             versions: nextEntry,
           });
@@ -584,7 +430,7 @@ export async function runUpdate(
       await loadCatalog(root);
     }
     report.changed = report.results.filter((r) =>
-      ["updated", "registered-unverified"].includes(r.status),
+      r.status === "updated",
     ).length;
     return report;
   } finally {

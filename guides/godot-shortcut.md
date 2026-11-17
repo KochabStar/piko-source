@@ -26,7 +26,7 @@
 
 ## 更新链路
 
-`-piko.N` 修订把上游版本字面写在 URL、`bin` 路径和快捷方式路径里。`scripts/update.mjs` 的 `nextManifest` 现在会先按"去掉 `-piko.N` 的上游版本"替换，再按完整修订版本替换，下一次上游发版（如 `4.7.3`）派生的候选不会继承 `4.7.2` 的载荷名。`tests/godot.test.mjs` 覆盖了这条路径。
+`-piko.N` 修订把上游版本字面写在 URL、`bin` 路径和快捷方式路径里。共享核心 `scripts/lib/upstream.mjs` 的 `nextManifest` 先按去掉 `-piko.N` 的上游版本替换，再按完整修订版本替换，下一次上游发版（如 `4.7.3`）派生的候选不会继承 `4.7.2` 的载荷名。`tests/godot.test.mjs` 覆盖这条路径。
 
 ## 已有安装
 

@@ -1,6 +1,18 @@
 {
   "schemaVersion": 2,
   "name": "blender",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://download.blender.org/release/Blender5.2/",
+    "versionRegex": "blender-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)-windows-x64\\.zip",
+    "urlTemplate": "https://download.blender.org/release/Blender{major}.{minor}/blender-{version}-windows-x64.zip",
+    "signature": "blender.exe",
+    "required": [
+      "blender-launcher.exe",
+      "5.2/python/bin/python.exe"
+    ],
+    "trust": "publisher"
+  },
   "recipes": {
     "r610ef9e4e1483485": {
       "schemaVersion": 1,

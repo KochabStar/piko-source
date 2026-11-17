@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "shadps4",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "shadps4-emu/shadPS4",
+    "versionRegex": "^v\\.(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$",
+    "assetRegex": "^shadps4-win64-sdl-[0-9.]+\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "ra35e647536aae7e2": {
       "schemaVersion": 1,

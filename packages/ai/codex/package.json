@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "codex",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "openai/codex",
+    "versionRegex": "^rust-v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^codex-package-x86_64-pc-windows-msvc\\.tar\\.gz$",
+    "trust": "https"
+  },
   "recipes": {
     "r3f9977d9ed0708c9": {
       "schemaVersion": 1,

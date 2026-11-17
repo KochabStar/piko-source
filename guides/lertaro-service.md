@@ -26,7 +26,7 @@ Piko 按版本目录安装，升级后旧版本目录会被回收。注册项仍
 
 ## 当前配方：真实目录与必需服务
 
-最新 `5.13.1` 配方使用 `admin.required: true`，在现有 `configFiles` 中提供 `piko-service.ps1`，保留显式管理员授权。载荷、SHA-256、命令和快捷方式名称不变。不声明 `persist: ["Data"]`，也不把 `.piko-system` 联接进厂商目录。
+当前 `5.13.3` 配方继续使用 `admin.required: true`，在现有 `configFiles` 中提供 `piko-service.ps1`，保留显式管理员授权。载荷、SHA-256、命令和快捷方式名称不变。不声明 `persist: ["Data"]`，也不把 `.piko-system` 联接进厂商目录。
 
 - 服务镜像始终为所选**真实版本目录**的 `Lertaro.Service.exe --service`；GUI、命令入口和快捷方式也必须由支持该声明的客户端指向同一真实目录，不能经过 `current`。
 - 运行中的 `Data` 始终是真实目录。后台台账位于 `{persist}/.piko-system/piko-lertaro-service.json`，完整备份放在同目录的 `backup-<代次>`，不会因普通卸载删除。
@@ -69,3 +69,12 @@ Piko ≥ 0.4.23 中 `--approve-admin` 单独一条命令即可完成审批（同
 - 只涉及 `LertaroService` 一个服务名；不注册驱动、不写启动项、不改 `HKCU` 的 `lertaro://` 关联。
 - 不自动安装 .NET 运行时；缺运行时仍由厂商 `install-dotnet-runtime.bat` 提示。
 - 服务以 `LocalSystem` 运行是厂商设计（需读 USN／MFT），Piko 不改变该账户。
+
+## 声明式 SCM 服务的适用边界
+
+新版客户端的 `services` 可以注册包内真实版本目录中的原生 `.exe`，记录完整 SCM 配置和安装身份，提供启动、停止、状态与注销。它不会自动请求 UAC，也不收养没有自身收据的同名服务。
+
+Lertaro **不能只把现有脚本改成 `services`**：当前脚本除 SCM 生命周期外，还负责真实 `Data` 的完整备份与跨版本恢复、旧目录身份核验、未认领数据冲突拒绝及失败阶段台账。普通 SCM 声明没有数据迁移能力；删除这些步骤会丢失数据安全保证。继续保留厂商特例 `admin` 路径，不同时声明同名服务，避免两个所有者争用 `LertaroService`。历史配方与已发布版本的展开摘要不变。
+
+WinFsp 也不适用：其载荷是包含内核驱动和厂商 Launcher 的 MSI，不是可由包内相对 `.exe` 直接注册的普通便携服务。保留现有 `winfsp-setup` 交互安装器入口；Piko 不自动运行 MSI、驱动或伪造 SCM 声明。
+

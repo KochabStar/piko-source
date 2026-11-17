@@ -1,6 +1,12 @@
 {
   "schemaVersion": 2,
   "name": "steam",
+  "upstream": {
+    "provider": "steam",
+    "url": "https://cdn.cloudflare.steamstatic.com/client/steam_client_win32",
+    "signature": "steam.exe",
+    "trust": "publisher"
+  },
   "recipes": {
     "rcef5cab9e4c63c99": {
       "schemaVersion": 1,

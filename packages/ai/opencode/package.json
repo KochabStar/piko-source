@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "opencode",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "anomalyco/opencode",
+    "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^opencode-windows-x64-baseline\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "rb83838444f1c20d6": {
       "schemaVersion": 1,

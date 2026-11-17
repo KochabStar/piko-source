@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "dingtalk",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://www.mydown.com/soft/452/725797952.shtml",
+    "versionRegex": "\"data\"\\s*:\\s*\\{\\s*\"category\"\\s*:\\s*\"[^\"]+\"\\s*,\\s*\"version\"\\s*:\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"",
+    "urlTemplate": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_updater/Release/DingTalkUpdate_v{version}.zip",
+    "trust": "https"
+  },
   "recipes": {
     "re217688d2362785b": {
       "schemaVersion": 1,

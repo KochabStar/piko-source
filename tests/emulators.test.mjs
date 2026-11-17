@@ -7,14 +7,12 @@ import {
   validateManifest,
   validateRules,
 } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const platform = (name) =>
   catalog.manifests.get(
     name + "@" + catalog.index.packages[name].latest,
@@ -23,7 +21,7 @@ const manifest = (name) =>
   catalog.manifests.get(name + "@" + catalog.index.packages[name].latest);
 
 test("emulator and editor packages declare portable Windows x64 payloads only", () => {
-  validateRules(catalog, rules);
+  validateRules(catalog);
   for (const name of [
     "retroarch",
     "ares",
@@ -339,8 +337,8 @@ test("version updates retarget only the versioned path fragments", () => {
   // RetroArch and VS Code keep every path fragment across versions, and the
   // generated configuration must not be rewritten by a version bump.
   for (const [name, version] of [
-    ["retroarch", "1.23.0"],
-    ["vscode", "1.146.0"],
+    ["retroarch", "99.23.0"],
+    ["vscode", "99.146.0"],
   ]) {
     const next = nextManifest(
       manifest(name),

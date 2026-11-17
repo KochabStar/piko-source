@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "retroarch",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://buildbot.libretro.com/stable/",
+    "versionRegex": "/stable/(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/",
+    "urlTemplate": "https://buildbot.libretro.com/stable/{version}/windows/x86_64/RetroArch.7z",
+    "trust": "https"
+  },
   "recipes": {
     "rfb2440d45f4d150c": {
       "schemaVersion": 1,

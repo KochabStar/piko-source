@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "tabby",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "Eugeny/tabby",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^tabby-[0-9]+(?:\\.[0-9]+)+-setup-x64\\.exe$",
+    "trust": "https"
+  },
   "recipes": {
     "re8f55c6ca02b9100": {
       "schemaVersion": 1,

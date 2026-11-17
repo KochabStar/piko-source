@@ -1,6 +1,18 @@
 {
   "schemaVersion": 2,
   "name": "clouddrive2",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://www.clouddrive2.com/download.html",
+    "versionRegex": "releases/download/app-v(?<assetver>[0-9]+(?:\\.[0-9]+){1,3})-(?<tag>[0-9]+)/CloudDrive2-(?<assetver2>[0-9]+(?:\\.[0-9]+){1,3})-(?<appbuild>[0-9]+)-windows-x64\\.exe",
+    "versionTemplate": "{assetver}.{appbuild}",
+    "urlTemplate": "https://github.com/cloud-fs/cloud-fs.github.io/releases/download/app-v{assetver}-{tag}/CloudDrive2-{assetver}-{appbuild}-windows-x64.exe",
+    "signature": true,
+    "required": [
+      "CloudDrive.exe"
+    ],
+    "trust": "publisher"
+  },
   "recipes": {
     "r651eeea6dd30420d": {
       "schemaVersion": 1,

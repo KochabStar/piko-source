@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "lua",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://sourceforge.net/projects/luabinaries/rss?path=/",
+    "versionRegex": "lua-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)_Win64_bin\\.zip",
+    "urlTemplate": "https://downloads.sourceforge.net/project/luabinaries/{version}/Tools%20Executables/lua-{version}_Win64_bin.zip",
+    "layout": "lua",
+    "trust": "https"
+  },
   "recipes": {
     "rb6da8404d96c915c": {
       "schemaVersion": 1,

@@ -1,6 +1,20 @@
 {
   "schemaVersion": 2,
   "name": "nushell",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "nushell/nushell",
+    "versionRegex": "^v?(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^nu-[0-9]+(?:\\.[0-9]+)+-x86_64-pc-windows-msvc\\.zip$",
+    "required": [
+      "less.exe",
+      "nu_plugin_formats.exe",
+      "nu_plugin_polars.exe",
+      "nu_plugin_query.exe",
+      "LICENSE"
+    ],
+    "trust": "https"
+  },
   "recipes": {
     "rb70603cee4e9e9c3": {
       "schemaVersion": 1,

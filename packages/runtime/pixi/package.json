@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "pixi",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "prefix-dev/pixi",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^pixi-x86_64-pc-windows-msvc\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "ra474fa2ff30dc524": {
       "schemaVersion": 1,

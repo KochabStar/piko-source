@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "orca",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "stablyai/orca",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^orca-windows-setup\\.exe$",
+    "signature": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "r6f5a5ea39a8dbd7e": {
       "schemaVersion": 1,

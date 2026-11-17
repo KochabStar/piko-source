@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "beyondcompare-zh-cn",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://www.scootersoftware.com/download",
+    "versionRegex": "BCompare-(?:zh-)?(?<version>[0-9]+(?:\\.[0-9]+)+)\\.exe",
+    "urlTemplate": "https://www.scootersoftware.com/BCompare-zh-{version}.exe",
+    "trust": "https"
+  },
   "recipes": {
     "rd460666d237513d7": {
       "schemaVersion": 1,

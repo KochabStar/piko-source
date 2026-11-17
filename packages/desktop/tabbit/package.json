@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
   "name": "tabbit",
+  "upstream": {
+    "provider": "tabbit",
+    "url": "https://www.tabbit.ai/api/v0/upgrade/latest?from=website",
+    "urlTemplate": "https://releases.tabbit.com/upgrade/windows/stable_x64_cn/Tabbit%20Browser_stable_x64_cn_{version3}.exe",
+    "layout": "tabbit",
+    "signature": true,
+    "verifyPEVersion": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "rd55f36226f5e9ec6": {
       "schemaVersion": 1,

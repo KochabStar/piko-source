@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "cmake",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "Kitware/CMake",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^cmake-[0-9]+(?:\\.[0-9]+)+-windows-x86_64\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "rf2158e7e04987721": {
       "schemaVersion": 1,

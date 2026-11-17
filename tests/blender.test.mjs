@@ -3,14 +3,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { loadCatalog, validateManifest, validateRules } from "../scripts/lib/catalog.mjs";
-import { discover } from "../scripts/lib/providers.mjs";
-import { nextManifest } from "../scripts/update.mjs";
+import { discover } from "../scripts/lib/upstream.mjs";
+import { nextManifest } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.blender.latest;
 const manifest = catalog.manifests.get("blender@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -59,7 +57,7 @@ test("only blender is a command: the launcher and debug .cmd helpers stay payloa
 test("blender discovery picks the newest x64 portable ZIP in the official release listing", async () => {
   const rule = rules.packages.blender;
   assert.equal(rule.provider, "regex");
-  validateRules(catalog, rules);
+  validateRules(catalog);
   // blender.exe only stamps major.minor in its PE FileVersion (5.2), so the
   // package version is anchored to the official directory listing and its
   // published .sha256 file, not verifyPEVersion.
@@ -95,19 +93,19 @@ test("blender version updates retarget the versioned strip prefix only", () => {
   const next = nextManifest(
     manifest,
     {
-      version: "5.2.4",
-      url: "https://download.blender.org/release/Blender5.2/blender-5.2.4-windows-x64.zip",
+      version: "5.2.99",
+      url: "https://download.blender.org/release/Blender5.2/blender-5.2.99-windows-x64.zip",
       sha256: "c".repeat(64),
       provenance: "https://download.blender.org/release/Blender5.2/",
     },
     rules.packages.blender,
   );
   const p = next.platforms["windows-x64"];
-  assert.equal(next.version, "5.2.4");
+  assert.equal(next.version, "5.2.99");
   // Only the outer archive folder is versioned; blender.exe and the rest of
   // the portable tree keep their names across releases.
-  assert.equal(p.stripPrefix, "blender-5.2.4-windows-x64");
+  assert.equal(p.stripPrefix, "blender-5.2.99-windows-x64");
   assert.deepEqual(p.bin, { blender: "blender.exe" });
   assert.equal(p.persist, undefined);
-  validateManifest(next, "blender", "5.2.4");
+  validateManifest(next, "blender", "5.2.99");
 });

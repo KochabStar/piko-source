@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "snipaste",
+  "upstream": {
+    "provider": "json",
+    "url": "https://www.snipaste.com/versions",
+    "versionPath": "win_desktop_version",
+    "urlTemplate": "https://download.snipaste.com/archives/Snipaste-{version}-x64.zip",
+    "trust": "https"
+  },
   "recipes": {
     "ra8b3c413205d9d72": {
       "schemaVersion": 1,

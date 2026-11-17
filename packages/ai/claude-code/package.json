@@ -1,6 +1,11 @@
 {
   "schemaVersion": 2,
   "name": "claude-code",
+  "upstream": {
+    "provider": "claude-code",
+    "url": "https://downloads.claude.ai/claude-code-releases/latest",
+    "trust": "publisher"
+  },
   "recipes": {
     "rea4ad89776f92ca5": {
       "schemaVersion": 1,

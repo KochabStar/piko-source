@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "obsidian",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "obsidianmd/obsidian-releases",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^Obsidian-[0-9]+(?:\\.[0-9]+)+\\.exe$",
+    "trust": "https"
+  },
   "recipes": {
     "r78b0a78c83fe9594": {
       "schemaVersion": 1,

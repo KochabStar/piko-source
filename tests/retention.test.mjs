@@ -1,3 +1,4 @@
+import { embedRules } from "./policy-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -114,9 +115,7 @@ async function fixture(t, versions) {
       2,
     ) + "\n",
   );
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
+  await embedRules(root, JSON.parse(JSON.stringify({
       schemaVersion: 1,
       packages: {
         demo: {
@@ -126,8 +125,7 @@ async function fixture(t, versions) {
           urlTemplate: "https://vendor.example/demo-{version}.zip",
         },
       },
-    }),
-  );
+    })));
   const git = (args) =>
     execFileSync("git", args, {
       cwd: root,
@@ -222,9 +220,7 @@ test("the updater prunes to the window while appending a verified version", asyn
       2,
     ) + "\n",
   );
-  await writeFile(
-    join(root, "automation/rules.json"),
-    JSON.stringify({
+  await embedRules(root, JSON.parse(JSON.stringify({
       schemaVersion: 1,
       packages: {
         demo: {
@@ -234,8 +230,7 @@ test("the updater prunes to the window while appending a verified version", asyn
           urlTemplate: "https://vendor.example/demo-{version}.zip",
         },
       },
-    }),
-  );
+    })));
   const body = Buffer.from("verified update payload");
   // The baseline commit anchors the immutability comparison: appending a
   // verified version pushes the oldest group out of the window, and check

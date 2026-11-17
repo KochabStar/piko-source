@@ -7,13 +7,11 @@ import {
   validateManifest,
   validateRules,
 } from "../scripts/lib/catalog.mjs";
-import { discover, render } from "../scripts/lib/providers.mjs";
+import { discover, render } from "../scripts/lib/upstream.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const catalog = await loadCatalog(root);
-const rules = JSON.parse(
-  await readFile(new URL("../automation/rules.json", import.meta.url), "utf8"),
-);
+const rules = ({ packages: Object.fromEntries(await Promise.all(Object.entries(JSON.parse(await readFile(new URL("../index.json", import.meta.url), "utf8")).packages).map(async ([name, entry]) => [name, JSON.parse(await readFile(new URL("../" + entry.versions[entry.latest], import.meta.url), "utf8")).upstream]))) });
 const version = catalog.index.packages.winfsp.latest;
 const manifest = catalog.manifests.get("winfsp@" + version);
 const platform = manifest.platforms["windows-x64"];
@@ -67,7 +65,7 @@ test("winfsp discovery reads the single stable installer from the release page",
   assert.equal(rule.url, "https://winfsp.dev/rel/");
   assert.equal(rule.signature, true);
   assert.deepEqual(rule.required, ["winfsp-setup.ps1"]);
-  validateRules(catalog, rules);
+  validateRules(catalog);
   // The page links the stable installer alongside unrelated companion
   // projects (nfs-win, sshfs-win); only the winfsp asset may match.
   const page = [

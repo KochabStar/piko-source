@@ -41,7 +41,7 @@ import {
 } from "./lib/layout.mjs";
 import { readMsiPlan } from "./lib/msi.mjs";
 import { network } from "./lib/net.mjs";
-import { compareVersions } from "./lib/providers.mjs";
+import { compareVersions, validateUpstreamRule } from "./lib/upstream.mjs";
 import { Tools, capture } from "./lib/tools.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -302,6 +302,7 @@ async function probe(name, source, flags) {
       next: [
         "review the candidates above",
         "add bin (and desktop/persist) to this draft",
+        "add upstream with provider, discovery policy and explicit publisher/https trust",
         "node scripts/add.mjs apply " + name + " --dry-run",
       ],
     };
@@ -320,6 +321,7 @@ async function apply(name, flags) {
   });
   const draft = JSON.parse(source);
   requireThat(draft.name === name, "Draft name differs");
+  const upstream = validateUpstreamRule(draft.upstream);
   requireThat(
     draft.bin && typeof draft.bin === "object",
     "Draft has no bin map; add the commands to " + file,
@@ -382,7 +384,7 @@ async function apply(name, flags) {
     const layout = await checkLayout(
       manifest,
       [artifact],
-      draft.rule ?? {},
+      upstream,
       tools,
       work,
     );
@@ -401,6 +403,7 @@ async function apply(name, flags) {
     const document = {
       schemaVersion: 2,
       name,
+      upstream,
       recipes: { [id]: template(manifest) },
       versions: {
         [draft.version]: {
@@ -437,17 +440,11 @@ async function apply(name, flags) {
     index.packages[name] = entry;
     await writeFile(indexPath, JSON.stringify(index, null, 2) + "\n");
 
-    const rulesPath = join(root, "automation/rules.json"),
-      rules = JSON.parse(await readFile(rulesPath, "utf8"));
-    if (draft.rule?.provider) {
-      rules.packages[name] = draft.rule;
-      await writeFile(rulesPath, JSON.stringify(rules, null, 2) + "\n");
-    }
     console.log(
       "\nWrote " +
         relative +
         ", updated index.json" +
-        (draft.rule?.provider ? " and automation/rules.json" : "") +
+        " and package upstream policy" +
         ".\nRun: node scripts/check.mjs && node scripts/update.mjs --check --packages " +
         name,
     );

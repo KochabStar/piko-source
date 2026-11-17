@@ -1,6 +1,14 @@
 {
   "schemaVersion": 2,
   "name": "listary",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://dl.listary.com/auto_update_v2.xml",
+    "versionRegex": "<version>\\s*(?<version>[0-9]+(?:\\.[0-9]+)+)\\s*</version>",
+    "urlTemplate": "https://www.listary.com/download/Listary.exe?version={version}",
+    "signature": true,
+    "trust": "publisher"
+  },
   "recipes": {
     "re38e0c906cd1aefa": {
       "schemaVersion": 1,

@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "7zip",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "ip7z/7zip",
+    "versionRegex": "^(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^7z[0-9]+-x64\\.msi$",
+    "trust": "https"
+  },
   "recipes": {
     "r8e6f2bcd13f8ffa2": {
       "schemaVersion": 1,

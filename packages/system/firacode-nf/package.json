@@ -1,6 +1,13 @@
 {
   "schemaVersion": 2,
   "name": "firacode-nf",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "ryanoasis/nerd-fonts",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^FiraCode\\.zip$",
+    "trust": "https"
+  },
   "recipes": {
     "r7a3582f6cb0f584a": {
       "schemaVersion": 1,
