@@ -157,15 +157,19 @@ function global:Copy-Item {
  Microsoft.PowerShell.Management\Copy-Item @PSBoundParameters
 }
 function global:Start-Process {
- param($FilePath,[string[]]$ArgumentList,[switch]$PassThru)
- $global:fake.launches+=@(@{file=$FilePath;args=@($ArgumentList)})
+ param($FilePath,[string[]]$ArgumentList,[string]$WorkingDirectory,[switch]$PassThru)
+ $global:fake.launches+=@(@{file=$FilePath;args=@($ArgumentList);cwd=$WorkingDirectory})
  if($global:fake.replaceConfig){
   $configuration=Join-Path $env:ROOT 'AweSun\config.ini'
   [IO.File]::Delete($configuration)
   [IO.File]::WriteAllText($configuration,'vendor-atomic-identity')
  }
- $global:fake.services=@([pscustomobject]@{Name='AweSunService';PathName=('"'+(Join-Path $env:ROOT 'AweSun\AweSun.exe')+'" --mod=service');State=$(if($global:fake.failInstall){'Stopped'}else{'Running'})})
- if($global:fake.twoServices){$global:fake.services+=@([pscustomobject]@{Name='SunloginService';PathName=('"'+(Join-Path $env:ROOT 'AweSun\OldAweSun.exe')+'" --mod=service');State='Running'})}
+ $global:fake.services=@([pscustomobject]@{Name='AweSunService';PathName=('"'+(Join-Path $env:ROOT 'AweSun\AweSun.exe')+'" --mod=service');State=$(if($global:fake.failInstall -or $global:fake.registerStopped){'Stopped'}else{'Running'})})
+ if($global:fake.twoServices){$global:fake.services+=@([pscustomobject]@{Name='SunloginService';PathName=('"'+(Join-Path $env:ROOT 'AweSun\OldAweSun.exe')+'"');State='Running'})}
+ if($global:fake.watchdogs){
+  $global:fake.services+=@([pscustomobject]@{Name='AweSunServiceDeamon';PathName=('"'+(Join-Path $env:ROOT 'AweSun\AweSun.exe')+'" --mod=daemon');State='Running'})
+  $global:fake.services+=@([pscustomobject]@{Name='SunloginServiceDeamon';PathName=('"'+(Join-Path $env:ROOT 'AweSun\OldAweSun.exe')+'" --mod=daemon');State='Running'})
+ }
  $p=[pscustomobject]@{HasExited=$true;ExitCode=$(if($global:fake.failInstall){23}else{0})}
  $p|Add-Member -MemberType ScriptMethod -Name WaitForExit -Value {param($timeout) $true}
  $p
@@ -176,9 +180,13 @@ function global:sc.exe {
  $global:LASTEXITCODE=0
  if($operation -eq 'stop'){
   if($global:fake.failStop){$global:LASTEXITCODE=5;return}
+  if($name -notlike '*Deamon' -and @($global:fake.services|Where-Object {$_.Name -like '*Deamon' -and $_.State -eq 'Running'}).Count){$global:LASTEXITCODE=1051;return}
   @($global:fake.services|Where-Object Name -eq $name)|ForEach-Object{$_.State='Stopped'}
  }
- elseif($operation -eq 'start'){@($global:fake.services|Where-Object Name -eq $name)|ForEach-Object{$_.State='Running'}}
+ elseif($operation -eq 'start'){
+  if($global:fake.failStart){$global:LASTEXITCODE=1053;Write-Output 'The service did not respond to the start request';return}
+  @($global:fake.services|Where-Object Name -eq $name)|ForEach-Object{$_.State='Running'}
+ }
  elseif($operation -eq 'delete'){
   if($global:fake.failDelete){$global:LASTEXITCODE=5;return}
   $global:fake.services=@($global:fake.services|Where-Object Name -ne $name)
@@ -207,7 +215,7 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
     const invoke = async (action, root, services = [], flags = {}) => {
       const fake = join(home, "fake.json"), result = join(home, "result.json");
       await writeFile(fake, JSON.stringify({ services, calls: [], launches: [], failInstall: false, failDelete: false, failStop: false, replaceConfig: false, twoServices: false, ...flags }));
-      execFileSync(ps, ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(harness, "utf16le").toString("base64")], {
+      execFileSync(ps, ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", Buffer.from(harness, "utf16le").toString("base64")], {
         env: { ...process.env, FAKE: fake, RESULT: result, RECIPE: join(root, "piko-service.ps1"), ROOT: root, DATA: data, ACTION: action }, timeout: 30000, stdio: ["ignore", "pipe", "pipe"],
       });
       return JSON.parse((await readFile(result, "utf8")).replace(/^\uFEFF/, ""));
@@ -223,6 +231,7 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
     assert.equal(r.error, null);
     assert.equal((await f.record()).state, "installed");
     assert.deepEqual(r.launches[0].args, ["--mod=install", "--admin=1", "--cmd=install_silent", "--serviceonly=1", '--path="'+old+'"']);
+    assert.equal(r.launches[0].cwd, old, 'vendor installer uses the real version directory');
     r = await f.invoke("remove", old, r.services);
     assert.equal(r.error, null);
     assert.equal(r.services.length, 0);
@@ -309,6 +318,67 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
     for (const backup of await readdir(join(f.data, "backups"))) {
       const marker = JSON.parse(await readFile(join(f.data, "backups", backup, "complete.json"), "utf8"));
       assert.equal(marker.root, root);
+    }
+  });
+  await t.test("successful stopped registration is explicitly activated after preserving data", async () => {
+    const f = await fixture(), root = f.roots[0];
+    const r = await f.invoke("install", root, [], { registerStopped: true });
+    assert.equal(r.error, null);
+    assert.deepEqual(r.calls, ["start:AweSunService"]);
+    assert.equal(r.services[0].State, "Running");
+    assert.equal((await f.record()).state, "installed");
+    assert.ok((await readdir(join(f.data, "backups"))).length);
+  });
+  await t.test("native startup failure remains visible and retains a removable recovery receipt", async () => {
+    const f = await fixture(), root = f.roots[0];
+    const r = await f.invoke("install", root, [], { registerStopped: true, failStart: true });
+    assert.match(r.error, /Failed to start service: AweSunService \(sc.exe exit 1053\)/);
+    assert.match(r.error, /did not respond/);
+    assert.deepEqual(r.calls, ["start:AweSunService"]);
+    assert.equal(r.services[0].State, "Stopped");
+    assert.equal((await f.record()).state, "cleanup-pending");
+    const removed = await f.invoke("remove", root, r.services);
+    assert.equal(removed.error, null);
+    assert.deepEqual(removed.services, []);
+  });
+  await t.test("native watchdogs stop before workers and restart after data preservation", async () => {
+    const f = await fixture(), root = f.roots[0];
+    const r = await f.invoke("install", root, [], { twoServices: true, watchdogs: true });
+    assert.equal(r.error, null);
+    assert.deepEqual(r.calls, [
+      "stop:AweSunServiceDeamon", "stop:SunloginServiceDeamon",
+      "stop:AweSunService", "stop:SunloginService",
+      "start:AweSunService", "start:SunloginService",
+      "start:AweSunServiceDeamon", "start:SunloginServiceDeamon",
+    ]);
+    assert.equal((await f.record()).services.length, 4);
+    const removed = await f.invoke("remove", root, r.services);
+    assert.equal(removed.error, null);
+    assert.deepEqual(removed.services, []);
+    assert.deepEqual(removed.calls.slice(0, 4), r.calls.slice(0, 4));
+  });
+  await t.test("external watchdog blocks vendor execution and every service mutation", async () => {
+    for (const name of ["AweSunServiceDeamon", "SunloginServiceDeamon"]) {
+      const f = await fixture(), root = f.roots[0];
+      const external = { ...f.svc(join(f.home, "external/AweSun.exe"), name), PathName: '"'+join(f.home, "external/AweSun.exe")+'" --mod=daemon' };
+      for (const action of ["install", "remove"]) {
+        const r = await f.invoke(action, root, [external]);
+        assert.match(r.error, /External Sunlogin service retained/);
+        assert.deepEqual(r.services, [external]);
+        assert.deepEqual(r.calls, []);
+        assert.deepEqual(r.launches, []);
+      }
+    }
+  });
+  await t.test("service names cannot disguise GUI, installer or mismatched native modes", async () => {
+    for (const [name, mode] of [["AweSunService", "install"], ["AweSunService", "daemon"], ["AweSunServiceDeamon", "service"]]) {
+      const f = await fixture(), root = f.roots[0];
+      const entry = { ...f.svc(join(root, "AweSun/AweSun.exe"), name), PathName: '"'+join(root, "AweSun/AweSun.exe")+'" --mod='+mode };
+      const r = await f.invoke("remove", root, [entry]);
+      assert.match(r.error, /Unexpected native service mode/);
+      assert.deepEqual(r.services, [entry]);
+      assert.deepEqual(r.calls, []);
+      assert.deepEqual(r.launches, []);
     }
   });
   await t.test("a failed stop preserves recovery state without copying live data", async () => {
