@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-19T03:01:14.368Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "winfsp",
+      "version": "2.1.25156",
+      "recipeChange": "in-place rewrite of the published 2.1.25156 recipe at the maintainer's direction (single-user source, no -piko.N revision): rfde6aa0d5229a522 (commit 389bf8d) dropped the winfsp-setup entry and declared the admin recipe; r6654752550700411 (commit 722bcf4) corrected the post-install verification to the side-by-side FSD instance key",
+      "source": "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-2.1.25156.msi",
+      "sha256": "073a70e00f77423e34bed98b86e600def93393ba5822204fac57a29324db9f7a",
+      "format": "file",
+      "file": "winfsp.msi",
+      "adminRecipe": {
+        "required": true,
+        "install": "piko-admin.ps1 install: elevated msiexec /i <saved MSI> /qn /norestart (log %TEMP%\\piko-winfsp-i-<stamp>.log)",
+        "remove": "piko-admin.ps1 remove: elevated msiexec /x <saved MSI> /qn /norestart, then asserts registry entry, WinFsp.Launcher and all WinFsp+* instance keys are gone",
+        "ownership": "expected version is read from the MSI ProductVersion property via Windows Installer COM (no hardcoded version); a registered WinFsp at another version is refused for both install and removal",
+        "postInstallChecks": "registry uninstall entry DisplayVersion == MSI ProductVersion; Get-Service WinFsp.Launcher; at least one HKLM\\SYSTEM\\CurrentControlSet\\Services\\WinFsp+* FSD instance key"
+      },
+      "realMachineAcceptance": {
+        "machine": "maintainer's desktop (DESKTOP-GND8LE2\\AIR), real %LOCALAPPDATA%\\piko home, piko 0.4.28, source raw.githubusercontent.com/KochabStar/piko-source/main/",
+        "run1": "elevated PowerShell via one UAC consent, 2026-11-19T02:56:15Z, binding d779867a6aa42ee1: msiexec /i exit 0; 'WinFsp 2025' DisplayVersion 2.1.25156 productCode {C79D9B29-3AF0-45B3-9DB9-226F3C2D2204} registered; WinFsp.Launcher RUNNING (StartType Automatic); FSD instance HKLM\\SYSTEM\\CurrentControlSet\\Services\\WinFsp+20261119T025617Z (FILE_SYSTEM_DRIVER, Start=demand, ImagePath C:\\Program Files (x86)\\WinFsp\\SxS\\sxs.20261119T025617Z\\bin\\winfsp-x64.sys, STATE STOPPED - loaded on first mount); WinFsp.Np network provider key present",
+        "run1Failure": "the first script revision asserted a literal Services\\WinFsp key which WinFsp 2.x never creates; the script threw after the successful install, piko recorded exit 1 and a failed admin receipt, and uninstall was correctly blocked with 'inspect and explicitly reconcile piko system before uninstalling' - the client safety behavior worked as designed",
+        "reconciliationRun": "2026-11-19T03:01:14Z after the corrected script (commit 722bcf4) was applied: registry version matched the MSI ProductVersion so msiexec was skipped; output 'WinFsp 2.1.25156 installed: FSD instance WinFsp+20261119T025617Z; WinFsp.Launcher service present'; piko exit 0; state.admin receipt completed with the recorded declaration and contentHash 844bfc11d8e0",
+        "removePreview": "piko system main/winfsp --remove --dry-run plans action remove-system, binding 0be6f4ec2b88f625, executable apps\\winfsp\\2.1.25156\\piko-admin.ps1",
+        "nonElevatedRefusal": "piko system main/winfsp --approve-admin without elevation fails with 'Administrator permission required ... Piko never opens a UAC prompt by itself' and writes no receipt (verified in an isolated PIKO_HOME first, then on the real home's first attempt)",
+        "migration": "an in-place manifest rewrite requires deleting the per-version saved resolution cache\\resolved\\<hash>.json on machines that installed the old content (done twice on this machine); the client otherwise refuses 'Installed version has different manifest content'"
+      },
+      "isolatedLoopback": {
+        "pikoHome": "temporary PIKO_HOME with a loopback HTTP source over this checkout",
+        "result": "install staged winfsp.msi + piko-admin.ps1 with the CLI next-step hint pointing at piko system --approve-admin; --dry-run printed the full plan (binding, script, ADMINISTRATOR warning); uninstall without any admin receipt removed the version directory cleanly"
+      },
+      "checks": {
+        "sourceCheck": "node scripts/check.mjs => 70 packages / 161 versions / 70 automatic",
+        "updateCheck": "node scripts/update.mjs --check --packages winfsp => current (2.1.25156) after both recipe revisions",
+        "tests": "tests/winfsp.test.mjs + tests/service.test.mjs: 8 pass, 0 fail; full node --test suite 208 pass with 1 pre-existing host-policy failure (tests/tortoise-recipe.test.mjs fails identically on the untouched tree; local PowerShell execution policy)"
+      },
+      "notVerified": [
+        "msiexec /x removal was never executed: the driver was deliberately left installed for the user; only the remove preview and the script's post-removal assertions were exercised",
+        "actual drive-letter mounting and first-mount driver load",
+        "upgrade to a future upstream build with the admin recipe active",
+        "arm64 installer"
+      ]
+    }
+  ],
+  "notVerified": [
+    "WinFsp uninstall on the target machine",
+    "mount behaviour and drive letters"
+  ],
+  "notes": "The interactive winfsp-setup entry is gone: every driver install now goes through an explicitly approved Administrator-terminal run and leaves a Piko receipt, so uninstall always knows what it owns. The first live run proved the value of the receipt model: a wrong script assertion failed loudly with a recorded receipt and a blocked uninstall instead of silently claiming success."
+}

@@ -213,7 +213,7 @@ pi --version
 - 就地修订的代价是 `check.mjs --base` 的追加式基线会拒绝本次改动，属已知豁免（同 Lertaro `5.13.1.1` 先例）；`check.mjs`（无基线）与全部回归测试仍必须通过。
 - 自动更新从 `winfsp.dev/rel/` 的下载按钮匹配 `winfsp-<build>.msi`：tag 用的是系列号（`v2.1`），资产名与 MSI 版本用的是构建号（`2.1.25156`），两者必须分开重建，否则下一次构建会拼出错误的下载地址。页面上同时出现的 `nfs-win` 与 `sshfs-win` 是两个独立项目，不属于本包。新配方不含版本字面量，`update.mjs` 的 `nextManifest` 推导无人工审查项。
 - 一等 `services` 只表达普通包内原生可执行文件的 SCM 注册，不能替代 MSI 的内核驱动部署与厂商安装动作；本包不添加伪服务声明。
-- 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`（2026-11-09）；`node scripts/check.mjs` 与 `node scripts/update.mjs --check --packages winfsp` 返回 `current`（2026-11-19）。真实安装／卸载验收见 [WinFsp 验证记录](verification/winfsp-20261119.json)。
+- 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`（2026-11-09）；`node scripts/check.mjs` 与 `node scripts/update.mjs --check --packages winfsp` 返回 `current`（2026-11-19）。真实管理员安装于 2026-11-19 在维护者本机实测（`msiexec /i` 静默安装、`WinFsp.Launcher` RUNNING、FSD 实例键 `WinFsp+<stamp>`、收据 completed；卸载仅预览未执行），证据与失败-协调全程见 [WinFsp 验证记录](verification/winfsp-20261119.json)。
 
 ## CloudDrive2（2026-11-05，2026-11-08 修订）
 
