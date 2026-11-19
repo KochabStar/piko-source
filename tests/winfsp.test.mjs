@@ -75,7 +75,12 @@ test("winfsp admin script only runs the vendor MSI and refuses foreign installs"
   assert.match(script, /does not match the managed MSI/);
   assert.match(script, /refusing to remove it/);
   // Success and removal are verified against the system, never assumed.
-  assert.match(script, /Services\\WinFsp/);
+  // The FSD registers as a side-by-side instance key (WinFsp+<stamp>).
+  assert.match(script, /'WinFsp\+\*'/);
+  assert.match(
+    script,
+    /FSD instance service key \(WinFsp\+\*\) is missing after installation/,
+  );
   assert.match(
     script,
     /WinFsp\.Launcher service is missing after installation/,
