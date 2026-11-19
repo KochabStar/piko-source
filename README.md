@@ -41,7 +41,7 @@
 
 服务指向校验过的真实版本目录，而非 `current` 联接；参数由客户端按 Windows 规则逐项引用，不作为 Shell 脚本。模板只插值 `binPath` 中的版本，`args` 保持字面值，不展开 `{root}`／`{persist}`。系统写操作要求用户手动打开管理员终端，不自动 UAC，也不接管缺少自身收据的同名服务。`piko service list` 和 `piko service <source>/<package>@<version> status|start|stop|restart` 提供生命周期管理；卸载根据收据逆序撤销。
 
-添加服务语义须追加新 recipe 和新版本／修订，不能改写已有发布版本的展开内容与摘要。当前 Lertaro 仍有不可省略的真实数据迁移脚本，WinFsp 仍是厂商 MSI／驱动安装器，因此本次不对这两个包伪造 `services` 声明；具体边界见 Lertaro 指南。
+添加服务语义须追加新 recipe 和新版本／修订，不能改写已有发布版本的展开内容与摘要（单人源里按维护者指示的就地修订是已知豁免，见 WinFsp 与 Lertaro 的先例记录）。Lertaro 仍有不可省略的真实数据迁移脚本；WinFsp 仍是厂商 MSI／内核驱动，两者都不伪造 `services` 声明——WinFsp 自 2026-11-19 起改由显式 `admin` 配方管理驱动安装（见 WinFsp 节），具体边界见 Lertaro 指南。
 
 
 ## 分类与版本保留
@@ -200,20 +200,20 @@ pi --version
 - 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
 - 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
 
-## WinFsp（2026-11-09）
+## WinFsp（2026-11-09，2026-11-19 修订）
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
-| `winfsp` | 2.1.25156 | `winfsp-setup`，只下载并保存官网签名的官方安装器 |
+| `winfsp` | 2.1.25156 | 无命令入口；`piko system winfsp --approve-admin` 在管理员终端安装官方 MSI 驱动 |
 
 - 版本与载荷取自 <https://winfsp.dev/rel/> 上的 **WinFsp Installer** 按钮（`winfsp-2.1.25156.msi`，2,191,360 字节）。SHA-256 `073a70e0…db9f7a` 与 GitHub release 官方资产 digest 逐字节一致；Authenticode 为 `Valid`（`CN=NAVIMATICS LLC`，DigiCert Global G3 Code Signing ECC）。MSI `ProductVersion` 就是 `2.1.25156`。
 - **不解包、不做便携安装。** WinFsp 是内核态文件系统驱动加 `WinFsp.Launcher` 服务，解出 MSI 里的文件并不会让驱动可用；所以清单用 `format: "file"` 原样保存 `winfsp.msi`，安装动作与系统改动全部留给官方安装器。
-- `winfsp-setup` 是一个 PowerShell 入口，作用等同双击 MSI：用 `msiexec /i` 打开交互式安装向导，UAC 由 Windows 自己弹，用户在向导里确认前不会写入任何东西。入口拒绝任何参数，避免被当成无人值守安装通道；没有 `admin` 配方，`piko system winfsp` 会直接报"未声明系统集成"。
-- 卸载 Piko 包只删除保存的安装器副本，不会卸载系统里已安装的 WinFsp 驱动或服务；撤销需走 Windows"应用和功能"或官方 MSI 卸载。
-- 新增的一等 `services` 只表达普通包内原生可执行文件的 SCM 注册，不能替代 MSI 的内核驱动部署与厂商安装动作；本包不添加伪服务声明，既有 recipe 和已发布摘要保持不变。
-- 自动更新从 `winfsp.dev/rel/` 的下载按钮匹配 `winfsp-<build>.msi`：tag 用的是系列号（`v2.1`），资产名与 MSI 版本用的是构建号（`2.1.25156`），两者必须分开重建，否则下一次构建会拼出错误的下载地址。页面上同时出现的 `nfs-win` 与 `sshfs-win` 是两个独立项目，不属于本包。
-- 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`；`node scripts/update.mjs --check --packages winfsp` 返回 `current`。隔离 Piko（`PIKO_HOME` + 本地 HTTP 源）安装后载荷为 `winfsp.msi` 与 `winfsp-setup.ps1`，`piko which winfsp-setup` 解析到该脚本，带参数调用被拒绝，卸载后版本目录清空。证据见 [WinFsp 验证记录](verification/winfsp-20261109.json)。
-- **未验收**：真实的内核驱动安装、服务注册、版本升级／降级与卸载；驱动能否加载、已挂载盘符是否正常，都需要在目标机上由用户手动完成安装后再单独确认。
+- **2026-11-19 修订（按维护者指示就地改写已发布的 `2.1.25156` 配方；单人源，无 `-piko.N` 修订版）：** 原先的 `winfsp-setup` 交互安装入口删除——它会把驱动装进系统却不留任何 Piko 收据，卸载无从知晓。取而代之的是一等 `admin` 配方（`required: true`）：`piko-admin.ps1` 在用户**手动打开的管理员终端**里以 `msiexec /i /qn /norestart` 静默执行保存的官方 MSI，`msiexec /x` 同理卸载；Piko 自身仍不弹 UAC、不自动提权。卸载时客户端按收据自动执行已批准的 `admin.remove`，驱动与 `WinFsp.Launcher` 一并移除。
+- `piko-admin.ps1` 的期望版本读自 MSI 自身的 `ProductVersion`（Windows Installer COM），脚本不内嵌版本号，未来上游新构建可自动继承配方。已注册的 WinFsp 版本与保存的 MSI 不一致时拒绝安装或卸载，绝不收养外部驱动；安装后校验注册表卸载项、`Services\WinFsp` 驱动键与 `WinFsp.Launcher` 服务，卸载后反向校验三者确已消失。
+- 就地修订的代价是 `check.mjs --base` 的追加式基线会拒绝本次改动，属已知豁免（同 Lertaro `5.13.1.1` 先例）；`check.mjs`（无基线）与全部回归测试仍必须通过。
+- 自动更新从 `winfsp.dev/rel/` 的下载按钮匹配 `winfsp-<build>.msi`：tag 用的是系列号（`v2.1`），资产名与 MSI 版本用的是构建号（`2.1.25156`），两者必须分开重建，否则下一次构建会拼出错误的下载地址。页面上同时出现的 `nfs-win` 与 `sshfs-win` 是两个独立项目，不属于本包。新配方不含版本字面量，`update.mjs` 的 `nextManifest` 推导无人工审查项。
+- 一等 `services` 只表达普通包内原生可执行文件的 SCM 注册，不能替代 MSI 的内核驱动部署与厂商安装动作；本包不添加伪服务声明。
+- 验证：`checkLayout` 隔离校验 1 个文件、2,191,360 字节、签名 `Valid`（2026-11-09）；`node scripts/check.mjs` 与 `node scripts/update.mjs --check --packages winfsp` 返回 `current`（2026-11-19）。真实安装／卸载验收见 [WinFsp 验证记录](verification/winfsp-20261119.json)。
 
 ## CloudDrive2（2026-11-05，2026-11-08 修订）
 

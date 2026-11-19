@@ -39,7 +39,7 @@ test("service recipes interpolate only binPath and preserve published recipe byt
   assert.deepEqual(recipe.platforms["windows-x64"].services[0].args, service.args);
 });
 
-test("Lertaro keeps real Data migration admin recipe and WinFsp remains an interactive driver MSI", async () => {
+test("Lertaro keeps real Data migration and WinFsp manages its driver MSI via an admin recipe", async () => {
   const catalog = await loadCatalog(fileURLToPath(new URL("../", import.meta.url)));
   const platform = (name) => catalog.manifests.get(`${name}@${catalog.index.packages[name].latest}`).platforms["windows-x64"];
   const lertaro = platform("lertaro"), winfsp = platform("winfsp");
@@ -47,9 +47,14 @@ test("Lertaro keeps real Data migration admin recipe and WinFsp remains an inter
   assert.equal(lertaro.admin.required, true);
   assert.match(lertaro.configFiles["piko-service.ps1"], /Data|backup-/);
   assert.equal(lertaro.persist, undefined);
+  // Neither package fabricates a user-mode SCM declaration for a kernel
+  // driver MSI; WinFsp installs the vendor MSI through the explicit admin
+  // recipe instead of an interactive setup entry.
   assert.equal(winfsp.services, undefined);
-  assert.equal(winfsp.admin, undefined);
+  assert.equal(winfsp.admin.required, true);
   assert.equal(winfsp.format, "file");
   assert.equal(winfsp.file, "winfsp.msi");
-  assert.match(winfsp.configFiles["winfsp-setup.ps1"], /msiexec\.exe/);
+  assert.deepEqual(Object.keys(winfsp.configFiles), ["piko-admin.ps1"]);
+  assert.match(winfsp.configFiles["piko-admin.ps1"], /msiexec/);
+  assert.match(winfsp.configFiles["piko-admin.ps1"], /'\/qn', '\/norestart'/);
 });
