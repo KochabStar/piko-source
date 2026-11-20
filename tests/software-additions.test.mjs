@@ -444,14 +444,18 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
   });
 });
 
-test("NVIDIA App is explicitly an installer-only entry, never a falsely portable app or implicit system install", async () => {
+test("NVIDIA App extracts the signed SFX payload instead of staging an installer", async () => {
   const p = platform("nvidia-app"),
     rule = rules["nvidia-app"];
-  assert.equal(p.format, "file");
-  assert.equal(p.file, "NVIDIA_app_setup.exe");
-  assert.deepEqual(p.bin, { "nvidia-app-setup": "NVIDIA_app_setup.exe" });
-  assert.equal(p.desktop, undefined);
+  assert.equal(p.format, "7z");
+  assert.deepEqual(p.bin, { "nvidia-app": "NvApp/CEF/NVIDIA App.exe" });
+  assert.deepEqual(p.desktop, {
+    shortcuts: [{ name: "NVIDIA App", path: "NvApp/CEF/NVIDIA App.exe" }],
+  });
   assert.equal(rule.signature, true);
+  // The setup is a 7z SFX (the PortableGit model): extraction stages the full
+  // vendor payload (NvApp/FrameViewSDK/MSVCRT/ShadowPlay) without running the
+  // installer, registering services or touching drivers.
   // Upstream moved to an architecture directory and an arch-suffixed asset
   // name, publishing arm64 alongside x64. The rule must follow the x64 link
   // and never publish the arm64 build as this package.
