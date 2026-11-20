@@ -5,7 +5,7 @@
     "provider": "github-release",
     "repo": "chen08209/FlClash",
     "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
-    "assetRegex": "^FlClash-[0-9]+(?:\\.[0-9]+)+-windows-amd64\\.zip$",
+    "assetRegex": "^FlClash-[0-9]+(?:\\.[0-9]+)+-windows-amd64-setup\\.exe$",
     "trust": "https"
   },
   "recipes": {
@@ -58,6 +58,56 @@
           "maxBytes": "{maxBytes}"
         }
       }
+    },
+    "r113ec2045ce089d5": {
+      "schemaVersion": 1,
+      "name": "flclash",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/chen08209/FlClash/releases/download/v{version}/FlClash-{version}-windows-amd64-setup.exe",
+          "sha256": "{sha256}",
+          "format": "inno",
+          "bin": {
+            "flclash": "FlClash.exe"
+          },
+          "admin": {
+            "install": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "install",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            },
+            "remove": {
+              "kind": "powershell",
+              "path": "piko-service.ps1",
+              "args": [
+                "remove",
+                "{root}",
+                "{persist}/.piko-system"
+              ]
+            }
+          },
+          "configFiles": {
+            "piko-service.ps1": "param([ValidateSet('install','remove')][string]$Action,[string]$Root,[string]$Data)\n$ErrorActionPreference='Stop'\n$helper=Join-Path $Root 'FlClashHelperService.exe'\n$marker=Join-Path $Data 'piko-flclash-service.json'\n$service=Get-CimInstance Win32_Service -Filter \"Name='FlClashHelperService'\"\n$owned=$false\nif (Test-Path -LiteralPath $marker) {\n $record=Get-Content -LiteralPath $marker -Raw | ConvertFrom-Json\n if ($record.executable -ne $helper) {throw 'Service ownership record mismatch'}\n $owned=$true\n}\nif ($service) {\n if (!$owned -or !$service.PathName.StartsWith(('\"'+$helper+'\"'),[StringComparison]::OrdinalIgnoreCase) -and !$service.PathName.StartsWith(($helper+' '),[StringComparison]::OrdinalIgnoreCase)) {throw 'An external FlClashHelperService exists; remove it explicitly through its owner first'}\n}\nif ($Action -eq 'install') {\n if (!$owned) { @{executable=$helper;created=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json | Set-Content -LiteralPath $marker -Encoding UTF8 }\n & $helper install --owner-pid $PID\n if ($LASTEXITCODE -ne 0) {throw \"Helper service install failed: $LASTEXITCODE\"}\n} else {\n if (!$owned) {throw 'No owned FlClash service record'}\n if ($service) { & $helper uninstall; if ($LASTEXITCODE -ne 0) {throw \"Helper service removal failed: $LASTEXITCODE\"} }\n Remove-Item -LiteralPath $marker\n}\n"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "FlClash",
+                "path": "FlClash.exe"
+              }
+            ]
+          },
+          "persist": [
+            ".piko-system"
+          ],
+          "maxBytes": "{maxBytes}"
+        }
+      }
     }
   },
   "versions": {
@@ -69,6 +119,11 @@
       "recipe": "r0d41f06cf834c1aa",
       "maxBytes": 536870912,
       "sha256": "e3c3c839784c50bbe406f2946f4f52147d418b3c28842ae8eb40404929490216"
+    },
+    "0.9.4": {
+      "recipe": "r113ec2045ce089d5",
+      "maxBytes": 52428800,
+      "sha256": "77f84fdf24ccb1499e6c0275b713c3a81031f157496e1c5305366184da1ac68a"
     }
   }
 }

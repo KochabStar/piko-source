@@ -645,24 +645,71 @@ test("official Rustup single-quoted TOML and publisher SHA256 are supported", as
   assert.equal(r.sha256, sha);
 });
 
-test("ToDesk stable links are read without evaluating Nuxt or selecting gray releases", async () => {
+test("ToDesk classic client link is read from the escaped release array, ignoring DaaS, Lite and gray entries", async () => {
   const rule = {
     trust: "https",
     provider: "regex",
     url: "https://www.todesk.com/download.html",
-    versionRegex:
-      '\\bwin_link:\\s*"https://dl\\.todesk\\.com/irrigation/ToDesk_(?<version>[0-9.]+)\\.exe"',
+    versionRegex: String.raw`irrigation(?:\\\\u002F|\\u002F|/)ToDesk_(?<version>[0-9.]+)\.exe`,
     urlTemplate:
       "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
   };
   const r = await discover(rule, fixtureManifest(), {
+    // The Nuxt page now pushes ToDesk DaaS through win_link (and a gray
+    // variant) while the classic client hides inside a double-escaped
+    // release array alongside mac, android, Lite and Linux links.
     text: async () =>
-      String.raw`win_link:"https:\u002F\u002Fdl.todesk.com\u002Firrigation\u002FToDesk_5.2.3.0.exe",win_link_gray:"https:\u002F\u002Fdl.todesk.com\u002Firrigation\u002FToDesk_5.3.0.0.exe"`,
+      String.raw`win_link:"https:\\u002F\\u002Fdl.todesk.com\\u002Fdaas\\u002FToDesk_DaaS_v1.1.1.1.exe",win_link_gray:"https:\\u002F\\u002Fdl.todesk.com\\u002Fdaas\\u002FToDesk_DaaS_v1.1.2.0.exe",t:["30","-1","",false,"5.3.4.0","2026.11.19","https:\\u002F\\u002Fdl.todesk.com\\u002Fmacos\\u002FToDesk_5.3.4.0.pkg","https:\\u002F\\u002Fdl.todesk.com\\u002Fandroid\\u002FToDesk_5.4.0.0.apk","2025.5.9","https:\\u002F\\u002Fdl.todesk.com\\u002Fwindows\\u002FToDesk_Lite.exe","https:\\u002F\\u002Fdl.todesk.com\\u002Firrigation\\u002FToDesk_5.3.4.0.exe","5.4.0.0","https:\\u002F\\u002Fdl.todesk.com\\u002Flinux\\u002Ftodesk-v4.9.8.1-amd64.deb"]`,
   });
-  assert.equal(r.version, "5.2.3.0");
+  assert.equal(r.version, "5.3.4.0");
   assert.equal(
     r.url,
-    "https://update.todesk.com/irrigation/ToDesk_Setup_5.2.3.0_x64.exe",
+    "https://update.todesk.com/irrigation/ToDesk_Setup_5.3.4.0_x64.exe",
+  );
+});
+
+test("FlClash picks the stable Windows setup asset after the portable zip moved to dev prereleases", async () => {
+  const r = await discover(
+    {
+      trust: "https",
+      provider: "github-release",
+      repo: "chen08209/FlClash",
+      versionRegex: "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+      assetRegex: "^FlClash-[0-9]+(?:\\.[0-9]+)+-windows-amd64-setup\\.exe$",
+    },
+    fixtureManifest(),
+    {
+      json: async () => ({
+        tag_name: "v0.9.4",
+        draft: false,
+        prerelease: false,
+        assets: [
+          {
+            name: "FlClash-0.9.4-android-arm64-v8a.apk",
+            size: 31457280,
+            browser_download_url:
+              "https://github.com/chen08209/FlClash/releases/download/v0.9.4/FlClash-0.9.4-android-arm64-v8a.apk",
+          },
+          {
+            name: "FlClash-0.9.4-windows-amd64-setup.exe",
+            size: 43132829,
+            browser_download_url:
+              "https://github.com/chen08209/FlClash/releases/download/v0.9.4/FlClash-0.9.4-windows-amd64-setup.exe",
+          },
+          {
+            name: "FlClash-0.9.4-windows-arm64-setup.exe",
+            size: 42132829,
+            browser_download_url:
+              "https://github.com/chen08209/FlClash/releases/download/v0.9.4/FlClash-0.9.4-windows-arm64-setup.exe",
+          },
+        ],
+      }),
+    },
+  );
+  assert.equal(r.version, "0.9.4");
+  assert.equal(
+    r.url,
+    "https://github.com/chen08209/FlClash/releases/download/v0.9.4/FlClash-0.9.4-windows-amd64-setup.exe",
   );
 });
 

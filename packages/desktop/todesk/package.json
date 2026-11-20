@@ -4,7 +4,7 @@
   "upstream": {
     "provider": "regex",
     "url": "https://www.todesk.com/download.html",
-    "versionRegex": "\\bwin_link:\\s*\"https://dl\\.todesk\\.com/irrigation/ToDesk_(?<version>[0-9.]+)\\.exe\"",
+    "versionRegex": "irrigation(?:\\\\\\\\u002F|\\\\u002F|/)ToDesk_(?<version>[0-9.]+)\\.exe",
     "urlTemplate": "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
     "signature": true,
     "trust": "publisher"
@@ -49,6 +49,46 @@
           }
         }
       }
+    },
+    "rae12b9e957644a5d": {
+      "schemaVersion": 1,
+      "name": "todesk",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://update.todesk.com/irrigation/ToDesk_Setup_{version}_x64.exe",
+          "maxBytes": "{maxBytes}",
+          "format": "nsis",
+          "bin": {
+            "todesk": "ToDesk.exe"
+          },
+          "maxExpandedBytes": 4294967296,
+          "nested": [
+            {
+              "path": "app64.7z",
+              "format": "7z"
+            }
+          ],
+          "persist": [
+            "Logs",
+            {
+              "path": "config.ini",
+              "kind": "file",
+              "mode": "hardlink",
+              "initial": "[ConfigInfo]\nautoStart=0\n"
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "ToDesk",
+                "path": "ToDesk.exe"
+              }
+            ]
+          },
+          "sha256": "{sha256}"
+        }
+      }
     }
   },
   "versions": {
@@ -66,6 +106,11 @@
       "recipe": "r9e3b307c3beddebe",
       "maxBytes": 119537664,
       "sha256": "eb4ea157f7d6ff1e7401e6bfffd067ef9f3f33b4706dd08a2a8a3c5aac4db48b"
+    },
+    "5.3.4.0": {
+      "recipe": "rae12b9e957644a5d",
+      "maxBytes": 119537664,
+      "sha256": "edcfd2aa41678655395b040d74df9328640900dc85590087b0c4e4c9a356020d"
     }
   }
 }

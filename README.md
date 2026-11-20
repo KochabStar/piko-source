@@ -325,6 +325,18 @@ pi --version
 - 自动更新匹配官方稳定版 `windows-x64.zip` 资产，`required` 强制校验主程序、控制台宿主与 runtime 捆绑文件；实测 `update.mjs --check --packages pebrel` 下载、摘要与布局校验通过，当前版本状态 `current`。
 - `npm run check` 通过；`npm test` 115 项通过、1 项失败，失败为本机 `D:/piko/apps/git/2.56.0.4/etc/gitconfig` 解析错误的预先存在环境问题（无 pebrel 改动的基线同样失败），与本次新增无关。未启动 GUI、未登录、未验证 SSH／AI 集成。
 
+## ToDesk／FlClash 上游适配（2026-11-20）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `todesk` | 5.3.4.0 | `todesk`，NSIS Setup 中的 `app64.7z`（规则修复后由更新器自动收录） |
+| `flclash` | 0.9.4 | `flclash`，稳定版 Inno Setup 6.7.0 的 `{app}` 树 |
+
+- **ToDesk 官网改版**：`download.html` 的 `win_link` 现指向新产品 **ToDesk_DaaS**（并带 `win_link_gray` 变体），经典客户端链接移入双重转义（`\\u002F`）的发布数组，与 mac／android／Lite／linux 混排。新 `versionRegex` 锚定 `irrigation` 路径并容忍 `\\u002F`／`\u002F`／`/` 三种分隔，恰好唯一命中 `ToDesk_5.3.4.0.exe`；载荷仍取 `update.todesk.com` 的 `ToDesk_Setup_{version}_x64.exe`（200 实测），`update.mjs --write` 自动完成下载、NSIS＋`app64.7z` 布局与签名验证并收录 5.3.4.0，状态 `current`。回归夹具改为新版页面结构，断言忽略 DaaS、Lite、xp 与 gray。
+- **FlClash 上游分发变更**：0.9.4 稳定版不再发布便携 ZIP（移入 dev 预发布渠道），Windows 稳定资产只剩 `FlClash-<v>-windows-amd64-setup.exe`（Inno Setup 6.7.0，43,132,829 字节，SHA-256 `77f84fdf…ac68a`）。新配方改 `format: "inno"`（无显式 files map，解 `{app}` 树），`bin`／`desktop`／`persist`／admin 服务配方原样继承；`assetRegex` 改指 setup 资产，0.9.2/0.9.3 历史 ZIP 版本行原样保留。
+- 7-Zip 26.06 无法列出 Inno 6.7.0 安装器，源侧 `checkLayout` 的 7z 路径对该格式不可用；布局证据改由客户端同款已验证 `innounp` 给出：**60 个文件、165,045,123 字节、最大单文件 71,059,968**，`{app}` 树含 `FlClash.exe`、`FlClashCore.exe` 与 `FlClashHelperService.exe`（admin 脚本的服务目标）。在 7-Zip 支持该 Inno 版本之前，FlClash 后续上游更新需手动收录（自动更新器会如实 blocked，不误报成功）。
+- `node scripts/check.mjs` 通过（70 包／163 版本）；`npm test` 更新夹具后全绿。未验收：FlClash 0.9.4 的 Inno 安装在隔离 PIKO_HOME 的实际解包、TUN／服务工作流，以及 ToDesk 5.3.4.0 的真实 GUI。
+
 ## GitHub 自动更新（第六阶段）
 
 - 已为登记的全部包（当前 70 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
