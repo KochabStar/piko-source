@@ -443,14 +443,6 @@
         "5.13.3": "packages/desktop/lertaro/package.json"
       }
     },
-    "nvidia-app": {
-      "category": "desktop",
-      "latest": "11.0.9.585",
-      "versions": {
-        "11.0.9.565": "packages/desktop/nvidia-app/package.json",
-        "11.0.9.585": "packages/desktop/nvidia-app/package.json"
-      }
-    },
     "qqnt": {
       "category": "desktop",
       "latest": "9.9.37.54395",
@@ -572,13 +564,6 @@
         "1.145.2": "packages/editors/vscode/package.json",
         "1.145.3": "packages/editors/vscode/package.json",
         "1.146.0": "packages/editors/vscode/package.json"
-      }
-    },
-    "winfsp": {
-      "category": "system",
-      "latest": "2.1.25156",
-      "versions": {
-        "2.1.25156": "packages/system/winfsp/package.json"
       }
     },
     "pebrel": {

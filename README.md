@@ -8,7 +8,7 @@
 
 `trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
 
-**当前共 70 个包、163 个历史版本锚点，按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 68 个包、160 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -54,9 +54,9 @@
 | ai | `packages/ai/` | 6 | claude-code、opencode、codex、pi、oh-my-pi、orca |
 | dev | `packages/dev/` | 21 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg |
 | editors | `packages/editors/` | 3 | vscode、sublime-text、obsidian |
-| desktop | `packages/desktop/` | 21 | tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、nvidia-app、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
+| desktop | `packages/desktop/` | 20 | tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
 | games | `packages/games/` | 9 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender |
-| system | `packages/system/` | 3 | winfsp、firacode-nf、hack-nf-mono |
+| system | `packages/system/` | 2 | firacode-nf、hack-nf-mono |
 
 **版本保留策略（2026-11-10 起）**：每个包保留最近 **8 个版本组**。一个版本组 = 基础版本及其全部 `-piko.N` 修订（同一载荷换入口的修订不与基础版本拆散）；组序按登记顺序（索引 `versions` 的插入顺序，更新器只在末尾追加）。落出窗口的最旧版本组会被裁剪：
 
@@ -184,7 +184,7 @@ pi --version
 - 已从官方渠道实际下载七个载荷并计算 SHA-256；Claude Code 对照官方版本清单，GitHub 发布包对照官方资源摘要，QQNT／NVIDIA 安装器校验 Windows Authenticode 为 `Valid`。布局检查覆盖所有命令、快捷方式及必要资源。七项隔离安装、命令选择及入口解析通过，四款 CLI 的原生和 shim 版本输出通过；Lertaro 的持久化目录在卸载／重装后保留测试数据。源检查、历史清单保护、106 项回归测试通过；证据见 [新增软件验证](verification/software-additions-20261031.json)。尚未据此认证 GUI、模型登录、服务／驱动安装或真实用户数据迁移。
 - Claude Code 设置进程环境 `DISABLE_UPDATES=1`，OpenCode 设置 `OPENCODE_DISABLE_AUTOUPDATE=1`，由 Piko 管理版本；不改写已有配置、会话或凭据。Claude Code 的 Bash 功能仍需 Git Bash，不自动更改宿主 PATH／Profile。
 - QQNT 已追加 **9.9.36.53644**，保留 9.9.33.52230。**先升级 Piko 至 0.4.1**：客户端和源更新器在下载前调用官网免登录 `GetSign`，签名仅留内存，清单／状态仍保存固定无签名资源身份和 SHA-256；支持内置及 aria2 分段，不采用第三方中转。空缓存真实安装、摘要、完整资源布局与命令解析通过，未启动 GUI、注册扩展／服务或迁移账户数据。见 [实现与升级顺序](guides/qqnt.md)、[原生安装证据](verification/qqnt-native-install-20261102.json)。
-- NVIDIA App 依赖系统安装与配套组件。此包只下载、校验、保存官方完整安装器；`piko install` 不安装系统应用，`nvidia-app-setup` 仅在用户主动调用时打开安装向导。没有 `nvidia-app` 伪便携入口、自动 UAC、管理员配方、服务／驱动／启动项操作；Piko 卸载此包也不会撤销用户另行完成的 NVIDIA 系统安装。
+- NVIDIA App（**2026-11-20 下架**）：官方安装器实为 7z SFX，解出的完整载荷中 `NVIDIA App.exe` 在安装上下文之外确定性崩溃（ucrtbase 0xc0000409，实测两次同偏移），便携模型不可行；静默卸载参数亦无官方证据，遂整体下架（维护者决定）。原模型只下载、校验、保存官方完整安装器；`piko install` 不安装系统应用，`nvidia-app-setup` 仅在用户主动调用时打开安装向导。没有 `nvidia-app` 伪便携入口、自动 UAC、管理员配方、服务／驱动／启动项操作；Piko 卸载此包也不会撤销用户另行完成的 NVIDIA 系统安装。
 - Lertaro 需要外部 **x64 .NET 10 Desktop Runtime**，本包不自动安装运行库，也不运行随包安装脚本。`Data` 在首次启动前由 Piko 持久化创建，避免便携程序自动沿用既有系统安装的数据。**上游 GUI 首次启动可能请求 UAC、注册或重装 `Lertaro.Service`；便携不等于无系统副作用。** `5.13.1-piko.1` 起提供显式的 `piko system lertaro` 集成：把服务注册锚定到 `current` 目录联接，而不是会被回收的版本目录；不预览审批就不会执行，也不接管指向本包之外的服务，见 [Lertaro 后台服务](guides/lertaro-service.md)。真实 GUI 保存与跨版本数据迁移仍未验收。
 - Nushell 不改默认登录 Shell、不注入 Profile、不自动注册插件；配置仍使用上游原生用户位置。新版客户端可能在安装时自动登记 QQ／Lertaro 的 Start Menu 入口；旧版客户端或额外桌面集成须按 `integrate --desktop` 预览确认。安装不自动选择默认 CLI 命令。
 
@@ -200,7 +200,7 @@ pi --version
 - 自动更新：x64dbg 匹配官方 stable 快照 ZIP 资产；百度网盘以官网 `pan.baidu.com/disk/cmsdata?do=client` 的 `guanjia.url` 为版本来源，载荷固定 `issuepcdn` 官方直链并重新校验签名与布局。未来版本载荷增删由 `layout: "baidu"` 重建显式映射（wecom 同款机制），布局校验失败只保留旧版。
 - 两包均通过 `checkLayout` 隔离校验（220／972 个文件、0 个未知大小），自动发现规则实测命中当前版本；`npm run check` 与 116 项测试通过。未启动 GUI、未登录、未触发网盘服务或驱动安装，真实 GUI 运行与数据迁移不据此视为验收。
 
-## WinFsp（2026-11-09，2026-11-19 修订）
+## WinFsp（2026-11-09，2026-11-19 修订，**2026-11-20 下架**）
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
@@ -335,7 +335,8 @@ pi --version
 - **ToDesk 官网改版**：`download.html` 的 `win_link` 现指向新产品 **ToDesk_DaaS**（并带 `win_link_gray` 变体），经典客户端链接移入双重转义（`\\u002F`）的发布数组，与 mac／android／Lite／linux 混排。新 `versionRegex` 锚定 `irrigation` 路径并容忍 `\\u002F`／`\u002F`／`/` 三种分隔，恰好唯一命中 `ToDesk_5.3.4.0.exe`；载荷仍取 `update.todesk.com` 的 `ToDesk_Setup_{version}_x64.exe`（200 实测），`update.mjs --write` 自动完成下载、NSIS＋`app64.7z` 布局与签名验证并收录 5.3.4.0，状态 `current`。回归夹具改为新版页面结构，断言忽略 DaaS、Lite、xp 与 gray。
 - **FlClash 上游分发变更**：0.9.4 稳定版不再发布便携 ZIP（移入 dev 预发布渠道），Windows 稳定资产只剩 `FlClash-<v>-windows-amd64-setup.exe`（Inno Setup 6.7.0，43,132,829 字节，SHA-256 `77f84fdf…ac68a`）。新配方改 `format: "inno"`（无显式 files map，解 `{app}` 树），`bin`／`desktop`／`persist`／admin 服务配方原样继承；`assetRegex` 改指 setup 资产，0.9.2/0.9.3 历史 ZIP 版本行原样保留。
 - 7-Zip 26.06 无法列出 Inno 6.7.0 安装器，源侧 `checkLayout` 的 7z 路径对该格式不可用；布局证据改由客户端同款已验证 `innounp` 给出：**60 个文件、165,045,123 字节、最大单文件 71,059,968**，`{app}` 树含 `FlClash.exe`、`FlClashCore.exe` 与 `FlClashHelperService.exe`（admin 脚本的服务目标）。在 7-Zip 支持该 Inno 版本之前，FlClash 后续上游更新需手动收录（自动更新器会如实 blocked，不误报成功）。
-- `node scripts/check.mjs` 通过（70 包／163 版本）；`npm test` 更新夹具后全绿。未验收：FlClash 0.9.4 的 Inno 安装在隔离 PIKO_HOME 的实际解包、TUN／服务工作流，以及 ToDesk 5.3.4.0 的真实 GUI。
+- **下架 winfsp 与 nvidia-app（维护者决定，2026-11-20）**：nvidia-app 曾尝试改为 7z SFS 解包配方，实测 `NVIDIA App.exe` 在安装上下文外确定性崩溃（ucrtbase 0xc0000409）后回滚并整体下架；winfsp 一并下架。两包从 index 与 `packages/` 目录移除，相关测试删除或改为 Lertaro 单包断言。下架不回收已安装客户端的本地副本与收据；已装 winfsp 驱动的机器在管理员终端 `piko uninstall main/winfsp` 即按收据执行 `msiexec /x` 卸载驱动。`check.mjs --base` 对删除已发布版本按预期拒绝，属单人源维护者豁免。
+- `node scripts/check.mjs` 通过（68 包／160 版本，下架后）；`npm test` 更新夹具后全绿。未验收：FlClash 0.9.4 的 TUN／服务工作流，以及 ToDesk 5.3.4.0 的真实 GUI。
 
 ## GitHub 自动更新（第六阶段）
 

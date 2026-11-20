@@ -21,7 +21,6 @@ for (const name of [
   "claude-code",
   "opencode",
   "nushell",
-  "nvidia-app",
   "qqnt",
   "codex",
 ])
@@ -442,26 +441,6 @@ try{& $env:RECIPE -Action $env:ACTION -Root $env:ROOT -Data $env:DATA|Out-Null}c
     assert.deepEqual(r.calls, []);
     assert.equal((await f.record()).active.root.toLowerCase(), old.toLowerCase());
   });
-});
-
-test("NVIDIA App is explicitly an installer-only entry, never a falsely portable app or implicit system install", async () => {
-  const p = platform("nvidia-app"),
-    rule = rules["nvidia-app"];
-  assert.equal(p.format, "file");
-  assert.equal(p.file, "NVIDIA_app_setup.exe");
-  assert.deepEqual(p.bin, { "nvidia-app-setup": "NVIDIA_app_setup.exe" });
-  assert.equal(p.desktop, undefined);
-  assert.equal(rule.signature, true);
-  // Upstream moved to an architecture directory and an arch-suffixed asset
-  // name, publishing arm64 alongside x64. The rule must follow the x64 link
-  // and never publish the arm64 build as this package.
-  const url = `https://us.download.nvidia.com/nvapp/client/${version}/x64/NVIDIA_app_v${version}_x64.exe`;
-  const candidate = await discover(rule, manifest("nvidia-app"), {
-    text: async () =>
-      `<a href="https://us.download.nvidia.com/nvapp/client/99.99.99/arm64/NVIDIA_app_v99.99.99_arm64.exe">ARM</a><a href="${url}">x64</a>`,
-  });
-  assert.equal(candidate.url, url);
-  assert.equal(candidate.version, version);
 });
 
 test("QQNT preserves old versions while using official on-demand authorization for its current channel", async () => {

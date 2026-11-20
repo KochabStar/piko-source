@@ -76,5 +76,5 @@ Piko ≥ 0.4.23 中 `--approve-admin` 单独一条命令即可完成审批（同
 
 Lertaro **不能只把现有脚本改成 `services`**：当前脚本除 SCM 生命周期外，还负责真实 `Data` 的完整备份与跨版本恢复、旧目录身份核验、未认领数据冲突拒绝及失败阶段台账。普通 SCM 声明没有数据迁移能力；删除这些步骤会丢失数据安全保证。继续保留厂商特例 `admin` 路径，不同时声明同名服务，避免两个所有者争用 `LertaroService`。历史配方与已发布版本的展开摘要不变。
 
-WinFsp 的 `services` 声明同样不适用：其载荷是包含内核驱动和厂商 Launcher 的 MSI，不是可由包内相对 `.exe` 直接注册的普通便携服务。自 2026-11-19 起 WinFsp 改走显式 `admin` 配方（`piko system winfsp --approve-admin`，管理员终端执行 `msiexec /i`／`/x` 静默安装与卸载，收据自动撤销），原 `winfsp-setup` 交互入口已删除；Piko 依旧不自动提权、不伪造 SCM 声明。
+WinFsp 已于 2026-11-20 从源下架（其 admin 配方曾以 `piko system winfsp --approve-admin` 静默安装厂商 MSI 驱动，见 WinFsp 节的历史记录）；下架不影响已安装机器的收据卸载。Lertaro 依旧是本源唯一带 admin 数据迁移配方的包，Piko 不自动提权、不伪造 SCM 声明的边界不变。
 
