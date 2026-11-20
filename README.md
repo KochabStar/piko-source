@@ -184,7 +184,7 @@ pi --version
 - 已从官方渠道实际下载七个载荷并计算 SHA-256；Claude Code 对照官方版本清单，GitHub 发布包对照官方资源摘要，QQNT／NVIDIA 安装器校验 Windows Authenticode 为 `Valid`。布局检查覆盖所有命令、快捷方式及必要资源。七项隔离安装、命令选择及入口解析通过，四款 CLI 的原生和 shim 版本输出通过；Lertaro 的持久化目录在卸载／重装后保留测试数据。源检查、历史清单保护、106 项回归测试通过；证据见 [新增软件验证](verification/software-additions-20261031.json)。尚未据此认证 GUI、模型登录、服务／驱动安装或真实用户数据迁移。
 - Claude Code 设置进程环境 `DISABLE_UPDATES=1`，OpenCode 设置 `OPENCODE_DISABLE_AUTOUPDATE=1`，由 Piko 管理版本；不改写已有配置、会话或凭据。Claude Code 的 Bash 功能仍需 Git Bash，不自动更改宿主 PATH／Profile。
 - QQNT 已追加 **9.9.36.53644**，保留 9.9.33.52230。**先升级 Piko 至 0.4.1**：客户端和源更新器在下载前调用官网免登录 `GetSign`，签名仅留内存，清单／状态仍保存固定无签名资源身份和 SHA-256；支持内置及 aria2 分段，不采用第三方中转。空缓存真实安装、摘要、完整资源布局与命令解析通过，未启动 GUI、注册扩展／服务或迁移账户数据。见 [实现与升级顺序](guides/qqnt.md)、[原生安装证据](verification/qqnt-native-install-20261102.json)。
-- NVIDIA App（**2026-11-20 修订**，就地改写已发布的 `11.0.9.585` 配方）：官方安装器是 7z SFX（与 PortableGit 同型），新配方改 `format: "7z"` 直接解出完整厂商载荷（`NvApp`／`FrameViewSDK`／`MSVCRT`／`ShadowPlay`，831 个文件、742,219,564 字节、0 未知大小，`checkLayout` 全量核对），入口 `nvidia-app` 指向 `NvApp/CEF/NVIDIA App.exe` 并提供开始菜单快捷方式；原 `nvidia-app-setup` 交互安装入口删除。解包不运行安装器、不注册服务、不写驱动或启动项；Overlay／FrameView 等系统级功能是否在便携目录下完整工作未验收。历史版本 `11.0.9.565` 行原样保留。
+- NVIDIA App 依赖系统安装与配套组件。此包只下载、校验、保存官方完整安装器；`piko install` 不安装系统应用，`nvidia-app-setup` 仅在用户主动调用时打开安装向导。没有 `nvidia-app` 伪便携入口、自动 UAC、管理员配方、服务／驱动／启动项操作；Piko 卸载此包也不会撤销用户另行完成的 NVIDIA 系统安装。
 - Lertaro 需要外部 **x64 .NET 10 Desktop Runtime**，本包不自动安装运行库，也不运行随包安装脚本。`Data` 在首次启动前由 Piko 持久化创建，避免便携程序自动沿用既有系统安装的数据。**上游 GUI 首次启动可能请求 UAC、注册或重装 `Lertaro.Service`；便携不等于无系统副作用。** `5.13.1-piko.1` 起提供显式的 `piko system lertaro` 集成：把服务注册锚定到 `current` 目录联接，而不是会被回收的版本目录；不预览审批就不会执行，也不接管指向本包之外的服务，见 [Lertaro 后台服务](guides/lertaro-service.md)。真实 GUI 保存与跨版本数据迁移仍未验收。
 - Nushell 不改默认登录 Shell、不注入 Profile、不自动注册插件；配置仍使用上游原生用户位置。新版客户端可能在安装时自动登记 QQ／Lertaro 的 Start Menu 入口；旧版客户端或额外桌面集成须按 `integrate --desktop` 预览确认。安装不自动选择默认 CLI 命令。
 
@@ -325,17 +325,17 @@ pi --version
 - 自动更新匹配官方稳定版 `windows-x64.zip` 资产，`required` 强制校验主程序、控制台宿主与 runtime 捆绑文件；实测 `update.mjs --check --packages pebrel` 下载、摘要与布局校验通过，当前版本状态 `current`。
 - `npm run check` 通过；`npm test` 115 项通过、1 项失败，失败为本机 `D:/piko/apps/git/2.56.0.4/etc/gitconfig` 解析错误的预先存在环境问题（无 pebrel 改动的基线同样失败），与本次新增无关。未启动 GUI、未登录、未验证 SSH／AI 集成。
 
-## ToDesk／FlClash／NVIDIA App 上游适配（2026-11-20）
+## ToDesk／FlClash 上游适配（2026-11-20）
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
 | `todesk` | 5.3.4.0 | `todesk`，NSIS Setup 中的 `app64.7z`（规则修复后由更新器自动收录） |
 | `flclash` | 0.9.4 | `flclash`，稳定版 Inno Setup 6.7.0 的 `{app}` 树 |
-| `nvidia-app` | 11.0.9.585 | `nvidia-app`，7z SFX 解出的完整厂商载荷（就地修订） |
 
+- **ToDesk 官网改版**：`download.html` 的 `win_link` 现指向新产品 **ToDesk_DaaS**（并带 `win_link_gray` 变体），经典客户端链接移入双重转义（`\\u002F`）的发布数组，与 mac／android／Lite／linux 混排。新 `versionRegex` 锚定 `irrigation` 路径并容忍 `\\u002F`／`\u002F`／`/` 三种分隔，恰好唯一命中 `ToDesk_5.3.4.0.exe`；载荷仍取 `update.todesk.com` 的 `ToDesk_Setup_{version}_x64.exe`（200 实测），`update.mjs --write` 自动完成下载、NSIS＋`app64.7z` 布局与签名验证并收录 5.3.4.0，状态 `current`。回归夹具改为新版页面结构，断言忽略 DaaS、Lite、xp 与 gray。
 - **FlClash 上游分发变更**：0.9.4 稳定版不再发布便携 ZIP（移入 dev 预发布渠道），Windows 稳定资产只剩 `FlClash-<v>-windows-amd64-setup.exe`（Inno Setup 6.7.0，43,132,829 字节，SHA-256 `77f84fdf…ac68a`）。新配方改 `format: "inno"`（无显式 files map，解 `{app}` 树），`bin`／`desktop`／`persist`／admin 服务配方原样继承；`assetRegex` 改指 setup 资产，0.9.2/0.9.3 历史 ZIP 版本行原样保留。
 - 7-Zip 26.06 无法列出 Inno 6.7.0 安装器，源侧 `checkLayout` 的 7z 路径对该格式不可用；布局证据改由客户端同款已验证 `innounp` 给出：**60 个文件、165,045,123 字节、最大单文件 71,059,968**，`{app}` 树含 `FlClash.exe`、`FlClashCore.exe` 与 `FlClashHelperService.exe`（admin 脚本的服务目标）。在 7-Zip 支持该 Inno 版本之前，FlClash 后续上游更新需手动收录（自动更新器会如实 blocked，不误报成功）。
-- **NVIDIA App 就地修订**：官方安装器实为 7z SFX，`11.0.9.585` 配方改为 `format: "7z"` 解出完整载荷，`checkLayout` 全量核对通过（831 文件、742,219,564 字节、0 未知大小、签名 `Valid`）；详见上文新增软件节的修订说明。已安装旧配方的客户端需删除该版本的已保存精确清单（`cache/resolved`）后卸载重装才会取得新配方。
+- `node scripts/check.mjs` 通过（70 包／163 版本）；`npm test` 更新夹具后全绿。未验收：FlClash 0.9.4 的 Inno 安装在隔离 PIKO_HOME 的实际解包、TUN／服务工作流，以及 ToDesk 5.3.4.0 的真实 GUI。
 
 ## GitHub 自动更新（第六阶段）
 
