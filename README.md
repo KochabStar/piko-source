@@ -8,7 +8,7 @@
 
 `trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
 
-**当前共 69 个包、161 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 70 个包、162 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -54,7 +54,7 @@
 | ai | `packages/ai/` | 6 | claude-code、opencode、codex、pi、oh-my-pi、orca |
 | dev | `packages/dev/` | 21 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg |
 | editors | `packages/editors/` | 3 | vscode、sublime-text、obsidian |
-| desktop | `packages/desktop/` | 21 | warp-terminal、tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
+| desktop | `packages/desktop/` | 22 | warp-terminal、wps-office、tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
 | games | `packages/games/` | 9 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender |
 | system | `packages/system/` | 2 | firacode-nf、hack-nf-mono |
 
@@ -325,14 +325,16 @@ pi --version
 - 自动更新匹配官方稳定版 `windows-x64.zip` 资产，`required` 强制校验主程序、控制台宿主与 runtime 捆绑文件；实测 `update.mjs --check --packages pebrel` 下载、摘要与布局校验通过，当前版本状态 `current`。
 - `npm run check` 通过；`npm test` 115 项通过、1 项失败，失败为本机 `D:/piko/apps/git/2.56.0.4/etc/gitconfig` 解析错误的预先存在环境问题（无 pebrel 改动的基线同样失败），与本次新增无关。未启动 GUI、未登录、未验证 SSH／AI 集成。
 
-## 新增 Warp 终端（2026-11-21）
+## 新增 Warp 终端与 WPS Office（2026-11-21）
 
 | 包名 | 版本 | 入口 |
 | --- | --- | --- |
 | `warp-terminal` | 0.2026.11.18.08.17.stable_04 | `warp`，Inno Setup 6.7.0 的 `{app}` 树 |
+| `wps-office` | 12.1.0.29670 | `wps`／`et`／`wpp`／`wpsoffice`，7z# 签名扫描解出的三层私有引导器载荷 |
 
 - Warp 官方下载端点（`app.warp.dev/download?package=exe_x86_64`）是 JS 跳转，无任何可机读版本源；包用一等 `redirect` provider 跟随跳转、从最终 URL 提取 `0.2026.11.18.08.17.stable_04`，再以同源模板重建 `releases.warp.dev/stable/v{version}/WarpSetup.exe`。实测 `update.mjs --check --packages warp-terminal` 经真实跳转返回 `current`。
 - 载荷 SHA-256 `b902f7be…b66fa` 与 Scoop Extras 独立发布的哈希逐字节一致（双源核对）。`WarpSetup.exe` 为 Inno Setup 6.7.0，7-Zip 26.06 无法列出，布局证据同 FlClash 走客户端同款已验证 `innounp`：**154 个文件、415,119,410 字节**，`{app}` 根含 `warp.exe`（含 conpty／OpenConsole 运行时与捆绑 harness skills）。在 7-Zip 支持该 Inno 版本前，后续上游版本需手动收录。
+- **WPS Office（个人版）**：官方安装器是三层私有引导器（外层 NSIS → `$_11_/$EXEFILE` → 真实 `office6` 载荷藏在 PE 裸偏移，7-Zip 普通模式只能看到 35MB 的 kpacketui 安装 UI）。包用新的一等 `7z#` 签名扫描嵌套步骤（同 Scoop 社区清单的 `-t#` 手法）物化全部内嵌档案，再显式选取 `4.7z`（2680 个文件、1,726,452,290 字节、0 未知大小，`office6\wps.exe`／`et.exe`／`wpp.exe`／`wpsoffice.exe`／`ksomisc.exe` 全在，另有 `clitool` 目录原样保留）。来源页为官方 `platformUrlsv2` JSON：捕获组 `assetver` 以反向引用与 `productVcode` 绑定，`urlTemplate` 用构建号重建下载地址（`build` 是渲染保留键，不可用作组名）。上游 12.1.0.29670 经更新器验证 `current`。**需要客户端 ≥0.4.32**；WPS 自带更新器在受管目录内的行为未验证，发生自更新漂移时按收据重装。
 - `bin.warp` 与开始菜单快捷方式指向 `warp.exe`；用户数据沿用原生 `%LOCALAPPDATA%\warp`，不声明 persist。解包不运行安装器、不注册服务；与 FlClash 同理，后续上游更新由自动更新器如实 blocked，需手动收录。未验收：GUI／AI 工作流、账号登录。
 ## ToDesk／FlClash 上游适配（2026-11-20）
 

@@ -280,11 +280,15 @@ export function validateManifest(m, name, version) {
         keys(step, ["path", "format", "stripPrefix"], "nested step");
         pathName(step.path);
         requireThat(
-          ["zip", "7z"].includes(step.format),
+          ["zip", "7z", "7z#"].includes(step.format),
           "Invalid nested codec",
         );
         if (step.stripPrefix) pathName(step.stripPrefix);
       }
+      requireThat(
+        d.nested.at(-1).format !== "7z#",
+        "The final nested step must extract a real archive",
+      );
     }
     if (d.format === "pe")
       requireThat(d.nested, "PE requires explicit resource selection");

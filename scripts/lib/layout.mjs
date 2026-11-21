@@ -556,7 +556,7 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
     }
     if (d.nested) {
       for (const step of d.nested) {
-        const actual = type === "pe" ? "PE" : type,
+        const actual = type === "pe" ? "PE" : type === "7z#" ? "#" : type,
           entries = await listing(tools, file, actual);
         if (
           rule.layout === "tabbit" &&

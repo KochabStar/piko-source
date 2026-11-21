@@ -583,6 +583,13 @@
       "versions": {
         "0.2026.11.18.08.17.stable_04": "packages/desktop/warp-terminal/package.json"
       }
+    },
+    "wps-office": {
+      "category": "desktop",
+      "latest": "12.1.0.29670",
+      "versions": {
+        "12.1.0.29670": "packages/desktop/wps-office/package.json"
+      }
     }
   }
 }

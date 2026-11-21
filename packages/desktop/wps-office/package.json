@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "name": "wps-office",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://www.wps.cn/platformUrlsv2",
+    "versionRegex": "WPS_Setup_x64_(?<assetver>[0-9]+)\\.exe\",\"productVcode\":\"(?<version>[0-9]+(?:\\.[0-9]+)*\\.\\k<assetver>)",
+    "urlTemplate": "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_{assetver}.exe",
+    "trust": "https"
+  },
+  "recipes": {
+    "r59bd6595eafc54b5": {
+      "schemaVersion": 1,
+      "name": "wps-office",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_29670.exe",
+          "sha256": "{sha256}",
+          "format": "nsis",
+          "nested": [
+            {
+              "path": "$_11_/$EXEFILE",
+              "format": "7z#"
+            },
+            {
+              "path": "4.7z",
+              "format": "7z"
+            }
+          ],
+          "bin": {
+            "wps": "office6/wps.exe",
+            "et": "office6/et.exe",
+            "wpp": "office6/wpp.exe",
+            "wpsoffice": "office6/wpsoffice.exe",
+            "ksomisc": "office6/ksomisc.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "WPS Office",
+                "path": "office6/wpsoffice.exe"
+              },
+              {
+                "name": "WPS 文字",
+                "path": "office6/wps.exe"
+              },
+              {
+                "name": "WPS 表格",
+                "path": "office6/et.exe"
+              },
+              {
+                "name": "WPS 演示",
+                "path": "office6/wpp.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}",
+          "maxExpandedBytes": 2147483648
+        }
+      }
+    }
+  },
+  "versions": {
+    "12.1.0.29670": {
+      "recipe": "r59bd6595eafc54b5",
+      "maxBytes": 386924544,
+      "sha256": "6ff635c043749f3bbd34cc1e034df74753b8253abe186bc13df23c8ad92df985"
+    }
+  }
+}

@@ -737,6 +737,31 @@ test("Warp resolves the JS redirect feed and re-renders the same-origin setup UR
   );
 });
 
+test("WPS resolves the escaped platform JSON and rebuilds the build-numbered asset URL", async () => {
+  const r = await discover(
+    {
+      trust: "https",
+      provider: "regex",
+      url: "https://www.wps.cn/platformUrlsv2",
+      versionRegex: String.raw`WPS_Setup_x64_(?<assetver>[0-9]+)\.exe","productVcode":"(?<version>[0-9]+(?:\.[0-9]+)*\.\k<assetver>)`,
+      urlTemplate: "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_{assetver}.exe",
+    },
+    fixtureManifest(),
+    {
+      // The x64 entry hides in the official JSON alongside the DaaS-era main
+      // button; the backreference ties the asset build to the vcode so a
+      // drifting build number can never masquerade as the published version.
+      text: async () =>
+        '{"productDetail":{"productButtonUrl":"https:\\\\u002F\\\\u002Fofficial-package.wpscdn.cn\\\\u002Fwps\\\\u002Fdownload\\\\u002FWPS_Setup_29690.exe","productVcode":"12.1.0.29690"},"productList":[{"productButtonUrl":"https:\\\\u002F\\\\u002Fofficial-package.wpscdn.cn\\\\u002Fwps\\\\u002Fdownload\\\\u002FWPS_Setup_29690.exe","productVcode":"12.1.0.29690"},{"productButtonUrl":"https:\\\\u002F\\\\u002Fofficial-package.wpscdn.cn\\\\u002Fwps\\\\u002Fdownload\\\\u002FWPS_Setup_x64_29670.exe","productVcode":"12.1.0.29670"}]}',
+    },
+  );
+  assert.equal(r.version, "12.1.0.29670");
+  assert.equal(
+    r.url,
+    "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_29670.exe",
+  );
+});
+
 test("Tabbit chooses the Windows x64 release while preserving the full CN payload", async () => {
   const r = await discover(
     {
