@@ -494,6 +494,7 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
     }
   };
   const namespace = new Map();
+  let overlaying = false;
   const add = (entries) => {
     charge(entries, 512 * MiB);
     for (const e of entries) {
@@ -505,7 +506,8 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
           previous = namespace.get(key);
         requireThat(
           !previous ||
-            (previous.name === name && previous.directory && directory),
+            (previous.name === name && previous.directory && directory) ||
+            (overlaying && previous.name === name && !directory),
           "Combined downloads collide or overwrite a file",
         );
         namespace.set(key, { name, directory });
@@ -519,6 +521,7 @@ export async function checkLayout(manifest, artifacts, rule, tools, temp) {
       artifact = artifacts[n];
     let file = artifact.file,
       type = d.format;
+    overlaying = d.overlay === true;
     if (type === "file") {
       if (/\.exe$/i.test(d.file)) {
         const handle = await open(file, "r");

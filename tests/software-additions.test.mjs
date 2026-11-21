@@ -485,3 +485,29 @@ test("Codex appends the complete native package without changing the previously 
   assert.equal(platform("codex").format, "tar.gz");
   assert.deepEqual(platform("codex").bin, { codex: "bin/codex.exe" });
 });
+
+test("WPS overlays the CONTROL runtime layer and rejects first-download overlay", async () => {
+  const m = manifest("wps-office");
+  validateManifest(m, "wps-office", m.version);
+  const platform = m.platforms["windows-x64"];
+  // Two downloads over the same signed setup: the second scans 2.7z and
+  // overlays the CONTROL\office6 runtime layer (the qt.conf with real plugin
+  // paths, api-ms forwarders, kpacketui) onto the app tree; without this
+  // merge wps.exe exits instantly instead of booting.
+  assert.equal(platform.downloads.length, 2);
+  assert.equal(platform.downloads[0].overlay, undefined);
+  assert.equal(platform.downloads[1].overlay, true);
+  assert.deepEqual(platform.downloads[1].nested, [
+    { path: "$_11_/$EXEFILE", format: "7z#" },
+    { path: "2.7z", format: "7z", stripPrefix: "CONTROL" },
+  ]);
+  // Overlay is only meaningful after a first download owns the base tree.
+  const first = structuredClone(m);
+  first.platforms["windows-x64"].downloads[0].overlay = true;
+  assert.throws(() => validateManifest(first, "wps-office", m.version), {
+    message: "overlay requires combined downloads, cannot be first, and must be true",
+  });
+  const fake = structuredClone(m);
+  fake.platforms["windows-x64"].downloads[1].overlay = false;
+  assert.throws(() => validateManifest(fake, "wps-office", m.version));
+});

@@ -9,23 +9,46 @@
     "trust": "https"
   },
   "recipes": {
-    "r59bd6595eafc54b5": {
+    "r8beb093618792e07": {
       "schemaVersion": 1,
       "name": "wps-office",
       "version": "{version}",
       "platforms": {
         "windows-x64": {
-          "url": "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_29670.exe",
-          "sha256": "{sha256}",
-          "format": "nsis",
-          "nested": [
+          "downloads": [
             {
-              "path": "$_11_/$EXEFILE",
-              "format": "7z#"
+              "url": "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_29670.exe",
+              "sha256": "{sha256}",
+              "maxBytes": "{maxBytes}",
+              "format": "nsis",
+              "nested": [
+                {
+                  "path": "$_11_/$EXEFILE",
+                  "format": "7z#"
+                },
+                {
+                  "path": "4.7z",
+                  "format": "7z"
+                }
+              ]
             },
             {
-              "path": "4.7z",
-              "format": "7z"
+              "url": "https://official-package.wpscdn.cn/wps/download/WPS_Setup_x64_29670.exe",
+              "sha256": "{sha2562}",
+              "maxBytes": "{maxBytes2}",
+              "format": "nsis",
+              "overlay": true,
+              "nested": [
+                {
+                  "path": "$_11_/$EXEFILE",
+                  "format": "7z#"
+                },
+                {
+                  "path": "2.7z",
+                  "format": "7z",
+                  "stripPrefix": "CONTROL"
+                }
+              ]
             }
           ],
           "bin": {
@@ -55,17 +78,18 @@
               }
             ]
           },
-          "maxBytes": "{maxBytes}",
-          "maxExpandedBytes": 2147483648
+          "maxExpandedBytes": 4294967296
         }
       }
     }
   },
   "versions": {
     "12.1.0.29670": {
-      "recipe": "r59bd6595eafc54b5",
+      "recipe": "r8beb093618792e07",
       "maxBytes": 386924544,
-      "sha256": "6ff635c043749f3bbd34cc1e034df74753b8253abe186bc13df23c8ad92df985"
+      "sha256": "6ff635c043749f3bbd34cc1e034df74753b8253abe186bc13df23c8ad92df985",
+      "maxBytes2": 386924544,
+      "sha2562": "6ff635c043749f3bbd34cc1e034df74753b8253abe186bc13df23c8ad92df985"
     }
   }
 }

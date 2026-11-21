@@ -161,6 +161,7 @@ export function validateManifest(m, name, version) {
     "maxBytes",
     "cabinets",
     "payload",
+    "overlay",
   ];
   keys(
     p,
@@ -214,6 +215,13 @@ export function validateManifest(m, name, version) {
         !downloadKeys.some((k) => k in p),
       "Invalid combined downloads",
     );
+  downloads(p).forEach((d, n) => {
+    if (d && typeof d === "object" && "overlay" in d)
+      requireThat(
+        p.downloads !== undefined && n > 0 && d.overlay === true,
+        "overlay requires combined downloads, cannot be first, and must be true",
+      );
+  });
   for (const d of downloads(p)) {
     if (p.downloads) keys(d, downloadKeys, "download");
     httpsURL(d.url);
