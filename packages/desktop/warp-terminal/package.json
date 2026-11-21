@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "name": "warp-terminal",
+  "upstream": {
+    "provider": "redirect",
+    "url": "https://app.warp.dev/download?package=exe_x86_64",
+    "versionRegex": "/v(?<version>[0-9]+(?:\\.[0-9]+)+\\.stable_[0-9]+)/WarpSetup\\.exe$",
+    "urlTemplate": "https://releases.warp.dev/stable/v{version}/WarpSetup.exe",
+    "trust": "https"
+  },
+  "recipes": {
+    "r7b56bf211d2791cf": {
+      "schemaVersion": 1,
+      "name": "warp-terminal",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://releases.warp.dev/stable/v{version}/WarpSetup.exe",
+          "sha256": "{sha256}",
+          "format": "inno",
+          "bin": {
+            "warp": "warp.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Warp",
+                "path": "warp.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.2026.11.18.08.17.stable_04": {
+      "recipe": "r7b56bf211d2791cf",
+      "maxBytes": 145752064,
+      "sha256": "b902f7be625dc2b45a3330f170f8d6aef08e3457a7088ec237e83478bb4b66fa"
+    }
+  }
+}

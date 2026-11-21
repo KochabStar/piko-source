@@ -576,6 +576,13 @@
         "2.5.8": "packages/desktop/pebrel/package.json",
         "2.5.9": "packages/desktop/pebrel/package.json"
       }
+    },
+    "warp-terminal": {
+      "category": "desktop",
+      "latest": "0.2026.11.18.08.17.stable_04",
+      "versions": {
+        "0.2026.11.18.08.17.stable_04": "packages/desktop/warp-terminal/package.json"
+      }
     }
   }
 }

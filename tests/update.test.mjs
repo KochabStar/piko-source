@@ -713,6 +713,30 @@ test("FlClash picks the stable Windows setup asset after the portable zip moved 
   );
 });
 
+test("Warp resolves the JS redirect feed and re-renders the same-origin setup URL", async () => {
+  const r = await discover(
+    {
+      trust: "https",
+      provider: "redirect",
+      url: "https://app.warp.dev/download?package=exe_x86_64",
+      versionRegex: "/v(?<version>[0-9]+(?:\\.[0-9]+)+\\.stable_[0-9]+)/WarpSetup\\.exe$",
+      urlTemplate: "https://releases.warp.dev/stable/v{version}/WarpSetup.exe",
+    },
+    fixtureManifest(),
+    {
+      redirect: async (url) => {
+        assert.equal(url, "https://app.warp.dev/download?package=exe_x86_64");
+        return "https://releases.warp.dev/stable/v0.2026.11.18.08.17.stable_04/WarpSetup.exe";
+      },
+    },
+  );
+  assert.equal(r.version, "0.2026.11.18.08.17.stable_04");
+  assert.equal(
+    r.url,
+    "https://releases.warp.dev/stable/v0.2026.11.18.08.17.stable_04/WarpSetup.exe",
+  );
+});
+
 test("Tabbit chooses the Windows x64 release while preserving the full CN payload", async () => {
   const r = await discover(
     {
