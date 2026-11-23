@@ -24,6 +24,7 @@ export async function request(
     token = process.env.GITHUB_TOKEN,
     headers = {},
     maxRedirects = 8,
+    timeoutMs = 120000,
   } = {},
 ) {
   const initial = httpsURL(url);
@@ -46,7 +47,7 @@ export async function request(
       headers: h,
       ...(body === undefined ? {} : { body }),
       redirect: "manual",
-      signal: AbortSignal.timeout(120000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     if ([301, 302, 303, 307, 308].includes(response.status)) {
       const location = response.headers.get("location");
@@ -118,7 +119,9 @@ export function network(options = {}) {
         Number.isSafeInteger(maxBytes) && maxBytes > 0 && maxBytes <= 2 * GiB,
         "Invalid download limit",
       );
-      const r = await request(url, options);
+      // Payload transfers stream the whole artifact; metadata's 120s budget
+      // does not fit them. The declared byte ceiling still bounds the body.
+      const r = await request(url, { ...options, timeoutMs: 30 * 60 * 1000 });
       requireThat(
         !r.headers.get("content-type")?.includes("text/html"),
         "Publisher returned HTML instead of an application",

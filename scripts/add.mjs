@@ -79,6 +79,7 @@ export async function sniffFormat(file, tools) {
   if (text.startsWith("PK\u0003\u0004")) return { format: "zip" };
   if (hex.startsWith("377abcaf271c")) return { format: "7z" };
   if (text.startsWith("\u001f\u008b")) return { format: "tar.gz" };
+  if (hex.startsWith("fd377a585a00")) return { format: "tar.xz" };
 
   // An MSI is an OLE compound document, not a PE image. Asking lessmsi is the
   // only reliable test: the header alone is shared with every Installer DB.
@@ -192,8 +193,34 @@ export async function deriveEntries(file, sniffed, tools) {
   }
   if (msi) return msi.files.map((f) => ({ path: f.path, size: f.size }));
   if (inno) return inno.map((e) => ({ path: e.path, size: e.size }));
+  // Compressed tar layers must be decompressed before the tar listing, the
+  // same two-step expansion scripts/lib/layout.mjs performs; 7z cannot read
+  // a gzip/xz container with -ttar.
+  let tarFile = file;
+  if (format === "tar.gz" || format === "tar.xz") {
+    const scratch = await mkdtemp(join(tmpdir(), "add-tar-"));
+    try {
+      tarFile = join(scratch, "inner.tar");
+      await capture(await tools.get("sevenzip"), [
+        "x",
+        "-t" + (format === "tar.gz" ? "gzip" : "xz"),
+        "-so",
+        "-y",
+        "-bd",
+        "-bb0",
+        "--",
+        file,
+      ], { file: tarFile, limit: 2 * GiB });
+      const type = "tar";
+      return (await listing(tools, tarFile, type))
+        .filter((e) => !e.directory)
+        .map((e) => ({ path: e.path, size: e.size }));
+    } finally {
+      await rm(scratch, { recursive: true, force: true, maxRetries: 10 });
+    }
+  }
   const type = format === "zip" ? "zip" : format === "7z" ? "7z" : "tar";
-  return (await listing(tools, file, type))
+  return (await listing(tools, tarFile, type))
     .filter((e) => !e.directory)
     .map((e) => ({ path: e.path, size: e.size }));
 }
@@ -260,8 +287,18 @@ async function probe(name, source, flags) {
           name +
           "; pass the asset URL directly with --version",
       );
+      // Prefer x64 Windows builds; a release listing both aarch64 and x86_64
+      // Windows assets otherwise puts the ARM64 archive first (it also
+      // matches a plain /windows/ test).
+      const windowsAssets = links.filter(
+        (l) =>
+          /(?:x64|win64|windows)/i.test(l) &&
+          !/(?:aarch64|arm64)/i.test(l),
+      );
       const preferred =
-        links.find((l) => /(?:x64|win64|windows)/i.test(l)) ?? links[0];
+        windowsAssets[0] ??
+        links.find((l) => /(?:x64|win64|windows)/i.test(l)) ??
+        links[0];
       url = new URL(preferred, source).href;
       version ??= url.match(/(\d+\.\d+(?:\.\d+)*(?:-\d+)?)/)?.[1];
     }
@@ -371,6 +408,7 @@ async function apply(name, flags) {
           url: draft.urlTemplate ?? draft.source,
           sha256: draft.sha256,
           format: draft.format,
+          ...(draft.file ? { file: draft.file } : {}),
           bin: draft.bin,
           ...(draft.payload ? { payload: draft.payload } : {}),
           ...(draft.stripPrefix ? { stripPrefix: draft.stripPrefix } : {}),
