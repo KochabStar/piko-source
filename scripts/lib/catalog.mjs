@@ -179,6 +179,7 @@ export function validateManifest(m, name, version) {
       "bootstrap",
       "admin",
       "services",
+      "selfUpdate",
       "maxExpandedBytes",
     ],
     "distribution",
@@ -393,7 +394,7 @@ export function validateManifest(m, name, version) {
   function exec(v) {
     keys(
       v,
-      ["path", "args", "env", "kind", "outputs"],
+      ["path", "args", "env", "kind", "outputs", "timeoutMinutes"],
       "execution declaration",
     );
     pathName(v.path);
@@ -409,8 +410,35 @@ export function validateManifest(m, name, version) {
       );
     if (v.env) texts(v.env, "execution environment");
     if (v.outputs) uniquePaths(v.outputs);
+    if (v.timeoutMinutes !== undefined)
+      requireThat(
+        Number.isSafeInteger(v.timeoutMinutes) &&
+          v.timeoutMinutes >= 1 &&
+          v.timeoutMinutes <= 240,
+        "Invalid bootstrap timeoutMinutes",
+      );
   }
   if (p.bootstrap) exec(p.bootstrap);
+  if (p.selfUpdate) {
+    keys(p.selfUpdate, ["command", "versionCommand"], "self-update declaration");
+    const argv = (list) =>
+      Array.isArray(list) &&
+      list.length > 0 &&
+      list.length <= 64 &&
+      list.every(
+        (a) =>
+          typeof a === "string" &&
+          a.length > 0 &&
+          a.length <= 8192 &&
+          !/[\u0000-\u001f]/.test(a),
+      );
+    requireThat(argv(p.selfUpdate.command), "Invalid self-update command");
+    if (p.selfUpdate.versionCommand !== undefined)
+      requireThat(
+        argv(p.selfUpdate.versionCommand),
+        "Invalid self-update version command",
+      );
+  }
   if (p.services !== undefined) validateServices(p.services);
   if (p.admin) {
     keys(p.admin, ["install", "remove", "required"], "admin");

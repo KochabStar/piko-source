@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 2,
+  "name": "chromium",
+  "upstream": {
+    "provider": "json",
+    "url": "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json",
+    "versionPath": "channels.Stable.version",
+    "urlTemplate": "https://storage.googleapis.com/chrome-for-testing-public/{version}/win64/chrome-win64.zip",
+    "trust": "https"
+  },
+  "recipes": {
+    "r124826710aa75423": {
+      "schemaVersion": 1,
+      "name": "chromium",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://storage.googleapis.com/chrome-for-testing-public/{version}/win64/chrome-win64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "chromium": "chrome.exe"
+          },
+          "stripPrefix": "chrome-win64",
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Chromium (Chrome for Testing)",
+                "path": "chrome.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "158.0.8127.36": {
+      "recipe": "r124826710aa75423",
+      "maxBytes": 223346688,
+      "sha256": "6a8ad290952cc612c7777ffb3eb62f345539a2a1a8d440cfac190c6d36b34d2c"
+    }
+  }
+}

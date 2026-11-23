@@ -8,7 +8,7 @@
 
 `trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
 
-**当前共 70 个包、162 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 75 个包、168 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office；2026-11-23 新增 hermes、chromium、pnpm、just、bws），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Hermes Agent 源码安装型包与四件 PM 同源工具（见 [Hermes Agent](#hermes-agent-源码安装2026-11-23)）。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -17,6 +17,7 @@
 - 模板源需要新版客户端；原 schema 1 完整清单仍可由新版客户端读取。迁移说明见 [模板包清单](#模板包清单)。
 - 新增包用 `node scripts/add.mjs probe <name> <发布页或资产URL> [--category <分类>]` 探测格式并生成草稿，再用 `apply --dry-run`／`--yes` 校验发布（apply 要求草稿或参数提供分类，清单写入 `packages/<category>/<name>/package.json`）；流程见 [新增一个包](automation/README.md#新增一个包)。
 - **Burn 捆绑包格式需要 piko 0.4.14 或更新版本**：`clouddrive2@1.1.3.3` 使用 `format: "burn"` 加 `payload`，0.4.13 及更早客户端会以 `Unsupported or missing download format/URL` 拒绝该清单（其余包不受影响）。
+- **Bootstrap 源码安装与自更新委托需要配套新版客户端**：`hermes` 使用 `bootstrap.timeoutMinutes`（可声明至 240 分钟的执行预算）、`bootstrap.args` 的 `{version}`／`{upstream}` 插值与 `selfUpdate` 声明；旧客户端会把它们当作未知字段拒绝或以默认 15 分钟预算中断安装。`-ExecutionPolicy Bypass` 仅限当前 bootstrap 进程，不修改持久执行策略。
 - [TortoiseSVN 升级与 DLL 占用处理](guides/tortoise-svn.md)：版本化 Shell 配方、旧版本延后清理，以及旧 Scoop 安装的一次性撤销边界。修订 `1.15.0.29830-piko.1` 保留原载荷，后续上游更新自动继承新配方；历史阶段说明中的旧配方行为不适用于此修订。
 - [向日葵快捷方式打开安装器的修复](guides/sunlogin.md)：`16.8.0.33445-piko.1` 将快捷方式及 `sunlogin`／`awesun` 命令改为提取后的 `flutter/AweSun.exe`，保留载荷及配置声明，不安装服务或驱动。
 - [CloudDrive2 快捷方式打开黑窗口](guides/clouddrive2-shortcut.md)：`1.1.3.3` 改打 WinUI 桌面版（GUI 子系统 `CloudDrive.exe`），只解包捆绑链里的应用 MSI；旧服务版 `1.1.3` 保留。
@@ -348,6 +349,24 @@ pi --version
 - 7-Zip 26.06 无法列出 Inno 6.7.0 安装器，源侧 `checkLayout` 的 7z 路径对该格式不可用；布局证据改由客户端同款已验证 `innounp` 给出：**60 个文件、165,045,123 字节、最大单文件 71,059,968**，`{app}` 树含 `FlClash.exe`、`FlClashCore.exe` 与 `FlClashHelperService.exe`（admin 脚本的服务目标）。在 7-Zip 支持该 Inno 版本之前，FlClash 后续上游更新需手动收录（自动更新器会如实 blocked，不误报成功）。
 - **下架 winfsp 与 nvidia-app（维护者决定，2026-11-20）**：nvidia-app 曾尝试改为 7z SFS 解包配方，实测 `NVIDIA App.exe` 在安装上下文外确定性崩溃（ucrtbase 0xc0000409）后回滚并整体下架；winfsp 一并下架。两包从 index 与 `packages/` 目录移除，相关测试删除或改为 Lertaro 单包断言。下架不回收已安装客户端的本地副本与收据；已装 winfsp 驱动的机器在管理员终端 `piko uninstall main/winfsp` 即按收据执行 `msiexec /x` 卸载驱动。`check.mjs --base` 对删除已发布版本按预期拒绝，属单人源维护者豁免。
 - `node scripts/check.mjs` 通过（68 包／160 版本，下架后）；`npm test` 更新夹具后全绿。未验收：FlClash 0.9.4 的 TUN／服务工作流，以及 ToDesk 5.3.4.0 的真实 GUI。
+
+## Hermes Agent 源码安装与 PM 同源工具（2026-11-23）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `hermes` | 0.2026.11.14-232e27fe | `hermes`／`hermes-acp`，官方安装器发布的 launcher |
+| `chromium` | 158.0.8127.36 | `chromium`，Chrome for Testing Stable |
+| `pnpm` | 12.21.0 | `pnpm`，官方 `pnpm-win32-x64.zip` |
+| `just` | 1.59.0 | `just`，官方 x86_64-pc-windows-msvc ZIP |
+| `bws` | 2.0.0／2.1.0 | `bws`，Bitwarden Secrets CLI |
+
+- **`hermes` 是首个 bootstrap 源码安装型包**：Nous Research 的 Hermes Agent 在 Windows 上没有静态二进制发行——官方安装器 `install.ps1` 负责 git clone、PM 环境（Python 3.14、Node、ripgrep、FFmpeg、Chromium、cua-driver 等全部自管、哈希验证）与 launcher 发布。包载荷即该安装器（repo `scripts/install.ps1`，与官网端点逐字节一致），`github-file` provider 锚定 commit，版本随安装器文件演化（同 rustup-init 语义：包版本 = 安装器版本，Agent 代码版本由安装时的 stable channel 决定）。
+- **布局**：bootstrap 以 `-NonInteractive -HermesHome {persist}/home` 把 checkout、venv、PM 工具仓与用户数据全部落在 `persist/hermes/home`；`HERMES_HOME` 环境变量同步声明给命令与桌面集成。outputs 校验 `home/bin/hermes.exe` 与 `home/bin/hermes-acp.exe` 两个 distlib launcher。`timeoutMinutes: 120`（首装含 clone 与全套 PM 依赖下载）。
+- **安装／更新／卸载**：`piko install` → `piko bootstrap main/hermes`（审批预览，安装器脚本 92KB 在 256KB 上限内）→ `piko use`。更新两条路：`piko update main/hermes` 走 `selfUpdate` 委托（调用持久化 launcher 的 `hermes update`，git checkout 前进、依赖重建，piko 不重新下载）；或新安装器 commit 出现时按正常版本行重跑 bootstrap（安装器对已有 checkout 只前进不降级）。卸载删包目录；`persist/hermes/home` 默认保留（会话、技能、记忆与 API 配置），`--purge` 才删除。
+- **已知边界**：安装器会把 `home\bin` 写入用户 PATH（hermes 官方预期行为，与新控制台生效；piko shims 优先不受影响），piko 不追踪该条目，purge 后需手动清理。bootstrap 阶段的全部下载（git、uv、Python、Chromium 等）由 hermes 自带 SHA-256 清单验证，piko 按审批模型不重复验证。**桌面版不单独成包**：官方 Windows 桌面分发只有 Microsoft Store MSIX 与 7.9MB Hermes-Setup 引导器（无静态载荷，Store 应用不在源模型内）；装好 CLI 后 `hermes desktop` 即从同一 checkout 构建并启动原生桌面应用（更新随 `hermes update` 重建）。
+- **其余四件是 Hermes PM `pm/lock.json` 同源的独立工具**（hermes 自带 PM 环境不依赖它们，这里只是把同版本工具补进源）：`chromium` 用 Chrome for Testing 官方 `last-known-good-versions` JSON 发现 Stable 版本、googleapis 官方存储直链（`trust: https`）；`pnpm`／`just`／`bws` 均为 GitHub Release 静态资产；收录后自动更新器已真实收录 `bws` 2.1.0（`--write` 状态 `updated`）。PM 依赖中的 python（python-build-standalone）与 `runtime/uv` 的定位重叠，未收录（见维护者决定）；llamacpp／whispercpp／cua-driver 为 hermes 专用推理与驱动组件，通用性不足，未收录。
+- 修复了维护工具三处缺陷：`add.mjs probe` 对 tar.gz／tar.xz 只按 tar 列表导致解包失败（现在与 `checkLayout` 同样两步展开）；probe 资产选择在 aarch64+x86_64 并存时优先命中 ARM64（just 首版已按官方 SHA256SUMS 修正为 x86_64 载荷，双源核对）；`apply` 漏透传 `file` 字段。`net.mjs` 载荷下载超时从 120 秒提高到 30 分钟（元数据请求不变），大载荷不再因慢速网络误报。
+- 客户端配套（见顶部版本要求）：bootstrap `timeoutMinutes`、`args` 版本插值、`selfUpdate` 委托与 256KB 脚本预览上限；端到端测试 `tests/hermes-bootstrap.test.ts` 覆盖 install → 审批预览 → 执行 → outputs 落盘全链路。未验收：真实 clone＋PM 首装时长与断网重试、`hermes update` 委托在真实 checkout 上的行为、桌面构建。
 
 ## GitHub 自动更新（第六阶段）
 

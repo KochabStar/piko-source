@@ -86,6 +86,11 @@ function transform(manifest, version, row, encode) {
   for (const kind of ["shortcuts", "fonts", "associations", "menus"])
     if (p.desktop?.[kind])
       p.desktop[kind] = p.desktop[kind].map((e) => typeof e === "string" ? path(e) : { ...e, path: path(e.path) });
+  // Bootstrap arguments may pin the distribution version (source installs
+  // check out the exact tag); they interpolate the same version fields as
+  // download paths. Everything else in the declaration stays literal.
+  if (p.bootstrap?.args)
+    p.bootstrap.args = p.bootstrap.args.map((a) => typeof a === "string" ? path(a) : a);
   return m;
 }
 function resolveManifestDocument(document, name, version) {

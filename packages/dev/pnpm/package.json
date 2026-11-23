@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "name": "pnpm",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "pnpm/pnpm",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^pnpm-win32-x64\\.zip$",
+    "trust": "https"
+  },
+  "recipes": {
+    "rb88c481359f79ee7": {
+      "schemaVersion": 1,
+      "name": "pnpm",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/pnpm/pnpm/releases/download/v{version}/pnpm-win32-x64.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "pnpm": "pnpm.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "12.21.0": {
+      "recipe": "rb88c481359f79ee7",
+      "maxBytes": 35651584,
+      "sha256": "4fb64bb37e46c788309e0fd4ea93beb512546fdc7348121194fb704fbb72c09c"
+    }
+  }
+}

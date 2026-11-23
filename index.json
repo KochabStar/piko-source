@@ -590,6 +590,42 @@
       "versions": {
         "12.1.0.29670": "packages/desktop/wps-office/package.json"
       }
+    },
+    "just": {
+      "latest": "1.59.0",
+      "versions": {
+        "1.59.0": "packages/dev/just/package.json"
+      },
+      "category": "dev"
+    },
+    "bws": {
+      "latest": "2.1.0",
+      "versions": {
+        "2.0.0": "packages/dev/bws/package.json",
+        "2.1.0": "packages/dev/bws/package.json"
+      },
+      "category": "dev"
+    },
+    "pnpm": {
+      "latest": "12.21.0",
+      "versions": {
+        "12.21.0": "packages/dev/pnpm/package.json"
+      },
+      "category": "dev"
+    },
+    "chromium": {
+      "latest": "158.0.8127.36",
+      "versions": {
+        "158.0.8127.36": "packages/desktop/chromium/package.json"
+      },
+      "category": "desktop"
+    },
+    "hermes": {
+      "latest": "0.2026.11.14-232e27fe",
+      "versions": {
+        "0.2026.11.14-232e27fe": "packages/ai/hermes/package.json"
+      },
+      "category": "ai"
     }
   }
 }

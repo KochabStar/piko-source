@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 2,
+  "name": "hermes",
+  "upstream": {
+    "provider": "github-file",
+    "repo": "NousResearch/hermes-agent",
+    "path": "scripts/install.ps1",
+    "trust": "https"
+  },
+  "recipes": {
+    "r9608a34e1ee0a2fe": {
+      "schemaVersion": 1,
+      "name": "hermes",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://raw.githubusercontent.com/NousResearch/hermes-agent/232e27fe78471bbd1a7469a03d6ea9fa37ca6aa6/scripts/install.ps1",
+          "sha256": "{sha256}",
+          "format": "file",
+          "file": "install.ps1",
+          "bin": {
+            "hermes": {
+              "path": "home/bin/hermes.exe",
+              "kind": "native",
+              "data": true
+            },
+            "hermes-acp": {
+              "path": "home/bin/hermes-acp.exe",
+              "kind": "native",
+              "data": true
+            }
+          },
+          "persist": [
+            "home"
+          ],
+          "env": {
+            "HERMES_HOME": "{persist}/home"
+          },
+          "bootstrap": {
+            "path": "install.ps1",
+            "kind": "powershell",
+            "args": [
+              "-NonInteractive",
+              "-HermesHome",
+              "{persist}/home"
+            ],
+            "env": {
+              "HERMES_HOME": "{persist}/home"
+            },
+            "outputs": [
+              "home/bin/hermes.exe",
+              "home/bin/hermes-acp.exe"
+            ],
+            "timeoutMinutes": 120
+          },
+          "selfUpdate": {
+            "command": [
+              "{persist}/home/bin/hermes.exe",
+              "update"
+            ],
+            "versionCommand": [
+              "{persist}/home/bin/hermes.exe",
+              "--version"
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "0.2026.11.14-232e27fe": {
+      "recipe": "r9608a34e1ee0a2fe",
+      "maxBytes": 9437184,
+      "sha256": "9bd2c1402427414a2ac9a3c3f33c66d78073ba81bb2d15634c13a52e9615d2d7"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "name": "bws",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "bitwarden/sdk-sm",
+    "versionRegex": "^bws-v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^bws-x86_64-pc-windows-msvc-[0-9][0-9.]*\\.zip$",
+    "trust": "https"
+  },
+  "recipes": {
+    "r5faf64c35792c160": {
+      "schemaVersion": 1,
+      "name": "bws",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/bitwarden/sdk-sm/releases/download/bws-v{version}/bws-x86_64-pc-windows-msvc-{version}.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "bws": "bws.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    },
+    "r3a702670e2e6f147": {
+      "schemaVersion": 1,
+      "name": "bws",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/bitwarden/sdk-sm/releases/download/bws-v{version}/bws-x86_64-pc-windows-msvc-{version}.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "bws": "bws.exe"
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.0.0": {
+      "recipe": "r5faf64c35792c160",
+      "maxBytes": 14680064,
+      "sha256": "4284944f3b0c7b97a4d4105c715cd814c744ceff0405481a213937955e31d866"
+    },
+    "2.1.0": {
+      "recipe": "r3a702670e2e6f147",
+      "maxBytes": 14680064,
+      "sha256": "8d6f2b51beb6f992b5b1de8b85a98bdf18de74096b724d17fa06219fc23f2bd5"
+    }
+  }
+}
