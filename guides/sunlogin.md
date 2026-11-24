@@ -59,7 +59,7 @@ piko use main/sunlogin@latest
 
 ### 现象与原因
 
-GUI 入口修订后，客户端可以启动但一直停留在“连接服务中”：向日葵16 的被控能力依赖 Windows 服务（`AweSunService` 为主，`SunloginService` 为兼容遗留名），便携安装不注册任何服务。若机器上有旧版向日葵/傲软卸载残留（服务指向已删除的 `D:\AweSun\OldAweSun.exe` 之类死路径），客户端也无法自愈，因为修复服务需要管理员权限。
+GUI 入口修订后，客户端可以启动但一直停留在“连接服务中”：向日葵16 的被控能力依赖 Windows 服务（`AweSunService` 为主，`SunloginService` 为兼容遗留名），便携安装不注册任何服务。若机器上有旧版向日葵/傲软卸载残留（服务指向已删除的 `D:\AweSun\OldAweSun.exe` 之类死路径），客户端也无法自愈，因为修复服务需要管理员权限。此时 `piko system ... --approve-admin` 会在预检处以 `External Sunlogin service retained: <服务名>` 拒绝执行——脚本绝不接管包目录外的任何同名服务；先在管理员终端用 `sc delete <服务名>` 删除这条死注册（指向的镜像已不存在，无人能再启动它），再重新执行同一条审批命令即可完成迁移。2026-11-24 在一台带 `C:\Program Files\Oray\AweSun\OldAweSun.exe` 死残留的实机验证过该处置。
 
 ### 修订内容
 
@@ -128,16 +128,17 @@ remove 支持 `installed`、`installing`、`recovery`、`cleanup-pending` 状态
 
 本修订必须先发布到正在使用的软件源；只修改本地仓库不会改变远端清单。发布后，后续上游版本从当前 `latest` 清单生成，因此会继承 `flutter/AweSun.exe` 的两条命令及快捷方式目标，而不是继承旧清单的安装器入口。布局校验同时要求目标 EXE、Flutter 引擎和数据文件存在；路径或资源布局改变时阻止该候选发布，不自动回退到外层安装器。该校验不代替新版 GUI／远控功能验收。当前清单还会继承后台服务集成声明。
 
-保持跟随 `latest` 且软件源确实发布了**新上游版本**时，后续执行（同版本 recipe 修订不能靠此流程迁移，参见已有安装）：
+保持跟随 `latest`（`piko use main/sunlogin@latest`）且上游发布**新版本**时，后续执行（同版本 recipe 修订不能靠此流程迁移，参见已有安装）：
 
 ```powershell
+# 管理员终端执行（Windows 11 可用 sudo piko ...，一次 UAC 确认）
 piko source refresh main
-piko update main/sunlogin
+piko update main/sunlogin --approve-admin
 piko which sunlogin
 piko reset sunlogin --dry-run
 ```
 
-客户端安装新版后切换默认版本、`current` 和受管理快捷方式；持久化声明保持不变，不清除现有数据。实际配置格式的跨版本兼容仍需单独验证。如果曾用 `piko use main/sunlogin@<精确版本>`，该选择会锁定版本，`update` 不会升级；先改为 `piko use main/sunlogin@latest` 可恢复跟随源的最新版本。
+自集成后台服务起，版本变更必须 `--approve-admin` 且在管理员终端执行：普通终端的 `update` 在预检即被拒绝，不会下载或留下半装状态。`update` 直接探测上游 API 解析新版本，不要求软件源目录先收录；安装新版后客户端切换默认版本、`current` 和受管理快捷方式，服务迁移沿用同一厂商 service-only 安装器并原子更新所有权台账，持久化数据不清除。实际配置格式的跨版本兼容仍需单独验证。如果曾用 `piko use main/sunlogin@<精确版本>`，该选择会锁定版本，`update` 不会升级；先改为 `piko use main/sunlogin@latest` 可恢复跟随上游最新版本。
 
 当前问题机器的本地修复保留了原有 `latest` 请求，但不能替代远端修订发布。向日葵自身的应用内更新不由上述源生成和客户端切换流程管理，其行为未验证，建议通过 Piko 更新。
 
