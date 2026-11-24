@@ -8,7 +8,7 @@
 
 `trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
 
-**当前共 75 个包、168 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office；2026-11-23 新增 hermes、chromium、pnpm、just、bws），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Hermes Agent 源码安装型包与四件 PM 同源工具（见 [Hermes Agent](#hermes-agent-源码安装2026-11-23)）。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 77 个包、170 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office；2026-11-23 新增 hermes、chromium、pnpm、just、bws；2026-11-24 新增 ghost-downloader、motrix），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Ghost Downloader 与 Motrix 下载工具（见 [新增下载工具](#新增下载工具2026-11-24)）。新增 Hermes Agent 源码安装型包与四件 PM 同源工具（见 [Hermes Agent](#hermes-agent-源码安装2026-11-23)）。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -47,15 +47,15 @@
 
 ## 分类与版本保留
 
-70 个包按用途分为 7 类，物理目录与索引 `category` 字段一一对应，`check.mjs` 强制两者一致，不允许未分类的平铺路径：
+77 个包按用途分为 7 类，物理目录与索引 `category` 字段一一对应，`check.mjs` 强制两者一致，不允许未分类的平铺路径：
 
 | 分类 | 目录 | 数量 | 包 |
 | --- | --- | --- | --- |
 | runtime | `packages/runtime/` | 7 | node、go、lua、bun、rustup、uv、pixi |
-| ai | `packages/ai/` | 6 | claude-code、opencode、codex、pi、oh-my-pi、orca |
-| dev | `packages/dev/` | 21 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg |
+| ai | `packages/ai/` | 7 | claude-code、opencode、codex、pi、oh-my-pi、orca、hermes |
+| dev | `packages/dev/` | 24 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg、pnpm、just、bws |
 | editors | `packages/editors/` | 3 | vscode、sublime-text、obsidian |
-| desktop | `packages/desktop/` | 22 | warp-terminal、wps-office、tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit |
+| desktop | `packages/desktop/` | 25 | warp-terminal、wps-office、tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit、chromium、ghost-downloader、motrix |
 | games | `packages/games/` | 9 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender |
 | system | `packages/system/` | 2 | firacode-nf、hack-nf-mono |
 
@@ -368,9 +368,23 @@ pi --version
 - 修复了维护工具三处缺陷：`add.mjs probe` 对 tar.gz／tar.xz 只按 tar 列表导致解包失败（现在与 `checkLayout` 同样两步展开）；probe 资产选择在 aarch64+x86_64 并存时优先命中 ARM64（just 首版已按官方 SHA256SUMS 修正为 x86_64 载荷，双源核对）；`apply` 漏透传 `file` 字段。`net.mjs` 载荷下载超时从 120 秒提高到 30 分钟（元数据请求不变），大载荷不再因慢速网络误报。
 - 客户端配套（见顶部版本要求）：bootstrap `timeoutMinutes`、`args` 版本插值、`selfUpdate` 委托与 256KB 脚本预览上限；端到端测试 `tests/hermes-bootstrap.test.ts` 覆盖 install → 审批预览 → 执行 → outputs 落盘全链路。未验收：真实 clone＋PM 首装时长与断网重试、`hermes update` 委托在真实 checkout 上的行为、桌面构建。
 
+## 新增下载工具（2026-11-24）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `ghost-downloader` | 4.5.11 | `ghost-downloader`（GUI）／`ghd`（上游官方 CLI），Inno Setup 6.7.0 的 `{app}` 树（显式 208 项映射） |
+| `motrix` | 2.4.5 | `motrix`，官方 `Motrix-2.4.5-win.zip` 解压即用 |
+
+- **Ghost Downloader 的便携 ZIP 不能用**：`Ghost-Downloader-v<版本>-Windows-x86_64.zip` 由 `7z a -tzip -m0=LZMA` 生成，206 个条目全是 ZIP 方法 14（LZMA）。源侧 `checkLayout` 经 7-Zip 能列出并通过，但客户端 0.4.36 用 yauzl 解 ZIP，只认 Store／Deflate，隔离安装实测报 `unsupported compression method: 14`。因此改收官方 **Inno Setup 安装器**（`…-Windows-x86_64-Setup.exe`），与 FlClash／Warp 同模型：只解 `{app}` 树，不运行安装器。规则为 `trust: publisher`＋`signature: true`（Orca 同款）：安装器、`Ghost-Downloader-3.exe`、`bin/ghd.exe` 的 Authenticode 均为 `Valid`（SignPath Foundation），`updater.exe`、`hpatchz.exe` 状态亦为 `Valid`。
+- **为什么要显式映射**：上游 iss 的 `[Files]` 把主程序列了两次（显式一行加 `dist/*` 通配），Inno 6.7.0 元数据因此出现 `Ghost-Downloader-3,1.exe`／`,2.exe` 两个重复条目，客户端对重复变体要求显式 `files`。实测两条目各 64,471,896 字节、SHA-256 相同，且与 ZIP 内 `Ghost-Downloader-3.exe` 逐字节一致；映射把 `,1` 还原为 `Ghost-Downloader-3.exe`、丢弃 `,2`，其余 207 项一一对应。**代价**：上游增删或改名任一 `{app}` 文件，自动更新与客户端更新都会如实 `blocked`，需人工更新 recipe。该上游发版频繁，这会经常发生；客户端支持 ZIP 方法 14 后可切回 ZIP 载荷并去掉映射。
+- 布局：208 个文件、169,628,042 字节、0 个未知大小，与 ZIP 展开完全一致（等价于对两个官方渠道做了一次逐字节交叉核对）。`ghd` 指向 `bin/ghd.exe`：上游 CLI 启动器从自身位置上溯两级定位 `Ghost-Downloader-3.exe` 并经本地 socket 转发，无运行实例时后台拉起主程序。数据沿用原生 `%LOCALAPPDATA%\GhostDownloader`，不声明 persist（上游 Portable 模式仅在程序旁已存在 `GhostDownloader` 目录时才启用，两种官方分发包都不带）。`updater.exe`／`hpatchz.exe` 随包保留但不运行；应用内自更新会改写受管目录，按收据重装即可。
+- **Motrix**：载荷取官方 x64 便携 ZIP（Deflate／Store，根级平铺 `Motrix.exe`），229 个文件、422,888,802 字节、0 个未知大小；`required` 强制校验捆绑的下载引擎 `resources/extra/win32/x64/aria2c.exe`。`assetRegex` 精确匹配 `-win.zip`，不会误收 `-win-arm64.zip` 或 Linux 的 `-x64.zip`。上游未签名（`Motrix.exe`、`aria2c.exe` 等均 `NotSigned`），按其余 GitHub Release ZIP 包的既定策略使用 `trust: https` 并比对发布摘要。数据沿用原生 `%APPDATA%\Motrix`，不声明 persist（上游便携模式需在 `Motrix.exe` 旁预建 `data` 目录才启用，ZIP 不含）。`motrix-native-host.exe`（浏览器扩展原生消息主机）随包保留，未注册。
+- 隔离验证（本地 HTTP 源副本＋独立 `PIKO_HOME`，piko 0.4.36）：两包 `install`→`use`→`which`→`list` 全部通过（`VERIFIED yes`），`which ghost-downloader`／`ghd`／`motrix` 解析到受管入口；安装树与官方载荷逐文件一致（208／208、229／229，仅多出 `.piko-install.json` 收据）。`update.mjs --check` 两包均为 `current`；`npm run check` 77 包／170 版本；`npm test` 206 项中 205 项通过，1 项失败为既有的 tortoise-recipe 真实 `.ps1` 用例受本机执行策略限制（改动前后一致）。证据见 [下载工具验证记录](verification/downloaders-20261124.json)。
+- 未验收：两款 GUI 与真实下载、`ghd` CLI 经 shim 的实际行为（任一调用都会后台拉起主程序）、应用内自更新、桌面快捷方式 `integrate --desktop`、卸载／升级／保留窗口裁剪、既有非 piko 安装的数据迁移；Inno 安装器自身的注册表、协议关联与 PATH 写入均不创建。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 70 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
+- 已为登记的全部包（当前 77 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
 - 手动选择包名运行可选历史快照工具。校验官方摘要、分发签名及载荷布局后，追加历史记录并按保留策略裁剪，再生成 PR；已验证更新通过源整体校验、测试及精确远端文件树比对后自动 squash 合并。单包失败只保留该包历史，不阻止其他成功项；普通客户端更新不依赖该工作流。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。保留窗口内的版本记录受保护；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本，仅放行按保留策略到期的裁剪。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

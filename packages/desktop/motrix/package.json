@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "name": "motrix",
+  "upstream": {
+    "provider": "github-release",
+    "repo": "agalwood/Motrix",
+    "versionRegex": "^v(?<version>[0-9]+(?:\\.[0-9]+)+)$",
+    "assetRegex": "^Motrix-[0-9]+(?:\\.[0-9]+)+-win\\.zip$",
+    "required": [
+      "Motrix.exe",
+      "resources/extra/win32/x64/aria2c.exe"
+    ],
+    "trust": "https"
+  },
+  "recipes": {
+    "r43991c5bd2b0dda0": {
+      "schemaVersion": 1,
+      "name": "motrix",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://github.com/agalwood/Motrix/releases/download/v{version}/Motrix-{version}-win.zip",
+          "sha256": "{sha256}",
+          "format": "zip",
+          "bin": {
+            "motrix": "Motrix.exe"
+          },
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Motrix",
+                "path": "Motrix.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "2.4.5": {
+      "recipe": "r43991c5bd2b0dda0",
+      "maxBytes": 177209344,
+      "sha256": "a6122bf5c5ecc54abaed43ba8b11ebb0a9678935ad3621246136922b60585460"
+    }
+  }
+}

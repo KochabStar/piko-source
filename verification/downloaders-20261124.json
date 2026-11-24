@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-24T05:15:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "ghost-downloader",
+      "version": "4.5.11",
+      "source": "https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/download/v4.5.11/Ghost-Downloader-v4.5.11-Windows-x86_64-Setup.exe",
+      "discovery": "github-release on XiaoYouChR/Ghost-Downloader-3; tag ^v(?<version>[0-9]+(?:\\.[0-9]+)+)$; asset ^Ghost-Downloader-v[0-9]+(?:\\.[0-9]+)+-Windows-x86_64-Setup\\.exe$ (the arm64 twin does not match)",
+      "sha256": "0563d0e814fc9fed64ce700561be75d0d6769c4d2ade3f19e393aa779971fdfb",
+      "archiveBytes": 45093616,
+      "publisherCheck": "GitHub release asset digest equals the local SHA-256 of the installer; the rule is trust publisher + signature true, so every download must also pass Authenticode Valid (the orca model)",
+      "rejectedPayload": {
+        "asset": "Ghost-Downloader-v4.5.11-Windows-x86_64.zip",
+        "sha256": "2f4bef61dfbdd362758c20db454637e00e70c8ae35212dd3c5f1725edae450dc",
+        "archiveBytes": 46701606,
+        "reason": "built with 7z a -tzip -m0=LZMA: 206 entries use ZIP method 14 (LZMA). It passes the source-side checkLayout because 7-Zip lists it, but client 0.4.36 decodes ZIP through yauzl, which accepts only Stored and Deflate; the isolated install failed with 'unsupported compression method: 14'"
+      },
+      "format": "inno",
+      "innoVersion": "6.7.0 (Unicode), read with the pinned innounp 2.71.3",
+      "stripPrefix": "none; explicit 208-entry files map over the {app} tree",
+      "authenticode": {
+        "installer": "Valid, CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US, certificate notAfter 2027-09-08",
+        "Ghost-Downloader-3.exe": "Valid, same signer",
+        "bin/ghd.exe": "Valid, same signer",
+        "updater.exe": "Valid",
+        "hpatchz.exe": "Valid",
+        "note": "file signatures were read from the ZIP copy; the Inno {app} tree is byte-identical to it (see layout)"
+      },
+      "layout": {
+        "files": 208,
+        "knownExpandedBytes": 169628042,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "listedEntries": "210: 209 under {app} plus the innounp-generated install_script.iss, which is not mapped",
+        "duplicateEntries": "Inno 6.7.0 lists the main program twice ({app}\\Ghost-Downloader-3,1.exe and ,2.exe) because the upstream iss names it in an explicit Source line and again through the dist/* wildcard. Each is 64471896 bytes with sha256 f70f3ebdf05eaabcba13a8119fba72ef744634adace7d6ca185b04334f5c88e0, equal to Ghost-Downloader-3.exe in the official ZIP",
+        "filesMap": "\"Ghost-Downloader-3,1.exe\": \"Ghost-Downloader-3.exe\"; the ,2 duplicate is left unmapped; the other 207 entries map one-to-one",
+        "equalsOfficialZipTree": "208/208 files byte-identical to the official Windows x86_64 ZIP"
+      },
+      "commandModel": {
+        "bin": {
+          "ghost-downloader": "Ghost-Downloader-3.exe",
+          "ghd": "bin/ghd.exe"
+        },
+        "ghd": "upstream CLI launcher: resolves Ghost-Downloader-3.exe two levels above its own module path and forwards argv over the local socket GhostDownloader-<user>; starts the main program in the background when no instance is running",
+        "desktop": "Ghost Downloader shortcut declared; requires separate integrate --desktop preview/confirmation",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "userData": "native %LOCALAPPDATA%\\GhostDownloader (Qt GenericDataLocation)",
+        "portableMode": "upstream switches to a program-side GhostDownloader folder only when that directory already exists next to the executable; neither official distribution ships it"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.36",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "zipAttempt": "piko install iso/ghost-downloader@4.5.11 with the ZIP recipe failed: unsupported compression method: 14",
+        "innoAttempt": "piko install iso/ghost-downloader@4.5.11 with the Inno recipe installed; the client fetched its own pinned innounp helper",
+        "useAfterInstall": "Default and current updated",
+        "whichAfterUse": {
+          "ghost-downloader": "apps/ghost-downloader/4.5.11/Ghost-Downloader-3.exe",
+          "ghd": "apps/ghost-downloader/4.5.11/bin/ghd.exe"
+        },
+        "listVerified": "yes",
+        "installedTreeVsOfficialZip": "208/208 files byte-identical; the only extra file is the .piko-install.json receipt",
+        "installedMainExeSha256": "f70f3ebdf05eaabcba13a8119fba72ef744634adace7d6ca185b04334f5c88e0",
+        "installedGhdSha256": "57930eef2ec047306ab3eca674b6a5534d8814473b44f36d636376f90f63b347",
+        "ruleAfterInstall": "the install ran while the rule was trust https; the rule was then tightened to trust publisher + signature true (recipe, files map and version row unchanged). Exact-version installs do not read the upstream rule; after the change the client still refreshed, searched and listed the final catalog"
+      },
+      "updateModel": "explicit files map: a release that adds, renames or removes any {app} file is blocked until the recipe is revised by hand"
+    },
+    {
+      "name": "motrix",
+      "version": "2.4.5",
+      "source": "https://github.com/agalwood/Motrix/releases/download/v2.4.5/Motrix-2.4.5-win.zip",
+      "discovery": "github-release on agalwood/Motrix; tag ^v(?<version>[0-9]+(?:\\.[0-9]+)+)$; asset ^Motrix-[0-9]+(?:\\.[0-9]+)+-win\\.zip$ (x64; neither the win-arm64 twin nor the Linux x64.zip matches)",
+      "sha256": "a6122bf5c5ecc54abaed43ba8b11ebb0a9678935ad3621246136922b60585460",
+      "archiveBytes": 167773521,
+      "publisherCheck": "GitHub release asset SHA-256 digest equals the local re-hash; trust https, the policy of every other github-release ZIP package",
+      "format": "zip",
+      "compression": "Deflate for 206 entries and Stored for 48, decodable by the client's yauzl path",
+      "stripPrefix": "none (flat root with Motrix.exe)",
+      "authenticode": {
+        "Motrix.exe": "NotSigned (FileVersion 2.4.5; the resource also reports 2.4.5.0)",
+        "Motrix_wer.dll": "NotSigned",
+        "resources/extra/win32/x64/aria2c.exe": "NotSigned",
+        "resources/bin/motrix-native-host.exe": "NotSigned",
+        "resources/bin/motrix-finalize-fs.exe": "NotSigned"
+      },
+      "layout": {
+        "files": 229,
+        "knownExpandedBytes": 422888802,
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "required": "Motrix.exe and resources/extra/win32/x64/aria2c.exe (download engine bundled through electron-builder extraResources)"
+      },
+      "commandModel": {
+        "bin": {
+          "motrix": "Motrix.exe"
+        },
+        "desktop": "Motrix shortcut declared; requires separate integrate --desktop preview/confirmation",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "userData": "native %APPDATA%\\Motrix (Electron default userData)",
+        "portableMode": "upstream opt-in: active only when a data directory exists next to Motrix.exe; the release ZIP ships none"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.36",
+        "pikoHome": "temporary directory with a local HTTP source copy",
+        "installed": "iso/motrix@2.4.5",
+        "useAfterInstall": "Default and current updated",
+        "whichAfterUse": "apps/motrix/2.4.5/Motrix.exe",
+        "listVerified": "yes",
+        "installedTreeVsOfficialZip": "229/229 files byte-identical; the only extra file is the .piko-install.json receipt"
+      }
+    }
+  ],
+  "checks": {
+    "sourceCheck": "77 packages / 170 versions / 77 automatic",
+    "categoryCounts": "runtime 7, ai 7, dev 24, editors 3, desktop 25, games 9, system 2",
+    "updateCheck": "node scripts/update.mjs --check --packages ghost-downloader,motrix -> both current. The same-version path compares the GitHub asset digest with the registered SHA-256 and does not download again; full download, digest, layout and (for ghost-downloader) signature verification were exercised by apply --dry-run and apply --yes",
+    "applyRuns": "ghost-downloader: ZIP dry-run and publish, then Inno dry-run, publish, dry-run and publish; motrix: dry-run and publish",
+    "tests": "206 total, 205 pass, 1 pre-existing failure: tests/tortoise-recipe.test.mjs invokes a real .ps1 and is blocked by this host's Restricted execution policy; identical before and after the change"
+  },
+  "notVerified": [
+    "GUI launch of either application, and any real download (HTTP, BitTorrent, magnet, ed2k, m3u8) or Motrix's aria2 engine",
+    "ghd CLI behaviour through a piko shim: any ghd invocation starts Ghost-Downloader-3.exe in the background and writes %LOCALAPPDATA%\\GhostDownloader, so it was not run",
+    "In-application self-update (updater.exe / hpatchz.exe for ghost-downloader, electron-updater for motrix): both ship unmodified and were never executed; an in-app update rewrites the managed tree and is detected as divergence",
+    "Desktop shortcuts: integrate --desktop preview and confirmation were not exercised",
+    "Client update to a future upstream version. ghost-downloader carries an explicit 208-entry files map, so a release that adds, renames or removes any {app} file is blocked until the recipe is revised by hand; a client that decodes ZIP method 14 would allow a return to the ZIP payload without a map",
+    "Uninstall, upgrade and retention-window pruning for either package",
+    "Migration of data from an existing non-piko Ghost Downloader or Motrix installation; the native user-data locations are simply shared",
+    "Running the Inno setup itself: the registry keys, URL-protocol associations and PATH entry the upstream installer writes are not created"
+  ]
+}
