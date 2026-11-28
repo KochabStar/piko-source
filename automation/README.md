@@ -7,7 +7,7 @@
 普通客户端 update 直接使用静态包文档顶层 `upstream` 与审核配方，不要求源按次发布版本。`.github/workflows/update-source.yml` 仅为手动触发的可选历史快照审核工具，`packages` 为空时检查全部包；不承担客户端运行时更新。
 
 1. 校验当前索引、清单与更新规则，并运行测试。
-2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 77 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。`steam` 解析官方 CDN 引导清单（Valve KV），固定国际版 `steamrow` 引导 ZIP 的内容寻址地址与 `sha2` 摘要，仅当载荷哈希变化时以新通道时间戳登记版本；`steamchina` 渠道不匹配。`epic-games-launcher` 跟随 Epic 官方稳定重定向端点发现构建号，载荷固定为同版本官方 MSI 直链并按 `layout: "epic"` 重建只含启动器本体的显式映射。`godot` 匹配官方稳定 tag 的 Windows x64 ZIP 并以 `verifyPEVersion` 核对 PE 版本；`blender` 解析官方 `download.blender.org` 发布目录清单并渲染官方直链，大版本／次版本目录升级需人工更新规则 URL。
+2. 从官方发布仓库、官网下载页、经批准的社区版本提示或官方 API 发现正式版本。当前 78 包全部配置自动发现。`innounp` 从上游发布说明发现版本并只取对应官方解包器；`dingtalk` 仅从社区目录读取四段数字版本作为提示，载荷 URL 固定为钉钉国内完整 updater ZIP，随后仍由 SHA-256、PE 版本与布局校验把关。国际版 `-Release` 后缀不匹配。Claude Code 从官方原生版本清单读取 Windows x64 SHA-256；OpenCode、Nushell、Lertaro 匹配各自经过审查的正式版 ZIP。NVIDIA App 仅管理已签名的官方安装器，不自动执行系统安装。Pi 使用官方 `earendil-works/pi` 稳定版 Windows x64 ZIP，额外核对主题、WASM 和原生辅助模块等资源布局。`steam` 解析官方 CDN 引导清单（Valve KV），固定国际版 `steamrow` 引导 ZIP 的内容寻址地址与 `sha2` 摘要，仅当载荷哈希变化时以新通道时间戳登记版本；`steamchina` 渠道不匹配。`epic-games-launcher` 跟随 Epic 官方稳定重定向端点发现构建号，载荷固定为同版本官方 MSI 直链并按 `layout: "epic"` 重建只含启动器本体的显式映射。`godot` 匹配官方稳定 tag 的 Windows x64 ZIP 并以 `verifyPEVersion` 核对 PE 版本；`blender` 解析官方 `download.blender.org` 发布目录清单并渲染官方直链，大版本／次版本目录升级需人工更新规则 URL。`unity-hub` 读官方更新源 `latest.yml` 里与版本绑定的 x64 转换壳条目，不执行这个提权外壳，只把壳内 MSIX 当 ZIP 展开。
 3. 下载候选载荷，计算 SHA-256；GitHub、Node、Go、rustup 提供官方摘要时必须比对，PowerShell Gallery 比对 SHA-512，向日葵另比对官方 MD5。部分桌面分发同时要求 Windows 签名状态为 `Valid`。
 4. 使用单独固定版本、固定摘要的 7-Zip、innounp、lessmsi 读取或解包元数据。检查命令、快捷方式、字体及执行配方引用的文件，检查显式文件映射、嵌套载荷、文件类型、大小、链接和路径冲突。MSI 同时核对数据库中的文件标识和 CAB 内容；不会运行 MSI 安装动作。
 5. 在 `packages/<category>/<name>/package.json` 中追加已验证版本的 SHA-256／配方引用，按保留策略裁剪落窗版本，再更新 `index.json`。旧版本展开后的内容和安装哈希不可改变，模板包只允许增加版本或确有需要的新配方。源在验证期间被手动修改时拒绝覆盖。
@@ -25,13 +25,13 @@
    node scripts/add.mjs probe <name> <发布页或资产URL> [--version <版本>] [--payload <捆绑包ID>] [--category <分类>]
    ```
 
-   它会挑出页面上提到包名的资产（优先 x64/Windows），下载一次，然后按**文件头结构**而不是扩展名判断格式：zip / 7z / tar.gz / MSI（OLE 复合文档）/ Inno（试读元数据）/ Burn（读链上 `BurnManifest.xml`）。判断依据是真实结构，所以把 zip 命名成 `.exe` 或把安装器命名成 `.zip` 也不会认错。
+   它会挑出页面上提到包名的资产（优先 x64/Windows），下载一次，然后按**文件头结构**而不是扩展名判断格式：zip / 7z / tar.gz / MSI（OLE 复合文档）/ Inno（试读元数据）/ Burn（读链上 `BurnManifest.xml`）/ NSIS（7-Zip 能按 NSIS 列出）。判断依据是真实结构，所以把 zip 命名成 `.exe` 或把安装器命名成 `.zip` 也不会认错。
 
    WiX Burn 捆绑包链上通常有好几个 MSI（CloudDrive2 就是 WinFsp 驱动 + 应用两个），探测会列出全部 `payloadCandidates`；用 `--payload` 指定要哪一个，再跑一次即可得到该载荷的文件树。
 
    结果写到 `automation/drafts/<name>.json`（已在 `.gitignore`），里面包含 SHA-256、字节数、格式、可执行文件候选和条目样例。
 
-2. **补齐审核信息**：`bin`、`desktop`、`stripPrefix`，以及必填 `upstream`（provider、repo／URL／正则、必要布局与签名策略、显式 trust）。`publisher` 只用于有上游强摘要或必需有效签名的规则；其他规则明确选择 `https`，委托该 HTTPS 发布端，计算哈希不构成发布者验证。
+2. **补齐审核信息**：`bin`、`desktop`、`stripPrefix`、`nested`（NSIS／PE 壳内嵌的载荷），以及必填 `upstream`（provider、repo／URL／正则、必要布局与签名策略、显式 trust）。`publisher` 只用于有上游强摘要或必需有效签名的规则；其他规则明确选择 `https`，委托该 HTTPS 发布端，计算哈希不构成发布者验证。
 
 3. **校验并发布**：
 
@@ -110,7 +110,7 @@ GitHub Actions 本身全部固定到提交 SHA。仓库变更和 PR 另由 `.git
 
 ## 模板与历史版本
 
-目前每包一个 `packages/<category>/<name>/package.json`（7 类目录见主 README 的[分类与版本保留](../README.md#分类与版本保留)），共 77 个包文件、170 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未跳过 SHA-256 校验；每包按保留策略保留最近 8 个版本组，落出窗口的最旧版本由更新器或 `npm run prune` 裁剪，Git 历史仍可找回。
+目前每包一个 `packages/<category>/<name>/package.json`（7 类目录见主 README 的[分类与版本保留](../README.md#分类与版本保留)），共 78 个包文件、171 个版本。schema 2 文件按 `recipes` 保存声明式模板，按 `versions` 保存已核验版本、recipe 引用、各下载摘要及可选配额。普通更新不新增版本文件；配方改变时增加独立 recipe。旧版精确安装仍可用，未跳过 SHA-256 校验；每包按保留策略保留最近 8 个版本组，落出窗口的最旧版本由更新器或 `npm run prune` 裁剪，Git 历史仍可找回。
 
 `npm run compact:check` 可预览 schema 1 清单合并；`npm run compact` 执行。迁移允许索引路径改为共享包文件，但必须逐版本保证解析后的完整 JSON 序列化及 manifestHash 不变；原 schema 1 路径未迁移时仍要求文件字节不变。迁移后的客户端必须支持模板格式；先部署新版 Piko，再发布此源。Git 历史仍保留旧清单，模板只控制工作目录和后续重复配置增长，不压缩已有 Git 历史。
 

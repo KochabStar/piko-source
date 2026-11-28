@@ -97,6 +97,10 @@ export async function sniffFormat(file, tools) {
     if (burn) return { format: "burn", burn };
     const inno = await tryInno(file, tools);
     if (inno) return { format: "inno", inno };
+    // NSIS is the other PE installer type the source supports (for example an
+    // Electron app whose payload is a nested archive). 7-Zip only opens a
+    // file as NSIS when the Nullsoft header is really there.
+    if (await tryNsis(file, tools)) return { format: "nsis" };
     return { format: "pe" };
   }
 
@@ -137,6 +141,14 @@ async function tryInno(file, tools) {
     return innoEntries(listing);
   } catch {
     return undefined;
+  }
+}
+
+async function tryNsis(file, tools) {
+  try {
+    return (await listing(tools, file, "nsis")).length > 0;
+  } catch {
+    return false;
   }
 }
 
@@ -219,7 +231,14 @@ export async function deriveEntries(file, sniffed, tools) {
       await rm(scratch, { recursive: true, force: true, maxRetries: 10 });
     }
   }
-  const type = format === "zip" ? "zip" : format === "7z" ? "7z" : "tar";
+  const type =
+    format === "zip"
+      ? "zip"
+      : format === "7z"
+        ? "7z"
+        : format === "nsis"
+          ? "nsis"
+          : "tar";
   return (await listing(tools, tarFile, type))
     .filter((e) => !e.directory)
     .map((e) => ({ path: e.path, size: e.size }));
@@ -411,7 +430,11 @@ async function apply(name, flags) {
           ...(draft.file ? { file: draft.file } : {}),
           bin: draft.bin,
           ...(draft.payload ? { payload: draft.payload } : {}),
+          ...(draft.nested ? { nested: draft.nested } : {}),
           ...(draft.stripPrefix ? { stripPrefix: draft.stripPrefix } : {}),
+          ...(draft.maxExpandedBytes
+            ? { maxExpandedBytes: draft.maxExpandedBytes }
+            : {}),
           ...(files ? { files } : {}),
           ...(draft.desktop ? { desktop: draft.desktop } : {}),
           ...(draft.persist ? { persist: draft.persist } : {}),

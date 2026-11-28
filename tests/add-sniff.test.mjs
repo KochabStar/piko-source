@@ -13,6 +13,20 @@ const root = "D:/code/work/piko/piko-source/";
 const tools = new Tools(root, network());
 const fixture = process.env.PIKO_FIXTURE_MSI;
 const bundle = process.env.PIKO_FIXTURE_BURN;
+const shell = process.env.PIKO_FIXTURE_NSIS;
+
+// An NSIS installer is a PE image that is neither Burn nor Inno (the Unity Hub
+// MSIX converter shell is the motivating payload): it must be reported as
+// nsis, with its payload listed under 7-Zip's NSIS variable roots instead of
+// PE resources.
+if (shell) {
+  const sniffed = await sniffFormat(shell, tools);
+  assert.equal(sniffed.format, "nsis");
+  const entries = await deriveEntries(shell, sniffed, tools);
+  assert.ok(entries.some((e) => e.path === "$9/UnityHub.msix"));
+  assert.ok(entries.every((e) => e.path.startsWith("$")));
+  console.log(JSON.stringify({ nsis: { entries: entries.length, paths: entries.map((e) => e.path) } }, null, 2));
+}
 
 if (!fixture || !bundle) {
   console.log("skipped: set PIKO_FIXTURE_MSI and PIKO_FIXTURE_BURN");

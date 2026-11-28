@@ -640,6 +640,13 @@
         "2.4.5": "packages/desktop/motrix/package.json"
       },
       "category": "desktop"
+    },
+    "unity-hub": {
+      "latest": "4.0.2",
+      "versions": {
+        "4.0.2": "packages/games/unity-hub/package.json"
+      },
+      "category": "games"
     }
   }
 }

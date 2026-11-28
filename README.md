@@ -8,7 +8,7 @@
 
 `trust: publisher` 要求上游强摘要或规则规定的有效签名；`trust: https` 是源明确委托规则中的 HTTPS 发布端，客户端计算的内容哈希用于精确缓存与恢复，不冒称发布者摘要或签名。所有可用上游摘要仍须比对，不接受全零摘要或隐式绕过。历史清单的展开字节与哈希不因顶层规则变化而改变。
 
-**当前共 77 个包、170 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office；2026-11-23 新增 hermes、chromium、pnpm、just、bws；2026-11-24 新增 ghost-downloader、motrix），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Ghost Downloader 与 Motrix 下载工具（见 [新增下载工具](#新增下载工具2026-11-24)）。新增 Hermes Agent 源码安装型包与四件 PM 同源工具（见 [Hermes Agent](#hermes-agent-源码安装2026-11-23)）。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
+**当前共 78 个包、171 个历史版本锚点（2026-11-20 下架 winfsp、nvidia-app；2026-11-21 新增 warp-terminal、wps-office；2026-11-23 新增 hermes、chromium、pnpm、just、bws；2026-11-24 新增 ghost-downloader、motrix；2026-11-28 新增 unity-hub），按 7 类目录组织（见 [分类与版本保留](#分类与版本保留)）**。新增 Unity Hub 4.0.2（官方 MSIX 转换壳按文件解包，见 [Unity Hub](#unity-hub2026-11-28)）。新增 Ghost Downloader 与 Motrix 下载工具（见 [新增下载工具](#新增下载工具2026-11-24)）。新增 Hermes Agent 源码安装型包与四件 PM 同源工具（见 [Hermes Agent](#hermes-agent-源码安装2026-11-23)）。新增 Pebrel 2.4.0 原生 Windows x64 便携包（见 [新增终端模拟器](#新增终端模拟器2026-11-10)）。此前新增 Claude Code、OpenCode、QQNT、NVIDIA App、Nushell、Lertaro、x64dbg、百度网盘、CloudDrive2、Bun、Steam、Epic 商城、Godot、Blender、WinFsp、RetroArch、ares、mGBA、medusa、shadPS4、VS Code，并将已有 Codex 追加至 0.166.0（见 [新增软件](#新增软件2026-10-31)、[新增逆向与云盘工具](#新增逆向与云盘工具2026-11-04)、[CloudDrive2](#clouddrive22026-11-05)、[Bun](#bun2026-11-05)、[Steam](#steam2026-11-07)、[Epic 商城](#epic-商城2026-11-07)、[Godot](#godot2026-11-07)、[Blender](#blender2026-11-07)、[模拟器与编辑器](#模拟器与编辑器2026-11-08)、[WinFsp](#winfsp2026-11-09)、[Pebrel](#新增终端模拟器2026-11-10)）。此前新增 Pi 1.4.0 原生 Windows x64 包（见 [Pi](#pi-原生-cli)）。原 38 包覆盖已盘点的 33 个 Scoop 迁移目标（排除管理器自身）和 5 个 mise 工具入口；本轮再登记 Orca、Tabbit、钉钉、微信、企业微信、Listary、ToDesk、向日葵共 8 包。新增 8 包均通过隔离安装、默认选择与命令入口校验，主程序版本和 Windows 签名状态检查通过；另验证两款远控软件的配置留存模型。证据见 [桌面软件验证](verification/desktop-apps-20261029.json)。原 19→38 包扩充的 30 项检查见 [历史覆盖记录](verification/coverage-20261029.json)。本页前三阶段的旧数量与待办保留为历史记录，当前范围以第四、第五阶段、Pi 原生 CLI 与新增软件章节为准。
 
 ## 目录
 
@@ -47,7 +47,7 @@
 
 ## 分类与版本保留
 
-77 个包按用途分为 7 类，物理目录与索引 `category` 字段一一对应，`check.mjs` 强制两者一致，不允许未分类的平铺路径：
+78 个包按用途分为 7 类，物理目录与索引 `category` 字段一一对应，`check.mjs` 强制两者一致，不允许未分类的平铺路径：
 
 | 分类 | 目录 | 数量 | 包 |
 | --- | --- | --- | --- |
@@ -56,7 +56,7 @@
 | dev | `packages/dev/` | 24 | git、gh、lazygit、cmake、ninja、xmake、ripgrep、fzf、z.lua、starship、psfzf、sudo、nushell、inno-setup、innounp、ffmpeg、aria2、7zip、llvm、tortoise-svn、x64dbg、pnpm、just、bws |
 | editors | `packages/editors/` | 3 | vscode、sublime-text、obsidian |
 | desktop | `packages/desktop/` | 25 | warp-terminal、wps-office、tabby、wave-terminal、pebrel、lertaro、beyondcompare-zh-cn、snipaste、localsend、dbgate、dingtalk、wechat、wecom、qqnt、listary、todesk、sunlogin、baidu-netdisk、clouddrive2、flclash、libreoffice、tabbit、chromium、ghost-downloader、motrix |
-| games | `packages/games/` | 9 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender |
+| games | `packages/games/` | 10 | steam、epic-games-launcher、retroarch、ares、mgba、medusa、shadps4、godot、blender、unity-hub |
 | system | `packages/system/` | 2 | firacode-nf、hack-nf-mono |
 
 **版本保留策略（2026-11-10 起）**：每个包保留最近 **8 个版本组**。一个版本组 = 基础版本及其全部 `-piko.N` 修订（同一载荷换入口的修订不与基础版本拆散）；组序按登记顺序（索引 `versions` 的插入顺序，更新器只在末尾追加）。落出窗口的最旧版本组会被裁剪：
@@ -382,9 +382,24 @@ pi --version
 - 隔离验证（本地 HTTP 源副本＋独立 `PIKO_HOME`，piko 0.4.36）：两包 `install`→`use`→`which`→`list` 全部通过（`VERIFIED yes`），`which ghost-downloader`／`ghd`／`motrix` 解析到受管入口；安装树与官方载荷逐文件一致（208／208、229／229，仅多出 `.piko-install.json` 收据）。`update.mjs --check` 两包均为 `current`；`npm run check` 77 包／170 版本；`npm test` 206 项中 205 项通过，1 项失败为既有的 tortoise-recipe 真实 `.ps1` 用例受本机执行策略限制（改动前后一致）。证据见 [下载工具验证记录](verification/downloaders-20261124.json)。
 - 未验收：两款 GUI 与真实下载、`ghd` CLI 经 shim 的实际行为（任一调用都会后台拉起主程序）、应用内自更新、桌面快捷方式 `integrate --desktop`、卸载／升级／保留窗口裁剪、既有非 piko 安装的数据迁移；Inno 安装器自身的注册表、协议关联与 PATH 写入均不创建。
 
+## Unity Hub（2026-11-28）
+
+| 包名 | 版本 | 入口 |
+| --- | --- | --- |
+| `unity-hub` | 4.0.2 | `unityhub`（GUI）／`unity`（随包 Unity CLI），官方 MSIX 转换壳内嵌的 `UnityHub.msix` 原样展开（477 个文件） |
+
+- **Hub 4 在 Windows 上只有 MSIX 一种分发**：`UnityHubSetup-<版本>-x64-msix-converter.exe` 是带签名的 NSIS 提权外壳，唯一的动作是用 PowerShell 跑 `Add-AppxPackage`／`Add-AppxProvisionedPackage`。本包不执行它，只取壳内 `$9/UnityHub.msix` 当普通 ZIP 展开（437 Deflate＋40 Store，客户端可解），与 Tabby 的 NSIS＋nested 同模型。外层按 `signature: true` 要求 Authenticode `Valid`（Unity Technologies SF 的 EV 证书），壳内主程序、`unity.exe`、许可客户端为同一证书；`verifyPEVersion` 核对解出的主程序 PE 版本等于发现版本。
+- **发现**：`regex` 读官方更新源 `hub/prod/latest.yml` 的 `path:` 行，版本与 x64 转换壳文件名绑定，arm64 条目不匹配；`urlTemplate` 固定 `hub/prod/{version}/{file}`。`trust: https`——该规则不比对 feed 里的 SHA-512，本次已手工核对与下载一致。
+- **条目名**：MSIX 的 zip 条目名是 URI 编码，主程序落盘为 `app/Unity%20Hub.exe`（`nested` 只支持 `stripPrefix`、不能改名；`stripPrefix: app` 又会因根目录的 `AppxManifest.xml`、`Assets` 等被闸门拒绝），所以整包原样展开，多出的 28 个包元数据文件为惰性文件。静态排查：主程序里的 `Unity Hub.exe` 只出现在版本资源，定位自身用 `current_exe()`；`unity.exe` 靠注册表与常见安装路径找 Hub。
+- **没有的东西**：脱离 MSIX 包标识后，`unityhub://` 协议、`unityhub.exe` 执行别名、启动任务与系统级自动更新这些清单声明不会随文件安装；数据沿用 `%APPDATA%\UnityHub`／`%LOCALAPPDATA%\UnityHub`，不声明 persist。未选 Hub 3.22.6（最后一个 3.x，自带更新会把用户迁到 4.x 转换壳）与 `admin` 配方（需提权，注册后 piko 无法撤销）。
+- **编辑器不经 Hub 直装暂不可行**：官方 Release API 的 `UnitySetup64-<版本>.exe` 直链按 changeset 固定并带 MD5，但 2020.3 起为 2.62–4.2 GiB，超过源与客户端共同写死的 2 GiB 下载上限（仅 2019.4.41f2 及更早放得下）；放开上限需要两边同步修改并先发客户端。
+- 工具配套：`add.mjs` 现在把 7-Zip 能按 NSIS 列出的 PE 识别为 `nsis`（此前一律 `pe`），`apply` 透传草稿的 `nested` 与 `maxExpandedBytes`。
+- 隔离验证（本地回环 HTTP 源副本＋独立 `PIKO_HOME`，piko 0.4.37）：`install`→`use`→`which`→`list` 通过（`VERIFIED yes`），`which unityhub`／`unity` 解析到受管入口；安装树与 `UnityHub.msix` 展开逐文件一致（477／477，仅多出收据）。`update.mjs --check` 为 `current`；`npm run check` 78 包／171 版本；`npm test` 208 项中 207 项通过，1 项失败为既有的 tortoise-recipe 用例受本机执行策略限制（改动前后一致）。证据见 [Unity Hub 验证记录](verification/unity-hub-20261128.json)。
+- 未验收：解包后 Hub 的 GUI 启动与自注册 `unityhub://`、经 Hub 安装编辑器与登录授权、`unity` CLI 经 shim 的行为、应用内更新（预计会自行下载下一个转换壳并要求提权）、桌面快捷方式 `integrate --desktop`、卸载／升级／保留窗口裁剪。
+
 ## GitHub 自动更新（第六阶段）
 
-- 已为登记的全部包（当前 77 包）提供自动发现策略。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
+- 已为登记的全部包（当前 78 包）提供自动发现策略。`unity-hub` 读官方更新源 `latest.yml` 里与版本绑定的 x64 转换壳条目，取壳内 MSIX 当 ZIP 展开。`innounp` 从上游发布说明发现版本；`dingtalk` 使用社区目录作为版本提示，但载荷固定取国内完整 updater ZIP 并通过现有摘要、PE 版本和布局校验，国际版 `-Release` 后缀不匹配。`qqnt` 自动发现官网新渠道、实时签名后验证原生 PE 版本与资源布局。`steam` 解析官方引导清单，仅在引导载荷哈希变化时登记新版本；`blender` 以官方 `download.blender.org` 目录清单发现版本，大版本目录变更需人工更新规则 URL。
 - 手动选择包名运行可选历史快照工具。校验官方摘要、分发签名及载荷布局后，追加历史记录并按保留策略裁剪，再生成 PR；已验证更新通过源整体校验、测试及精确远端文件树比对后自动 squash 合并。单包失败只保留该包历史，不阻止其他成功项；普通客户端更新不依赖该工作流。
 - 同版本摘要变化、布局缺项、超出配额或源在验证期间被修改时拒绝覆盖。保留窗口内的版本记录受保护；PR 校验逐版本保护已发布清单的展开内容与安装哈希，不允许模板改动影响历史版本，仅放行按保留策略到期的裁剪。
 - `oh-my-pi` 已补入 **18.14.1**，保留 `18.13.2`。2026-10-31 的旧工作流已验证该版本，但同轮 Inno Setup 解包失败阻止整份 PR 合并；本地恢复的是该 PR 中逐字节相同的清单。现已改为只合并成功项，仍保留摘要、历史版本、索引边界和精确文件树校验。见 [诊断证据](verification/oh-my-pi-update-20261031.json) 与 [未合并排查](automation/README.md#已发现新版但主分支版本没变)。

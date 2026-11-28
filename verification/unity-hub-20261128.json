@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-28T07:40:00.000Z",
+  "platform": "windows-x64",
+  "packages": [
+    {
+      "name": "unity-hub",
+      "version": "4.0.2",
+      "source": "https://public-cdn.cloud.unity3d.com/hub/prod/4.0.2/UnityHubSetup-4.0.2-x64-msix-converter.exe",
+      "discovery": "regex on the official update feed https://public-cdn.cloud.unity3d.com/hub/prod/latest.yml: path:\\s*(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/(?<file>UnityHubSetup-[0-9.]+-x64-msix-converter\\.exe); the arm64 twin listed under files: does not match. The version is bound to the x64 converter named by the same feed entry",
+      "sha256": "4b8f119261515f80c4d9b8aa78ed1c74c1f09281cbbf66f994224fb8c55ee56c",
+      "sha512": "30tDKwRCjSmVNN5oS3ugjC9DEU6+dYkRFiX0U0KuQOS4Dv9VFC/LHTZ3LHK0volQUeBy+EvOrY/vi2nFa1gqYg==",
+      "publisherCheck": "the base64 SHA-512 in latest.yml equals the locally re-hashed SHA-512 of the x64 converter; the rule is trust https + signature true, so every download must also pass Authenticode Valid. The regex provider cannot compare the feed digest itself, so that comparison was done by hand for this version",
+      "archiveBytes": 62437800,
+      "maxBytes": 71303168,
+      "authenticode": {
+        "converter": "Valid, CN=Unity Technologies SF, O=Unity Technologies SF, L=San Francisco, S=California, C=US, SERIALNUMBER=3183233 (EV), thumbprint 228FB6411B0A144478C86AAA3CD9473C43A8ABA7, certificate notAfter 2027-07-18, DigiCert SHA256 RSA4096 timestamp",
+        "app/Unity%20Hub.exe": "Valid, same certificate, FileVersion 4.0.2",
+        "app/unity.exe": "Valid, same certificate, FileVersion 1.0.1",
+        "app/UnityLicensingClient_V1/Unity.Licensing.Client.exe": "Valid, same certificate, FileVersion 1.19.0",
+        "app/UnityLicensingClient_V1/NativeProxyHelper.dll": "Valid, same certificate"
+      },
+      "container": {
+        "outer": "PE image (32-bit stub, FileVersion 4.0.2) carrying an NSIS-3 Unicode archive, LZMA:23 solid, read by the pinned 7-Zip 26.05 as nsis",
+        "nsisEntries": [
+          "$PLUGINSDIR/System.dll (12288 bytes, not selected)",
+          "$9/UnityHub.msix (62045541 bytes, the nested payload)",
+          "$9/convert-to-msix.ps1 (not selected)"
+        ],
+        "whatTheVendorInstallerDoes": "the shell is an elevated wrapper whose PowerShell script runs Add-AppxPackage and Add-AppxProvisionedPackage on UnityHub.msix, then verifies the registered package identity and removes an older Win32 Hub. None of it is executed or installed by the package: only the MSIX container is expanded as a plain ZIP",
+        "msix": {
+          "identity": "UnityTechnologies.UnityHub 4.0.2.65535 x64, Publisher CN=Unity Technologies SF (EV subject), Application Id UnityHub, Executable app\\Unity Hub.exe, EntryPoint Windows.FullTrustApplication",
+          "capabilities": "runFullTrust, unvirtualizedResources, allowElevation",
+          "declarationsNotReproducedWhenUnpacked": "unityhub:// protocol, unityhub.exe app execution alias, startup task, uap13 AutoUpdate App Installer pointer, Desktop shortcut repair",
+          "zipMethods": "437 Deflate and 40 Store entries, all decodable by the client's yauzl path",
+          "signature": "AppxSignature.p7x and AppxMetadata/CodeIntegrity.cat ship inside the container; neither is validated by the package, the outer Authenticode check is the enforced publisher gate"
+        }
+      },
+      "format": "nsis",
+      "nested": "$9/UnityHub.msix expanded as zip without a stripPrefix: the container root also holds AppxManifest.xml, AppxBlockMap.xml, [Content_Types].xml, AppxMetadata/, AppxSignature.p7x, Assets/ (18 PNG) and 5 .pri files, so a stripPrefix would be rejected as entries outside the prefix. These 28 package-metadata files (about 7 MB) are inert and ship as-is",
+      "layout": {
+        "files": 477,
+        "treeBytes": 162489441,
+        "knownExpandedBytes": 224534982,
+        "knownExpandedBytesNote": "includes the 62,045,541-byte intermediate MSIX layer charged by checkLayout",
+        "unknownSizeFiles": 0,
+        "reviewSensitive": false,
+        "largestFiles": "app/Unity%20Hub.exe 77,433,768; app/unity.exe 45,356,456; app/UnityLicensingClient_V1/Unity.Licensing.Client.exe 22,109,096; app/licenses.html 8,591,144",
+        "required": "app/unity.exe, app/UnityLicensingClient_V1/Unity.Licensing.Client.exe, app/assets/images/welcome-art.jpg",
+        "checksumsJson": "app/checksums.json lists SHA-512 for the 440 app/assets files; the executables are not listed"
+      },
+      "entryNames": {
+        "issue": "MSIX zip entry names are URI-encoded, so 7-Zip names the main program app\\Unity%20Hub.exe (AppxBlockMap.xml and the manifest use app\\Unity Hub.exe). Nested steps support only stripPrefix, so the package keeps the encoded name; app/UnityLicensingClient_V1/Third%20Party%20Notices.md is the only other affected entry",
+        "triage": "the Hub binary contains 'Unity Hub.exe' only as the VERSIONINFO OriginalFilename; it locates itself through current_exe(), and unity.exe finds the Hub through registry keys and common install paths or its own directory. No hard-coded own-file-name dependency was found by ASCII/UTF-16 scan",
+        "consequence": "bin and the shortcut target app/Unity%20Hub.exe; renaming would need a files map on a nested step, which neither the source validator nor client 0.4.37 accept today"
+      },
+      "commandModel": {
+        "bin": {
+          "unityhub": "app/Unity%20Hub.exe",
+          "unity": "app/unity.exe"
+        },
+        "unity": "the Unity CLI bundled by Hub 4 (own FileVersion 1.0.1); it locates an installed Hub and can itself download the Hub installer from the same CDN, which was not exercised",
+        "desktop": "Unity Hub shortcut declared; requires separate integrate --desktop preview/confirmation",
+        "noShellNoBootstrapNoAdmin": true
+      },
+      "stateModel": {
+        "persist": "none declared",
+        "userData": "native %APPDATA%\\UnityHub and %LOCALAPPDATA%\\UnityHub (hub.db, accounts.db, JSON blobs, logs); the MSIX declares these folders unvirtualized so every Hub flavour shares them, and the unpackaged tree uses them directly"
+      },
+      "isolatedInstall": {
+        "client": "piko 0.4.37",
+        "pikoHome": "temporary directory with a loopback HTTP copy of this source (index.json and package documents only)",
+        "installed": "iso/unity-hub@4.0.2; the client fetched its own pinned full 7-Zip 26.05 helper for the NSIS layer",
+        "useAfterInstall": "Default and current updated",
+        "whichAfterUse": {
+          "unityhub": "apps/unity-hub/4.0.2/app/Unity%20Hub.exe",
+          "unity": "apps/unity-hub/4.0.2/app/unity.exe"
+        },
+        "listVerified": "yes",
+        "installedTreeVsOfficialMsix": "477/477 files byte-identical to the 7-Zip expansion of UnityHub.msix; the only extra file is the .piko-install.json receipt (kind portable, verified true)",
+        "installedMainExeSha256": "1b6df8cb05fe54b14beb7ed6ead4f3958c6a64d274853b3fe19d5a476bbefc8b",
+        "installedCliSha256": "c06c2e86941162e8d46957d39a6089162ad52a00023433881b5e9a18ea220d17",
+        "installedLicensingClientSha256": "623cd1ad0e62504d8c75090e55dec3c38f8388e98a24a1faf41cca4fc42042c2"
+      },
+      "updateModel": "a new Hub version is discovered from latest.yml, downloaded, signature-checked and expanded through the same nested step; a release that renames the converter, moves UnityHub.msix or drops app/Unity%20Hub.exe, unity.exe or the licensing client is blocked and the published version is kept"
+    }
+  ],
+  "rejectedAlternatives": [
+    "Unity Hub 3.22.6 (UnityHubSetup-3.22.6-x64.exe, 193,133,232 bytes): a classic NSIS Electron installer that would extract without renaming, but it is the last 3.x release and its built-in updater moves users to the 4.x MSIX converter",
+    "An admin recipe that runs the signed converter: faithful MSIX registration, but it needs an elevated terminal, registers a package that piko cannot deregister on uninstall and provisions every other account",
+    "Unity Editor installers without the Hub: the archive API services.api.unity.com/unity/editor/release/v1/releases gives version-bound UnitySetup64-<version>.exe links with MD5 integrity, but the editors are 2.62 GiB (2020.3.49f1) to 4.2 GiB (6000.3.29f1), above the 2 GiB download ceiling enforced by this source and by the client; only 2019.4.41f2 (1.76 GiB) and older would fit"
+  ],
+  "checks": {
+    "sourceCheck": "78 packages / 171 versions / 78 automatic",
+    "categoryCounts": "runtime 7, ai 7, dev 24, editors 3, desktop 25, games 10, system 2",
+    "updateCheck": "node scripts/update.mjs --check --packages unity-hub -> current (regex discovery, download, SHA-256, signature, layout and PE version were exercised by apply --dry-run and apply --yes)",
+    "applyRuns": "dry-run with stripPrefix app was rejected (entries outside the prefix); dry-run and publish without a prefix",
+    "tests": "208 total, 207 pass, 1 pre-existing failure: tests/tortoise-recipe.test.mjs invokes a real .ps1 and is blocked by this host's Restricted execution policy; identical before and after the change",
+    "tooling": "scripts/add.mjs now reports nsis for PE images that 7-Zip lists as NSIS (previously pe), lists those entries with the nsis type and passes a draft's nested steps and maxExpandedBytes through apply"
+  },
+  "notVerified": [
+    "GUI launch of the unpackaged Hub; neither Unity%20Hub.exe nor unity.exe was executed",
+    "Behaviour that depends on MSIX package identity: the unityhub:// deep link, the unityhub.exe execution alias, the Startup task and OS-level auto-update are package declarations that an unpackaged tree does not carry; the Hub is expected to register the per-user protocol itself, which was not observed",
+    "Installing an Editor through the Hub, license sign-in and the bundled licensing client",
+    "The unity CLI through a piko shim",
+    "In-application update: an unpackaged Hub is expected to download the next MSIX converter itself, which asks for elevation and would register an MSIX beside the managed tree; piko update replaces the managed tree instead and was not compared",
+    "Desktop shortcuts: integrate --desktop preview and confirmation were not exercised",
+    "Client update to a future upstream version, uninstall, upgrade and retention-window pruning",
+    "Migration from an existing Hub installation; the native user-data folders are simply shared",
+    "Running the converter shell: Add-AppxPackage, Add-AppxProvisionedPackage and the Win32 uninstall step never run"
+  ]
+}

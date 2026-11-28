@@ -511,3 +511,98 @@ test("WPS overlays the CONTROL runtime layer and rejects first-download overlay"
   fake.platforms["windows-x64"].downloads[1].overlay = false;
   assert.throws(() => validateManifest(fake, "wps-office", m.version));
 });
+
+test("unity-hub unpacks the signed MSIX converter shell as files only", () => {
+  const m = manifest("unity-hub"),
+    p = platform("unity-hub");
+  validateManifest(m, "unity-hub", m.version);
+  // Hub 4 ships as an MSIX wrapped in a signed NSIS shell whose only job is
+  // Add-AppxPackage. The package takes the MSIX container from under $9 and
+  // expands it as a plain ZIP: no installer action, no package registration.
+  assert.equal(p.format, "nsis");
+  assert.deepEqual(p.nested, [{ path: "$9/UnityHub.msix", format: "zip" }]);
+  assert.equal(p.files, undefined);
+  assert.equal(p.stripPrefix, undefined);
+  assert.equal(p.downloads, undefined);
+  // MSIX entry names are URI-encoded, so the main program keeps %20 on disk.
+  assert.deepEqual(p.bin, {
+    unityhub: "app/Unity%20Hub.exe",
+    unity: "app/unity.exe",
+  });
+  assert.deepEqual(p.desktop, {
+    shortcuts: [{ name: "Unity Hub", path: "app/Unity%20Hub.exe" }],
+  });
+  for (const key of [
+    "bootstrap",
+    "admin",
+    "shell",
+    "persist",
+    "services",
+    "env",
+    "configFiles",
+    "configTemplates",
+  ])
+    assert.equal(p[key], undefined, key);
+  const r = rules["unity-hub"];
+  assert.equal(r.provider, "regex");
+  assert.equal(r.url, "https://public-cdn.cloud.unity3d.com/hub/prod/latest.yml");
+  // The outer shell must carry a valid Unity signature on every download and
+  // the extracted Hub must report the discovered version in its PE resource.
+  assert.equal(r.signature, true);
+  assert.equal(r.verifyPEVersion, true);
+  assert.equal(r.trust, "https");
+  assert.ok(r.required.includes("app/UnityLicensingClient_V1/Unity.Licensing.Client.exe"));
+});
+
+const hubFeed = (arch = "x64") =>
+  [
+    "version: 4.0.3",
+    "files:",
+    `  - url: 4.0.3/UnityHubSetup-4.0.3-${arch}-msix-converter.exe`,
+    "    sha512: 30tDKwRCjSmVNN5oS3ugjC9DEU6+dYkRFiX0U0KuQOS4Dv9VFC/LHTZ3LHK0volQUeBy+EvOrY/vi2nFa1gqYg==",
+    "    size: 62437800",
+    `path: 4.0.3/UnityHubSetup-4.0.3-${arch}-msix-converter.exe`,
+    "sha512: 30tDKwRCjSmVNN5oS3ugjC9DEU6+dYkRFiX0U0KuQOS4Dv9VFC/LHTZ3LHK0volQUeBy+EvOrY/vi2nFa1gqYg==",
+    "releaseDate: 2026-11-24T18:45:48.079Z",
+    "",
+  ].join("\n");
+
+test("unity-hub binds the version to the x64 converter named by the official update feed", async () => {
+  const net = (feed) => ({
+    text: async (url) => {
+      assert.equal(
+        url,
+        "https://public-cdn.cloud.unity3d.com/hub/prod/latest.yml",
+      );
+      return feed;
+    },
+  });
+  const candidate = await discover(
+    rules["unity-hub"],
+    manifest("unity-hub"),
+    net(hubFeed()),
+  );
+  assert.equal(candidate.version, "4.0.3");
+  assert.equal(
+    candidate.url,
+    "https://public-cdn.cloud.unity3d.com/hub/prod/4.0.3/UnityHubSetup-4.0.3-x64-msix-converter.exe",
+  );
+  // A feed that only names another architecture is not a Windows x64 release.
+  await assert.rejects(
+    () => discover(rules["unity-hub"], manifest("unity-hub"), net(hubFeed("arm64"))),
+    /No upstream release/,
+  );
+  // An update swaps the version-bound download and leaves the recipe alone.
+  const next = nextManifest(
+    manifest("unity-hub"),
+    candidate,
+    rules["unity-hub"],
+  );
+  const p = next.platforms["windows-x64"];
+  assert.equal(p.url, candidate.url);
+  assert.deepEqual(
+    p.nested,
+    manifest("unity-hub").platforms["windows-x64"].nested,
+  );
+  assert.deepEqual(p.bin, platform("unity-hub").bin);
+});

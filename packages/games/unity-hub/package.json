@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "name": "unity-hub",
+  "upstream": {
+    "provider": "regex",
+    "url": "https://public-cdn.cloud.unity3d.com/hub/prod/latest.yml",
+    "versionRegex": "path:\\s*(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)/(?<file>UnityHubSetup-[0-9.]+-x64-msix-converter\\.exe)",
+    "urlTemplate": "https://public-cdn.cloud.unity3d.com/hub/prod/{version}/{file}",
+    "signature": true,
+    "verifyPEVersion": true,
+    "required": [
+      "app/unity.exe",
+      "app/UnityLicensingClient_V1/Unity.Licensing.Client.exe",
+      "app/assets/images/welcome-art.jpg"
+    ],
+    "trust": "https"
+  },
+  "recipes": {
+    "rd9e4e4c1f44796b0": {
+      "schemaVersion": 1,
+      "name": "unity-hub",
+      "version": "{version}",
+      "platforms": {
+        "windows-x64": {
+          "url": "https://public-cdn.cloud.unity3d.com/hub/prod/{version}/UnityHubSetup-{version}-x64-msix-converter.exe",
+          "sha256": "{sha256}",
+          "format": "nsis",
+          "bin": {
+            "unityhub": "app/Unity%20Hub.exe",
+            "unity": "app/unity.exe"
+          },
+          "nested": [
+            {
+              "path": "$9/UnityHub.msix",
+              "format": "zip"
+            }
+          ],
+          "desktop": {
+            "shortcuts": [
+              {
+                "name": "Unity Hub",
+                "path": "app/Unity%20Hub.exe"
+              }
+            ]
+          },
+          "maxBytes": "{maxBytes}"
+        }
+      }
+    }
+  },
+  "versions": {
+    "4.0.2": {
+      "recipe": "rd9e4e4c1f44796b0",
+      "maxBytes": 71303168,
+      "sha256": "4b8f119261515f80c4d9b8aa78ed1c74c1f09281cbbf66f994224fb8c55ee56c"
+    }
+  }
+}
